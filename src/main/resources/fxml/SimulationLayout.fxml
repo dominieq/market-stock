@@ -1,0 +1,2235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<TabPane
+    maxHeight="Infinity"
+    maxWidth="Infinity"
+    minHeight="-Infinity"
+    minWidth="-Infinity"
+    prefHeight="960"
+    prefWidth="1360"
+    tabClosingPolicy="UNAVAILABLE"
+    xmlns="http://javafx.com/javafx/8.0.141"
+    xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="org.example.marketstock.fxml.SimulationLayoutController"
+>
+    <Tab text="Player's briefcase">
+        <SplitPane dividerPositions="0.3" maxHeight="Infinity" maxWidth="Infinity">
+            <TableView fx:id="briefcaseAssetsTableView" maxHeight="Infinity" maxWidth="Infinity">
+                <columns>
+                    <TableColumn fx:id="briefcaseAssetNamesTableColumn" text="Name of an asset" />
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+            <GridPane>
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="SOMETIMES" />
+                    <RowConstraints vgrow="SOMETIMES" />
+                    <RowConstraints vgrow="SOMETIMES" maxHeight="Infinity" />
+                </rowConstraints>
+                <GridPane gridLinesVisible="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <GridPane.margin>
+                        <Insets top="36" left="16" right="16" />
+                    </GridPane.margin>
+                    <Label
+                        text="Name"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Current rate"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Minimum rate"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Maximum rate"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="3"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Amount"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="4"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="briefcaseAssetNameLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="briefcaseAssetCurrentRateLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="briefcaseAssetMinRateLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="briefcaseAssetMaxRateLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="3"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="briefcaseAssetsNumberLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="4"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Your first name"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Your last name"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Your budget"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Number of owned assets"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="3"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Summarized value of owned assets"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="4"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="playersFirstNameLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="playersLastNameLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="playersBudgetLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="playersAssetsNumberLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="3"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="playersAssetsValueLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="4"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                </GridPane>
+                <VBox
+                    alignment="CENTER"
+                    minHeight="80"
+                    prefHeight="88"
+                    spacing="16"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="1"
+                >
+                    <GridPane.margin>
+                        <Insets left="16" right="16" />
+                    </GridPane.margin>
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <Label
+                            maxHeight="36"
+                            minHeight="36"
+                            text="Type a number of asset to buy:"
+                        />
+                        <TextField
+                            fx:id="numberOfAssetsToBuyTextField"
+                            maxHeight="36"
+                            minHeight="36"
+                            minWidth="64"
+                        />
+                        <Button
+                           defaultButton="true"
+                            mnemonicParsing="false"
+                            onAction="#handleBuyAsset"
+                            text="Buy"
+                            maxHeight="36"
+                            minHeight="36"
+                        />
+                    </HBox>
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <Label
+                            maxHeight="36"
+                            minHeight="36"
+                            text="Type a number of asset to sell:"
+                        />
+                        <TextField
+                            fx:id="numberOfAssetsToSellTextField"
+                            maxHeight="36"
+                            minHeight="36"
+                        />
+                        <Button
+                            mnemonicParsing="false"
+                            onAction="#handleSellAsset"
+                            text="Sell"
+                            maxHeight="36"
+                            minHeight="36"
+                        />
+                    </HBox>
+                </VBox>
+                <LineChart fx:id="assetLineChart" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                    <xAxis>
+                        <NumberAxis side="BOTTOM" fx:id="xAxisTime"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="yAxisValue" side="LEFT"/>
+                    </yAxis>
+                </LineChart>
+            </GridPane>
+        </SplitPane>
+    </Tab>
+    <Tab text="Stock exchange">
+        <SplitPane dividerPositions="0.3" maxHeight="Infinity" maxWidth="Infinity">
+            <GridPane id="stockExchangeGrid" vgap="32.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="SOMETIMES" />
+                    <RowConstraints vgrow="SOMETIMES" maxHeight="160.0" minHeight="160.0" />
+                </rowConstraints>
+                <TableView
+                    fx:id="stockExchangeTableView"
+                    maxHeight="Infinity"
+                    maxWidth="Infinity"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="0"
+                >
+                    <columns>
+                        <TableColumn
+                            fx:id="stockExchangeNameTableColumn"
+                            text="Stock exchanges"
+                        />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+                <VBox
+                    maxHeight="160"
+                    maxWidth="Infinity"
+                    minHeight="160"
+                    spacing="32"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="1"
+                >
+                    <GridPane.margin>
+                        <Insets bottom="32" left="16" right="16" />
+                    </GridPane.margin>
+                    <Button
+                        defaultButton="true"
+                        maxHeight="64"
+                        maxWidth="Infinity"
+                        minHeight="64"
+                        mnemonicParsing="false"
+                        onAction="#handleAddStockExchange"
+                        text="Add a random stock exchange"
+                    />
+                    <Button
+                        cancelButton="true"
+                        maxHeight="64"
+                        maxWidth="Infinity"
+                        minHeight="64"
+                        mnemonicParsing="false"
+                        onAction="#handleRemoveStockExchange"
+                        text="Remove a selected stock exchange"
+                    />
+                </VBox>
+            </GridPane>
+            <SplitPane dividerPositions="0.7" id="stockExchangePane" orientation="VERTICAL">
+                <GridPane id="companyPane">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" maxHeight="Infinity" />
+                    </rowConstraints>
+                    <GridPane id="companyGrid" vgap="32.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="80.0" minHeight="80.0" />
+                        </rowConstraints>
+                        <TableView
+                            fx:id="companyTableView"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="0"
+                        >
+                            <columns>
+                                <TableColumn fx:id="companyNameTableColumn" text="Companies" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+                        <VBox
+                            maxHeight="80.0"
+                            maxWidth="Infinity"
+                            minHeight="80.0"
+                            spacing="16.0"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets bottom="16.0" left="16.0" right="16.0" />
+                            </GridPane.margin>
+                            <Button
+                                maxHeight="32.0"
+                                maxWidth="Infinity"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleAddCompany"
+                                text="Add a random company"
+                            />
+                            <Button
+                                maxHeight="32.0"
+                                maxWidth="Infinity"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleRemoveCompany"
+                                text="Remove a selected company"
+                            />
+                        </VBox>
+                    </GridPane>
+                    <GridPane id="companyDetails" vgap="32.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints maxHeight="624.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="32.0" minHeight="32.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="Infinity" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                        <GridPane
+                            gridLinesVisible="true"
+                            maxHeight="624.0"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="0"
+                        >
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" />
+                                <ColumnConstraints hgrow="SOMETIMES" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                            </rowConstraints>
+                            <GridPane.margin>
+                                <Insets left="16.0" right="16.0" top="16.0" />
+                            </GridPane.margin>
+                            <Label
+                                text="Current rate"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="0"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Minimum rate"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="1"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Maximum rate"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="2"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Number of shares"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="3"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Name"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="4"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Date of first valuation"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="5"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Opening quotation"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="6"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Profit"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="7"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Revenue"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="8"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Equity capital"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="9"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Opening capital"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="10"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Turnover"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="11"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Volume"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="12"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyCurrentRateLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="0"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyMinRateLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="1"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyMaxRateLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="2"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyNumberOfAssetsLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="3"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyNameLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="4"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyDateOfFirstValuationLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="5"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyOpeningQuotationLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="6"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyProfitLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="7"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyRevenueLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="8"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyEquityCapitalLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="9"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyOpeningCapitalLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="10"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyTurnoverLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="11"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="companyVolumeLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="12"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                        </GridPane>
+                        <HBox
+                            maxHeight="32.0"
+                            maxWidth="Infinity"
+                            minHeight="32.0"
+                            spacing="8.0"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets left="16.0" right="16.0" />
+                            </GridPane.margin>
+                            <Label
+                                maxHeight="32.0"
+                                minHeight="32.2"
+                                text="Type a number of shares to buy:"
+                            />
+                            <TextField
+                                fx:id="numberOfSharesTextField"
+                                maxHeight="32.0"
+                                minHeight="32.2"
+                            />
+                            <Button
+                                defaultButton="true"
+                                mnemonicParsing="false"
+                                onAction="#handleBuyShares"
+                                text="Buy"
+                            />
+                        </HBox>
+                        <Pane GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    </GridPane>
+                    <GridPane id="indexGrid" vgap="16.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="80.0" minHeight="80.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" />
+                        </rowConstraints>
+                        <TableView fx:id="indexTableView" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <columns>
+                                <TableColumn fx:id="indexNameTableColumn" text="Indices" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                        <VBox
+                            maxHeight="80.0"
+                            maxWidth="Infinity"
+                            minHeight="80.0"
+                            spacing="16.0"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets left="16.0" right="16.0" />
+                            </GridPane.margin>
+                            <Button
+                                maxHeight="32.0"
+                                maxWidth="Infinity"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleAddIndex"
+                                text="Add a new random index"
+                            />
+                            <Button
+                                maxHeight="32.0"
+                                maxWidth="Infinity"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleRemoveIndex"
+                                text="Remove a selected index"
+                            />
+                        </VBox>
+                        <GridPane
+                            id="indexDetails"
+                            gridLinesVisible="true"
+                            maxHeight="48.0"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="2"
+                        >
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" />
+                                <ColumnConstraints hgrow="SOMETIMES" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="24.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="24.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <GridPane.margin>
+                                <Insets left="16.0" right="16.0" />
+                            </GridPane.margin>
+                            <Label
+                                text="Name"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="0"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="4.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Value"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="1"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="4.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="indexNameLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="0"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="4.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="indexValueLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="1"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="4.0" />
+                                </GridPane.margin>
+                            </Label>
+                        </GridPane>
+                        <TableView fx:id="indexCompaniesTableView" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                            <columns>
+                                <TableColumn fx:id="indexCompanyNameTableColumn" text="Companies from a selected index" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+                    </GridPane>
+                </GridPane>
+                <GridPane id="stockExchangeDetails" gridLinesVisible="true" maxHeight="144.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                        <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                    </rowConstraints>
+                    <Label
+                        text="Name"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Country"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="City"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="stockExchangeNameLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="stockExchangeCountryLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets left="5.0"/>
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="stockExchangeCityLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Address"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Currency"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Margin"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="stockExchangeAddressLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="stockExchangeCurrencyLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="stockExchangeMarginLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                </GridPane>
+            </SplitPane>
+        </SplitPane>
+    </Tab>
+    <Tab text="Currency exchanges">
+        <SplitPane dividerPositions="0.3" maxHeight="Infinity" maxWidth="Infinity">
+            <GridPane id="currencyExchangeGrid" vgap="32">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="SOMETIMES" />
+                    <RowConstraints vgrow="SOMETIMES" maxHeight="160.0" minHeight="160.0" />
+                </rowConstraints>
+                <TableView
+                    fx:id="currencyExchangeTableView"
+                    maxHeight="Infinity"
+                    maxWidth="Infinity"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="0"
+                >
+                    <columns>
+                        <TableColumn fx:id="currencyExchangeNameTableColumn" text="Currency exchanges" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+                <VBox
+                    maxHeight="160"
+                    maxWidth="Infinity"
+                    minHeight="160"
+                    spacing="32"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="1"
+                >
+                    <GridPane.margin>
+                        <Insets bottom="32" left="16" right="16" />
+                    </GridPane.margin>
+                    <Button
+                        defaultButton="true"
+                        mnemonicParsing="false"
+                        maxHeight="64.0"
+                        maxWidth="Infinity"
+                        minHeight="64.0"
+                        onAction="#handleAddCurrencyExchange"
+                        text="Add a random currency exchange"
+                    />
+                    <Button
+                        cancelButton="true"
+                        mnemonicParsing="false"
+                        maxHeight="64.0"
+                        maxWidth="Infinity"
+                        minHeight="64.0"
+                        onAction="#handleRemoveCurrencyExchange"
+                        text="Remove a selected currency exchange"
+                    />
+                </VBox>
+            </GridPane>
+            <SplitPane dividerPositions="0.7" id="currencyExchangePane" orientation="VERTICAL">
+                <GridPane id="currencyPane">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" maxHeight="Infinity" />
+                    </rowConstraints>
+                    <GridPane id="currencyGrid" vgap="32.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="80.0" minHeight="80.0" />
+                        </rowConstraints>
+                        <TableView
+                            fx:id="currencyTableView"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="0"
+                        >
+                            <columns>
+                                <TableColumn fx:id="currencyNameTableColumn" text="Currencies"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+                        <VBox
+                            maxHeight="80.0"
+                            maxWidth="Infinity"
+                            minHeight="80.0"
+                            spacing="16.0"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets bottom="16.0" left="16.0" right="16.0" />
+                            </GridPane.margin>
+                            <Button
+                                maxHeight="32.0"
+                                maxWidth="Infinity"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleAddCurrency"
+                                text="Add a random a currency"
+                            />
+                            <Button
+                                maxHeight="32.0"
+                                maxWidth="Infinity"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleRemoveCurrency"
+                                text="Remove a selected currency"
+                            />
+                        </VBox>
+                    </GridPane>
+                    <GridPane id="currencyDetails" vgap="32.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="240.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="32.0" minHeight="32.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="Infinity" />
+                        </rowConstraints>
+                        <GridPane gridLinesVisible="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" />
+                                <ColumnConstraints hgrow="SOMETIMES" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <GridPane.margin>
+                                <Insets left="16.0" right="16.0" top="16.0" />
+                            </GridPane.margin>
+                            <Label
+                                text="Name"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="0"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Current rate"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="1"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Minimum rate"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="2"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Maximum rate"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="3"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Über currency"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="4"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="currencyNameLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="0"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="currencyCurrentRateLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="1"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="currencyMinRateLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="2"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="currencyMaxRateLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="3"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="currencyUberCurrencyLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="4"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                        </GridPane>
+                        <HBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <GridPane.margin>
+                                <Insets left="16.0" right="16.0" />
+                            </GridPane.margin>
+                            <Label
+                                maxHeight="32.0"
+                                minHeight="32.0"
+                                text="Type a number of currency to buy:"
+                            />
+                            <TextField
+                                fx:id="numberOfCurrenciesTextField"
+                                maxHeight="32.0"
+                                minHeight="32.0"
+                            />
+                            <Button
+                                defaultButton="true"
+                                maxHeight="32.0"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleBuyCurrency"
+                                text="Buy"
+                            />
+                        </HBox>
+                        <Pane GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    </GridPane>
+                    <TableView fx:id="currencyCountriesTableView" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <columns>
+                            <TableColumn fx:id="currencyCountryNameTableView" text="Countries" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        </columnResizePolicy>
+                    </TableView>
+                </GridPane>
+                <GridPane id="currencyExchangeDetails" gridLinesVisible="true" maxHeight="144.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <Label
+                        text="Name"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Country"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="City"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="currencyExchangeNameLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="currencyExchangeCountryLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="currencyExchangeCityLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Address"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Currency"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Margin"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="currencyExchangeAddressLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="currencyExchangeCurrencyLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="currencyExchangeMarginLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                </GridPane>
+            </SplitPane>
+        </SplitPane>
+    </Tab>
+    <Tab text="Commodity exchanges">
+        <SplitPane dividerPositions="0.3" maxHeight="Infinity" maxWidth="Infinity">
+            <GridPane id="commodityExchangeGrid" vgap="32">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="SOMETIMES" />
+                    <RowConstraints vgrow="SOMETIMES" maxHeight="160" minHeight="160" />
+                </rowConstraints>
+                <TableView
+                    fx:id="commodityExchangeTableView"
+                    maxHeight="Infinity"
+                    maxWidth="Infinity"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="0"
+                >
+                    <columns>
+                        <TableColumn fx:id="commodityExchangeNameTableColumn" text="Commodity exchanges" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+                <VBox
+                    maxHeight="160"
+                    maxWidth="Infinity"
+                    minHeight="160"
+                    spacing="32"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="1"
+                >
+                    <GridPane.margin>
+                        <Insets bottom="32" left="16" right="16" />
+                    </GridPane.margin>
+                    <Button
+                        defaultButton="true"
+                        maxHeight="64"
+                        maxWidth="Infinity"
+                        minHeight="64"
+                        mnemonicParsing="false"
+                        onAction="#handleAddCommodityExchange"
+                        text="Add a random commodity exchange"
+                    />
+                    <Button
+                        cancelButton="true"
+                        maxHeight="64"
+                        maxWidth="Infinity"
+                        minHeight="64"
+                        mnemonicParsing="false"
+                        onAction="#handleRemoveCommodityExchange"
+                        text="Remove a selected commodity exchange"
+                    />
+                </VBox>
+            </GridPane>
+            <SplitPane dividerPositions="0.7" id="commodityExchangePane" orientation="VERTICAL">
+                <GridPane id="commodityPane">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" maxHeight="Infinity" />
+                    </rowConstraints>
+                    <GridPane id="commodityGrid" vgap="32.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="80.0" minHeight="80.0" />
+                        </rowConstraints>
+                        <TableView
+                            fx:id="commodityTableView"
+                            maxHeight="Infinity"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="0"
+                        >
+                            <columns>
+                                <TableColumn fx:id="commodityNameTableColumn" text="Commodities"/>
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                            </columnResizePolicy>
+                        </TableView>
+                        <VBox
+                            maxHeight="80"
+                            maxWidth="Infinity"
+                            minHeight="80"
+                            spacing="16.0"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets bottom="16.0" left="16.0" right="16.0" />
+                            </GridPane.margin>
+                            <Button
+                                maxHeight="32.0"
+                                maxWidth="Infinity"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleAddCommodity"
+                                text="Add a random commodity"
+                            />
+                            <Button
+                                maxHeight="32.0"
+                                maxWidth="Infinity"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleRemoveCommodity"
+                                text="Remove a selected commodity"
+                            />
+                        </VBox>
+                    </GridPane>
+                    <GridPane id="commodityDetails" vgap="32.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="288.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="32" minHeight="32" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="Infinity" />
+                        </rowConstraints>
+                        <GridPane gridLinesVisible="true" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" />
+                                <ColumnConstraints hgrow="SOMETIMES" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="48.0" vgrow="SOMETIMES"/>
+                            </rowConstraints>
+                            <GridPane.margin>
+                                <Insets left="16.0" right="16.0" top="16.0" />
+                            </GridPane.margin>
+                            <Label
+                                text="Name"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="0"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Current rate"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="1"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Minimum rate"
+                                wrapText="true"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="2"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Maximum rate"
+                                wrapText="true"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="3"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Unit of trading"
+                                wrapText="true"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="4"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                text="Currency"
+                                GridPane.columnIndex="0"
+                                GridPane.rowIndex="5"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="commodityNameLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="0"
+                            >
+                                <GridPane.margin>
+                                    <Insets left="5.0"/>
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="commodityCurrentRateLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="1"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="commodityMinRateLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="2"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="commodityMaxRateLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="3"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="commodityUnitOfTradingLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="4"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label
+                                fx:id="commodityCurrencyLabel"
+                                text="Label"
+                                GridPane.columnIndex="1"
+                                GridPane.rowIndex="5"
+                            >
+                                <GridPane.margin>
+                                    <Insets topRightBottomLeft="8.0" />
+                                </GridPane.margin>
+                            </Label>
+                        </GridPane>
+                        <HBox
+                            maxHeight="32.0"
+                            maxWidth="Infinity"
+                            minHeight="32.0"
+                            spacing="8.0"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets bottom="16.0" left="16.0" right="16.0" />
+                            </GridPane.margin>
+                            <Label
+                                maxHeight="32.0"
+                                minHeight="32.0"
+                                text="Type a number of commodity to buy:"
+                            />
+                            <TextField
+                                fx:id="numberOfCommoditiesTextField"
+                                maxHeight="32.0"
+                                minHeight="32.0"
+                            />
+                            <Button
+                                defaultButton="true"
+                                maxHeight="32.0"
+                                minHeight="32.0"
+                                mnemonicParsing="false"
+                                onAction="#handleBuyCommodity"
+                                text="Buy"
+                            />
+                        </HBox>
+                        <Pane GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    </GridPane>
+                    <Pane id="commodityBlankSpan" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                </GridPane>
+                <GridPane id="commodityExchangeDetails" gridLinesVisible="true" maxHeight="144">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="48.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <Label
+                        text="Name"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Country"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="City"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="commodityExchangeNameLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="commodityExchangeCountryLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="commodityExchangeCityLabel"
+                        text="Label"
+                        GridPane.columnIndex="1"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Address"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Currency"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        text="Margin"
+                        GridPane.columnIndex="2"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="commodityExchangeAddressLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="commodityExchangeCurrencyLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                    <Label
+                        fx:id="commodityExchangeMarginLabel"
+                        text="Label"
+                        GridPane.columnIndex="3"
+                        GridPane.rowIndex="2"
+                    >
+                        <GridPane.margin>
+                            <Insets topRightBottomLeft="8.0" />
+                        </GridPane.margin>
+                    </Label>
+                </GridPane>
+            </SplitPane>
+        </SplitPane>
+    </Tab>
+    <Tab text="Investors and investment funds">
+        <SplitPane dividerPositions="0.3, 0.7" maxHeight="Infinity" maxWidth="Infinity">
+            <TableView fx:id="investorTableView" maxHeight="Infinity" maxWidth="Infinity">
+                <columns>
+                    <TableColumn fx:id="investorFirstNameTableColumn" text="Investor first name" />
+                    <TableColumn fx:id="investorLastNameTableColumn" text="Investor last name" />
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+            <SplitPane dividerPositions="0.36" orientation="VERTICAL">
+                <GridPane id="investorGrid" vgap="16.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" maxHeight="32.0" minHeight="32.0" />
+                    </rowConstraints>
+                    <GridPane
+                        id="investorDetails"
+                        gridLinesVisible="true"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="0"
+                    >
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0"/>
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0"/>
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                        </rowConstraints>
+                        <GridPane.margin>
+                            <Insets left="16.0" right="16.0" top="16.0" />
+                        </GridPane.margin>
+                        <Label
+                            text="First name"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="0"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Last name"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="PESEL"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="2"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Budget"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="3"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Summarized value of assets"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="4"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investorFirstNameLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="0"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investorLastNameLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investorPESELLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="2"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investorBudgetLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="3"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investorAssetsValueLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="4"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                    </GridPane>
+                    <Button
+                        cancelButton="true"
+                        maxHeight="32.0"
+                        maxWidth="Infinity"
+                        minHeight="32.0"
+                        mnemonicParsing="false"
+                        onAction="#handleRemoveInvestor"
+                        text="Remove a selected investor"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="1"
+                    >
+                        <GridPane.margin>
+                            <Insets bottom="16.0" left="16.0" right="16.0" />
+                        </GridPane.margin>
+                    </Button>
+                </GridPane>
+                <GridPane id="investmentFundGrid" vgap="16.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" maxHeight="32.0" minHeight="32.0" />
+                        <RowConstraints vgrow="SOMETIMES" maxHeight="32.0" minHeight="32.0" />
+                        <RowConstraints vgrow="SOMETIMES" maxHeight="Infinity" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <Button
+                        cancelButton="true"
+                        maxHeight="32.0"
+                        maxWidth="Infinity"
+                        minHeight="32.0"
+                        mnemonicParsing="false"
+                        onAction="#handleRemoveInvestmentFund"
+                        text="Remove a selected investment fund"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="0"
+                    >
+                        <GridPane.margin>
+                            <Insets left="16.0" right="16.0" top="16.0" />
+                        </GridPane.margin>
+                    </Button>
+                    <HBox spacing="8.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <GridPane.margin>
+                            <Insets left="16.0" right="16.0" />
+                        </GridPane.margin>
+                        <Label
+                            maxHeight="32.0"
+                            minHeight="32.0"
+                            text="Type a number of investment units to buy:"
+                        />
+                        <TextField
+                            fx:id="numberOfInvestmentUnitsTextField"
+                            maxHeight="32.0"
+                            minHeight="32.0"
+                            minWidth="32.0"
+                        />
+                        <Button
+                            defaultButton="true"
+                            maxHeight="32.0"
+                            minHeight="32.0"
+                            mnemonicParsing="false"
+                            onAction="#handleBuyInvestmentUnits"
+                            text="Buy"
+                        />
+                    </HBox>
+                    <Pane id="blankSpan" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <GridPane
+                        id="investmentFundDetails"
+                        gridLinesVisible="true"
+                        GridPane.columnIndex="0"
+                        GridPane.rowIndex="3"
+                    >
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                            <ColumnConstraints hgrow="SOMETIMES" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
+                        </rowConstraints>
+                        <GridPane.margin>
+                            <Insets bottom="16.0" left="16.0" right="16.0" />
+                        </GridPane.margin>
+                        <Label
+                            text="First name of CEO"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="0"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Last name of CEO"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Name of investment fund"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="2"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Budget"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="3"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Number of investment units"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="4"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Current rate"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="5"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Maximum rate"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="6"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Minimum rate"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="7"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            text="Name of an investment unit"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="8"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentFundFirstNameLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="0"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentFundLastNameLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="1"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentFundNameLabel"
+                            text="Label"
+                            wrapText="true"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="2"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentFundBudgetLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="3"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentUnitNumberLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="4"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentUnitCurrentRateLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="5"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentUnitMaxRateLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="6"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentUnitMinRateLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="7"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentUnitNameLabel"
+                            text="Label"
+                            wrapText="true"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="8"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                    </GridPane>
+                </GridPane>
+            </SplitPane>
+            <TableView fx:id="investmentFundTableView" maxHeight="Infinity" maxWidth="Infinity">
+                <columns>
+                    <TableColumn fx:id="investmentFundNameTableColumn" text="Investment fund name"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+        </SplitPane>
+    </Tab>
+</TabPane>
