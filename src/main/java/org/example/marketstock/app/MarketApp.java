@@ -94,18 +94,17 @@ public class MarketApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Market Stock Simulator");
 
-        player = new Player();
-        stockExchanges = FXCollections.observableArrayList();
-        commodityExchanges = FXCollections.observableArrayList();
-        currencyExchanges = FXCollections.observableArrayList();
-        currencies = FXCollections.observableArrayList();
-        commodities = FXCollections.observableArrayList();
-        shares = FXCollections.observableArrayList();
-        investmentUnits = FXCollections.observableArrayList();
-        investmentFunds = FXCollections.observableArrayList();
-        investors = FXCollections.observableArrayList();
-        companies = FXCollections.observableArrayList();
-        indices = FXCollections.observableArrayList();
+        this.stockExchanges = FXCollections.observableArrayList();
+        this.commodityExchanges = FXCollections.observableArrayList();
+        this.currencyExchanges = FXCollections.observableArrayList();
+        this.currencies = FXCollections.observableArrayList();
+        this.commodities = FXCollections.observableArrayList();
+        this.shares = FXCollections.observableArrayList();
+        this.investmentUnits = FXCollections.observableArrayList();
+        this.investmentFunds = FXCollections.observableArrayList();
+        this.investors = FXCollections.observableArrayList();
+        this.companies = FXCollections.observableArrayList();
+        this.indices = FXCollections.observableArrayList();
         
         initRootLayout();
         showStartMenuLayout();
@@ -159,7 +158,7 @@ public class MarketApp extends Application {
         }
     }
 
-    public void showGuideLayout () {
+    public void showGuideLayout() {
         try {
             FXMLLoader loader = new FXMLLoader ();
             loader.setLocation(MarketApp.class.getResource("/fxml/GuideLayout.fxml"));
@@ -179,7 +178,39 @@ public class MarketApp extends Application {
         }
     }
 
-    public Stage getPrimaryStage () {
+    public boolean showCreatePlayerDialog() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MarketApp.class.getResource("/fxml/CreatePlayerDialog.fxml"));
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Customize player");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(this.primaryStage);
+            dialogStage.setScene(new Scene(loader.load()));
+
+            CreatePlayerDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+
+            dialogStage.showAndWait();
+
+            if (controller.isConfirmClicked()) {
+                this.player = Player.getInstance(
+                        controller.getFirstName(),
+                        controller.getLastName(),
+                        controller.getBudget()
+                );
+
+                return true;
+            }
+            return false;
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            return false;
+        }
+    }
+
+    public Stage getPrimaryStage() {
         return primaryStage;
     }
 
