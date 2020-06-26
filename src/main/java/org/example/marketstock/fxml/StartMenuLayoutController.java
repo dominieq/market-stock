@@ -20,8 +20,9 @@ public class StartMenuLayoutController {
      */
     @FXML
     private void handleNewGame () {
-        this.marketApp.getPlayer().createPlayer("Dominik", "Szmyt", 10000.0);
-        this.marketApp.showSimulationLayout();
+        if (this.marketApp.showCreatePlayerDialog()) {
+            this.marketApp.showSimulationLayout();
+        }
     }
 
     /**
