@@ -16,6 +16,9 @@ public class Croupier {
     private static final String CITIES_LOCATION = "built-in-names/cities.json";
     private static final String ADDRESSES_LOCATION = "built-in-names/addresses.json";
     private static final String CURRENCIES_LOCATION = "built-in-names/currencies.json";
+    private static final String FIRST_NAMES_LOCATION = "built-in-names/first-names.json";
+    private static final String LAST_NAMES_LOCATION = "built-in-names/last-names.json";
+    private static final String FUND_NAMES_LOCATION = "built-in-names/fund-names.json";
 
     private final JsonReader jsonReader;
     private final Random random;
@@ -94,6 +97,32 @@ public class Croupier {
     public String[] drawCountries() {
         final String path = getPath(COUNTRIES_LOCATION);
         return Croupiers.drawSubset(random, jsonReader.getResource(path));
+    }
+
+    public String drawFirstName() {
+        final String path = getPath(FIRST_NAMES_LOCATION);
+        return Croupiers.drawString(random, jsonReader.getResource(path));
+    }
+
+    public String drawLastName() {
+        final String path = getPath(LAST_NAMES_LOCATION);
+        return Croupiers.drawString(random, jsonReader.getResource(path));
+    }
+
+    public String drawInvestmentFundName() {
+        final String path = getPath(FUND_NAMES_LOCATION);
+        return Croupiers.drawString(random, jsonReader.getResource(path));
+    }
+
+    public double drawBudget() {
+        return Croupiers.drawDoubleWithBoundaries(random, 10_000D, 1_000_000D);
+    }
+
+    public String drawPESEL() {
+        final long lowerBoundary = 11_111_111_111L;
+        final long upperBoundary = 99_999_999_999L;
+
+        return String.valueOf(lowerBoundary + (long) (Math.random() * (upperBoundary - lowerBoundary)));
     }
 
     private String getPath(String location) {

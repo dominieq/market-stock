@@ -220,4 +220,73 @@ public class CroupierTest {
         assertThat(actual).isNotEmpty();
         assertThat(names).containsAll(Arrays.asList(actual));
     }
+
+    @Test
+    public void should_draw_valid_first_name() {
+
+        // given
+        URL url = getClass().getClassLoader().getResource("built-in-names/first-names.json");
+        assertThat(url).isNotNull();
+        String[] names = jsonReader.getResource(url.getPath());
+
+        // when
+        String actual = subject.drawFirstName();
+
+        // then
+        assertThat(actual).isNotEmpty();
+        assertThat(names).contains(actual);
+    }
+
+    @Test
+    public void should_draw_valid_last_name() {
+
+        // given
+        URL url = getClass().getClassLoader().getResource("built-in-names/last-names.json");
+        assertThat(url).isNotNull();
+        String[] names = jsonReader.getResource(url.getPath());
+
+        // when
+        String actual = subject.drawLastName();
+
+        // then
+        assertThat(actual).isNotEmpty();
+        assertThat(names).contains(actual);
+    }
+
+    @Test
+    public void should_draw_valid_investment_fund_name() {
+
+        // given
+        URL url = getClass().getClassLoader().getResource("built-in-names/fund-names.json");
+        assertThat(url).isNotNull();
+        String[] names = jsonReader.getResource(url.getPath());
+
+        // when
+        String actual = subject.drawInvestmentFundName();
+
+        // then
+        assertThat(actual).isNotEmpty();
+        assertThat(names).contains(actual);
+    }
+
+    @Test
+    public void should_draw_valid_budget() {
+
+        // when
+        double actual = subject.drawBudget();
+
+        // then
+        assertThat(actual).isBetween(10_000D, 1_000_000D);
+    }
+
+    @Test
+    public void should_draw_valid_PESEL() {
+
+        // when
+        String actual = subject.drawPESEL();
+
+        // then
+        assertThat(actual).isNotEmpty();
+        assertThat(Long.parseLong(actual)).isBetween(11_111_111_111L, 99_999_999_999L);
+    }
 }
