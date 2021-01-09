@@ -1,7 +1,7 @@
 package org.example.marketstock.fxml;
 
-import org.example.marketstock.app.MarketApp;
 import javafx.fxml.FXML;
+import org.example.marketstock.app.MarketApp;
 
 /**
  *
@@ -20,8 +20,8 @@ public class StartMenuLayoutController {
      */
     @FXML
     private void handleNewGame () {
-        if (this.marketApp.showCreatePlayerDialog()) {
-            this.marketApp.showSimulationLayout();
+        if (marketApp.showCreatePlayerDialog()) {
+            marketApp.showSimulationLayout();
         }
     }
 

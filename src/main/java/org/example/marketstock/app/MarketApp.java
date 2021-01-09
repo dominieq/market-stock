@@ -4,10 +4,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.marketstock.fxml.*;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
@@ -16,18 +18,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Modality;
-import org.example.marketstock.models.asset.Commodity;
-import org.example.marketstock.models.asset.Currency;
-import org.example.marketstock.models.asset.Share;
-import org.example.marketstock.models.asset.InvestmentUnit;
-import org.example.marketstock.models.company.Company;
-import org.example.marketstock.models.entity.InvestmentFund;
-import org.example.marketstock.models.entity.Investor;
+import org.example.marketstock.models.asset.builder.CurrencyBuilder;
+import org.example.marketstock.models.briefcase.builder.BriefcaseBuilder;
 import org.example.marketstock.models.entity.Player;
-import org.example.marketstock.models.exchange.CommodityExchange;
-import org.example.marketstock.models.exchange.CurrencyExchange;
 import org.example.marketstock.models.exchange.StockExchange;
-import org.example.marketstock.models.index.Index;
+import org.example.marketstock.simulation.Simulation;
+import org.example.marketstock.simulation.builder.SimulationBuilder;
+import org.example.marketstock.simulation.croupier.builder.CroupierBuilder;
+import org.example.marketstock.simulation.json.JsonReader;
+import org.example.marketstock.simulation.json.SimpleJsonReader;
+
+import static java.util.Objects.nonNull;
 
 /**
  *
@@ -37,54 +38,16 @@ import org.example.marketstock.models.index.Index;
 public class MarketApp extends Application {
 
     private static final Logger LOGGER = LogManager.getLogger(MarketApp.class);
+
+    private Simulation simulation;
+    private final SimulationBuilder simulationBuilder = SimulationBuilder.builder();
+
     private Stage primaryStage;
     private BorderPane rootLayout;
-
-    private Player player;
-
-    private ObservableList<StockExchange> stockExchanges;
-    private ObservableList<CommodityExchange> commodityExchanges;
-    private  ObservableList<CurrencyExchange> currencyExchanges;
-    private volatile ObservableList<Share> shares;
-    private volatile ObservableList<InvestmentUnit> investmentUnits;
-    private volatile ObservableList<Currency> currencies;
-    private volatile ObservableList<Commodity> commodities;
-    private volatile ObservableList<InvestmentFund> investmentFunds;
-    private volatile ObservableList<Investor> investors;
-    private volatile ObservableList<Company> companies;
-    private ObservableList<Index> indices;
 
     public static void main(String[] args) {
         LOGGER.info("Starting market stock simulator");
         launch(args);
-    }
-
-    public void addEntities() {
-        int count = this.shares.size() + this.investmentUnits.size()
-                + this.currencies.size() + this.commodities.size();
-
-        if(count % 5 == 0) {
-            /* Create new investor and add them to simulation. */
-            Investor investor = new Investor();
-            investor.initialize(this);
-            investors.add(investor);
-
-            /* Start the thread of the new investor. */
-            Thread thread1 = new Thread(investor);
-            thread1.start();
-            investor.setThreadId(thread1.getId());
-
-            /* Create new investment fund and add it to simulation. */
-            InvestmentFund investmentFund = new InvestmentFund();
-            investmentFund.initialize(this);
-            investmentFunds.add(investmentFund);
-            investmentUnits.add(investmentFund.getInvestmentUnit());
-
-            /* Start the thread of the new investment fund. */
-            Thread thread2 = new Thread(investmentFund);
-            thread2.start();
-            investmentFund.setThreadId(thread2.getId());
-        }
     }
 
     @Override
@@ -93,18 +56,6 @@ public class MarketApp extends Application {
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Market Stock Simulator");
-
-        this.stockExchanges = FXCollections.observableArrayList();
-        this.commodityExchanges = FXCollections.observableArrayList();
-        this.currencyExchanges = FXCollections.observableArrayList();
-        this.currencies = FXCollections.observableArrayList();
-        this.commodities = FXCollections.observableArrayList();
-        this.shares = FXCollections.observableArrayList();
-        this.investmentUnits = FXCollections.observableArrayList();
-        this.investmentFunds = FXCollections.observableArrayList();
-        this.investors = FXCollections.observableArrayList();
-        this.companies = FXCollections.observableArrayList();
-        this.indices = FXCollections.observableArrayList();
         
         initRootLayout();
         showStartMenuLayout();
@@ -145,14 +96,48 @@ public class MarketApp extends Application {
 
     public void showSimulationLayout() {
         try {
-            FXMLLoader loader = new FXMLLoader();
+            final FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MarketApp.class.getResource("/fxml/SimulationLayout.fxml"));
-            TabPane layout = loader.load();
+            final TabPane layout = loader.load();
 
             rootLayout.setCenter(layout);
 
-            SimulationLayoutController simulation = loader.getController();
-            simulation.setMarketApp(this);
+            final JsonReader jsonReader = new SimpleJsonReader();
+            simulationBuilder
+                    .withStockExchanges(FXCollections.observableArrayList())
+                    .withCurrencyExchanges(FXCollections.observableArrayList())
+                    .withCommodityExchange(FXCollections.observableArrayList())
+                    .withInvestors(FXCollections.observableArrayList())
+                    .withInvestmentFunds(FXCollections.observableArrayList())
+                    .withCroupier(CroupierBuilder.builder()
+                            .withJsonReader(jsonReader)
+                            .withRandom(new Random())
+                            .build());
+
+            final URL currenciesURL = getClass().getClassLoader().getResource("built-in-names/currencies.json");
+            if (nonNull(currenciesURL)) {
+                simulationBuilder.withCurrencyNames(Arrays.asList(jsonReader.getResource(currenciesURL.getPath())));
+            }
+
+            final URL commodities = getClass().getClassLoader().getResource("built-in-names/commodities.json");
+            if (nonNull(commodities)) {
+                simulationBuilder.withCommodityNames(Arrays.asList(jsonReader.getResource(commodities.getPath())));
+            }
+
+            final URL countriesURL = getClass().getClassLoader().getResource("built-in-names/countries.json");
+            if (nonNull(countriesURL)) {
+                simulationBuilder.withMainCurrency(CurrencyBuilder.builder()
+                        .withName("MarketAppCurrency")
+                        .withRateChanges(new ArrayList<>(Collections.singletonList(0.0)))
+                        .withCountries(Arrays.asList(jsonReader.getResource(countriesURL.getPath())))
+                        .build());
+            }
+
+            simulation = simulationBuilder.build();
+
+            final SimulationLayoutController controller = loader.getController();
+            controller.setSimulation(simulation);
+            controller.setSimulationItems();
         } catch (IOException exception) {
             exception.printStackTrace();
         }
@@ -195,11 +180,23 @@ public class MarketApp extends Application {
             dialogStage.showAndWait();
 
             if (controller.isConfirmClicked()) {
-                this.player = Player.getInstance(
+                Player.getInstance(
                         controller.getFirstName(),
                         controller.getLastName(),
-                        controller.getBudget()
+                        controller.getBudget(),
+                        BriefcaseBuilder.builder()
+                            .withMap(new HashMap<>())
+                            .build()
                 );
+
+                simulationBuilder
+                        .withPlayer(Player.getInstance(
+                                controller.getFirstName(),
+                                controller.getLastName(),
+                                controller.getBudget(),
+                                BriefcaseBuilder.builder()
+                                        .withMap(new HashMap<>())
+                                        .build()));
 
                 return true;
             }
@@ -210,125 +207,22 @@ public class MarketApp extends Application {
         }
     }
 
+    public void shutdownSimulation() {
+        simulation.getStockExchanges().stream()
+                .map(StockExchange::getCompaniesService)
+                .forEach(ExecutorService::shutdownNow);
+        simulation.getEntitiesService().shutdownNow();
+    }
+
     public Stage getPrimaryStage() {
         return primaryStage;
     }
 
-    public Player getPlayer() {
-        return this.player;
+    public Simulation getSimulation() {
+        return simulation;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public ObservableList<StockExchange> getStockExchanges() {
-        return this.stockExchanges;
-    }
-
-    public void setStockExchanges(ArrayList<StockExchange> stockExchanges) {
-        this.stockExchanges = FXCollections.observableArrayList(stockExchanges);
-    }
-
-    public ObservableList<CommodityExchange> getCommodityExchanges() {
-        return this.commodityExchanges;
-    }
-
-    public void setCommodityExchanges(ArrayList<CommodityExchange> commodityExchanges) {
-        this.commodityExchanges = FXCollections.observableArrayList(commodityExchanges);
-    }
-
-    public ObservableList<CurrencyExchange> getCurrencyExchanges() {
-        return this.currencyExchanges;
-    }
-
-    public void setCurrencyExchanges(ArrayList<CurrencyExchange> currencyExchanges) {
-        this.currencyExchanges = FXCollections.observableArrayList(currencyExchanges);
-    }
-
-    public ObservableList<Share> getShares() {
-        return this.shares;
-    }
-
-    public void setShares(ArrayList<Share> shares) {
-        this.shares = FXCollections.observableArrayList(shares);
-    }
-
-    public ObservableList<InvestmentUnit> getInvestmentUnits() {
-        return this.investmentUnits;
-    }
-
-    public void setInvestmentUnits(ArrayList<InvestmentUnit> investmentUnits) {
-        this.investmentUnits = FXCollections.observableArrayList(investmentUnits);
-    }
-
-    public ObservableList<Currency> getCurrencies() {
-        return this.currencies;
-    }
-
-    public void setCurrencies(ArrayList<Currency> currencies) {
-        this.currencies = FXCollections.observableArrayList(currencies);
-    }
-
-    public ObservableList<Commodity> getCommodities() {
-        return this.commodities;
-    }
-
-    public void setCommodities(ArrayList<Commodity> commodities) {
-        this.commodities = FXCollections.observableArrayList(commodities);
-    }
-
-    public ObservableList<InvestmentFund> getInvestmentFunds() {
-        return investmentFunds;
-    }
-
-    public void setInvestmentFunds(ArrayList<InvestmentFund> investmentFunds) {
-        this.investmentFunds = FXCollections.observableArrayList(investmentFunds);
-
-        for (InvestmentFund investmentFund : this.investmentFunds) {
-            Thread thread = new Thread(investmentFund);
-            thread.start();
-            investmentFund.setThreadId(thread.getId());
-        }
-    }
-
-    public ObservableList<Investor> getInvestors() {
-        return investors;
-    }
-
-    public void setInvestors(ArrayList<Investor> investors) {
-        this.investors = FXCollections.observableArrayList(investors);
-
-        for (Investor investor : this.investors) {
-            investor.setMarketApp(this);
-
-            Thread thread = new Thread(investor);
-
-            thread.start();
-            investor.setThreadId(thread.getId());
-        }
-    }
-
-    public ObservableList<Company> getCompanies() {
-        return companies;
-    }
-
-    public void setCompanies(ArrayList<Company> companies) {
-        this.companies = FXCollections.observableArrayList(companies);
-
-        for (Company company : this.companies) {
-            Thread thread = new Thread(company);
-
-            thread.start();
-            company.setThreadId(thread.getId());
-        }
-    }
-
-    public ObservableList<Index> getIndices() {
-        return indices;
-    }
-
-    public void setIndices(ArrayList<Index> indices) {
-        this.indices = FXCollections.observableArrayList(indices);
+    public SimulationBuilder getSimulationBuilder() {
+        return simulationBuilder;
     }
 }

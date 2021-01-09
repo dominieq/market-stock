@@ -1,14 +1,16 @@
 package org.example.marketstock.models.exchange;
 
-import org.example.marketstock.exceptions.AddingObjectException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import com.google.common.base.MoreObjects;
 import org.example.marketstock.models.company.Company;
 import org.example.marketstock.models.index.Index;
+
+import static java.util.Objects.nonNull;
 
 /**
  *
@@ -17,121 +19,82 @@ import org.example.marketstock.models.index.Index;
  */
 public class StockExchange extends Exchange implements Serializable {
 
-    private ArrayList<Index> indices;
-    private ArrayList<Company> companies;
-    private final ArrayList<String> allIndices;
+    private final List<Index> indices;
+    private final List<Company> companies;
+    private final ExecutorService companiesService = Executors.newFixedThreadPool(100);
 
-    @Deprecated
-    public StockExchange() {
-        this.indices = new ArrayList<>();
-        this.allIndices = new ArrayList<>();
-        this.companies = new ArrayList<>();
-    }
+    public StockExchange(final String name,
+                         final String country,
+                         final String city,
+                         final String address,
+                         final String currency,
+                         final double margin,
+                         final List<Index> indices,
+                         final List<Company> companies) {
 
-    public StockExchange(String country, String city, String address, String currency, double margin,
-                         ArrayList<Index> indices, ArrayList<String> allIndices, ArrayList<Company> companies) {
-        super(country, city, address, currency, margin);
+        super(name, country, city, address, currency, margin);
 
-        String name = "Stock exchange in " + city;
-
-        this.setName(name);
         this.indices = indices;
         this.companies = companies;
-        this.allIndices = allIndices;
-
-        LOGGER.info("Stock exchange with name: {}, companies and indices created.", name);
-    }
-
-    @Deprecated
-    public void initialize() {
-        this.drawValues();
-        this.setName("Stock exchange in " + this.getCity());
-        this.initializeAllIndices();
     }
 
     public void updateIndices() {
-        if (!this.indices.isEmpty()) {
-            for (Index index : this.indices) {
-                index.updateCompanies(this.companies);
-            }
+        if (nonNull(indices) && !indices.isEmpty()) {
+            indices.forEach(index -> index.updateIndex(new ArrayList<>(companies)));
         }
     }
-    
-    /**
-     * @return Index in a text form.
-     * @throws AddingObjectException when there are no indices to choose from.
-     */
-    @Deprecated
-    public String drawIndex() throws AddingObjectException {
-        if(allIndices.isEmpty()) {
-            throw new AddingObjectException("Nie ma nazw");
-        } else {
-            Random rand = new Random();
-            int index = rand.nextInt(this.allIndices.size());
 
-            String indexRaw = this.allIndices.get(index);
-            this.removeIndexRaw(indexRaw);
-            return indexRaw;
-        }
-    } 
-
-    @Deprecated
-    private void initializeAllIndices() {
-        String [] array = new String [] {"5 best companies;5;max",
-            "5 worst companies;5;min"};
-
-        this.getAllIndices().addAll(Arrays.asList(array));
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", name)
+                .add("country", country)
+                .add("city", city)
+                .add("address", address)
+                .add("currency", currency)
+                .add("margin", margin)
+                .add("indices", indices)
+                .add("companies", companies)
+                .toString();
     }
 
-    public ArrayList<Company> getCompanies() {
-        return this.companies;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StockExchange)) return false;
+        return super.equals(o);
     }
 
-    public ObservableList<Company> getCompaniesObservableArrayList() {
-        return FXCollections.observableArrayList(this.companies);
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
-    public void setCompanies(ArrayList<Company> companies) {
-        this.companies = companies;
+    public List<Company> getCompanies() {
+        return companies;
     }
 
     public void addCompany(Company company) {
-        this.companies.add(company);
+        companies.add(company);
     }
 
     public void removeCompany(Company company) {
-        this.companies.remove(company);
+        companies.remove(company);
     }
 
-    public ArrayList<Index> getIndices() {
-        return this.indices;
-    }
-
-    public ObservableList<Index> getIndicesObservableArrayList() {
-        return FXCollections.observableArrayList(this.indices);
-    }
-
-    public void setIndices(ArrayList<Index> indices) {
-        this.indices = indices;
+    public List<Index> getIndices() {
+        return indices;
     }
 
     public void addIndex(Index index) {
-        this.indices.add(index);
+        indices.add(index);
     }
 
     public void removeIndex(Index index) {
-        this.indices.remove(index);
+        indices.remove(index);
     }
 
-    public ArrayList<String> getAllIndices() {
-        return this.allIndices;
-    }
-
-    public void addIndexRaw(String indexRaw) {
-        this.allIndices.add(indexRaw);
-    }
-
-    public void removeIndexRaw(String indexRaw) {
-        this.allIndices.remove(indexRaw);
+    public ExecutorService getCompaniesService() {
+        return companiesService;
     }
 }

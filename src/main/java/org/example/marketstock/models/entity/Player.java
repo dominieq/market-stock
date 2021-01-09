@@ -6,33 +6,33 @@ import org.example.marketstock.models.briefcase.Briefcase;
  * @author Dominik Szmyt
  * @since 1.0.0
  */
-public class Player extends Entity {
+public class Player extends AbstractInvestor {
 
     private static Player PLAYER;
 
-    private Player(String firstName, String lastName, double budget) {
-        super(firstName, lastName, budget);
-    }
+    private Player(final String firstName,
+                   final String lastName,
+                   final double budget,
+                   final Briefcase briefcase) {
 
-    private Player(String firstName, String lastName, double budget, Briefcase briefcase) {
         super(firstName, lastName, budget, briefcase);
     }
 
-    public static Player getInstance(String firstName, String lastName, double budget) {
-        if (PLAYER != null) {
-            throw new IllegalStateException("Player already constructed.");
+    public static Player getInstance(String firstName, String lastName, double budget, Briefcase briefcase) {
+        if (PLAYER == null) {
+            PLAYER = new Player(firstName, lastName, budget, briefcase);
         }
 
-        PLAYER = new Player(firstName, lastName, budget);
         return PLAYER;
     }
 
-    public static Player getInstance(String firstName, String lastName, double budget, Briefcase briefcase) {
-        if (PLAYER != null) {
-            throw new IllegalStateException("Player already constructed.");
-        }
+    @Override
+    public String getFirstName() {
+        return firstName;
+    }
 
-        PLAYER = new Player(firstName, lastName, budget, briefcase);
-        return PLAYER;
+    @Override
+    public String getLastName() {
+        return lastName;
     }
 }

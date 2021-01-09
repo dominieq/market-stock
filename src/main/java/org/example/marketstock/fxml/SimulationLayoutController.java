@@ -1,10 +1,12 @@
 package org.example.marketstock.fxml;
 
+import javafx.collections.FXCollections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.marketstock.app.MarketApp;
-import org.example.marketstock.exceptions.*;
-import java.util.Set;
+
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 
 import javafx.beans.property.SimpleStringProperty;
 
@@ -28,6 +30,11 @@ import org.example.marketstock.models.exchange.CommodityExchange;
 import org.example.marketstock.models.exchange.CurrencyExchange;
 import org.example.marketstock.models.exchange.StockExchange;
 import org.example.marketstock.models.index.Index;
+import org.example.marketstock.models.asset.Asset;
+import org.example.marketstock.simulation.Simulation;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 /**
  *
@@ -37,7 +44,7 @@ import org.example.marketstock.models.index.Index;
 public class SimulationLayoutController {
 
     private static final Logger LOGGER = LogManager.getLogger(SimulationLayoutController.class);
-    private MarketApp marketApp;
+    private Simulation simulation;
 
     /* Belongings tab */
     @FXML
@@ -129,9 +136,9 @@ public class SimulationLayoutController {
     @FXML
     private TableColumn<Index, String> indexNameTableColumn;
     @FXML
-    private TableView<Company> indexCompaniesTableView;
+    private TableView<Asset> indexCompaniesTableView;
     @FXML
-    private TableColumn<Company, String> indexCompanyNameTableColumn;
+    private TableColumn<Asset, String> indexCompanyNameTableColumn;
     @FXML
     private Label indexValueLabel;
     @FXML
@@ -235,39 +242,37 @@ public class SimulationLayoutController {
     @FXML
     private Label investmentFundNameLabel;
     @FXML
-    private Label investmentFundFirstNameLabel;
-    @FXML
-    private Label investmentFundLastNameLabel;
-    @FXML
     private Label investmentFundBudgetLabel;
     @FXML
     private Label investmentUnitNumberLabel;
     @FXML
-    private Label investmentUnitCurrentRateLabel;
+    private Label investmentFundCurrentRateLabel;
     @FXML
-    private Label investmentUnitMinRateLabel;
+    private Label investmentFundMinRateLabel;
     @FXML
-    private Label investmentUnitMaxRateLabel;
-    @FXML
-    private Label investmentUnitNameLabel;
+    private Label investmentFundMaxRateLabel;
     @FXML
     private TextField numberOfInvestmentUnitsTextField;
 
-    public void setMarketApp(MarketApp marketApp) {
-        try {
-            this.marketApp = marketApp;
+    public Simulation getSimulation() {
+        return simulation;
+    }
 
-            this.briefcaseAssetsTableView.setItems(marketApp.getPlayer().getBriefcase().getAssetsObservableArrayList());
-            this.stockExchangeTableView.setItems(marketApp.getStockExchanges());
-            this.commodityExchangeTableView.setItems(marketApp.getCommodityExchanges());
-            this.currencyExchangeTableView.setItems(marketApp.getCurrencyExchanges());
-            this.investorTableView.setItems(marketApp.getInvestors());
-            this.investmentFundTableView.setItems(marketApp.getInvestmentFunds());
+    public void setSimulation(final Simulation simulation) {
+        this.simulation = simulation;
+    }
 
-            this.showPlayerDetails(this.marketApp.getPlayer());
-        } catch (NullPointerException exception) {
-            exception.printStackTrace();
+    public void setSimulationItems() {
+        if (isNull(simulation)) {
+            return;
         }
+
+        stockExchangeTableView.setItems(simulation.getStockExchanges());
+        commodityExchangeTableView.setItems(simulation.getCommodityExchanges());
+        currencyExchangeTableView.setItems(simulation.getCurrencyExchanges());
+        investorTableView.setItems(simulation.getInvestors());
+        investmentFundTableView.setItems(simulation.getInvestmentFunds());
+        showPlayerDetails(simulation.getPlayer());
     }
 
     public void showActionWithoutSelection() {
@@ -324,20 +329,21 @@ public class SimulationLayoutController {
         //##########################################//
 
         this.briefcaseAssetsTableView.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> showBriefcaseDetails(newValue, this.marketApp.getPlayer()));
+            (observable, oldValue, newValue) -> showBriefcaseDetails(newValue, simulation.getPlayer()));
 
         this.briefcaseAssetsTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        this.briefcaseAssetNamesTableColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        this.briefcaseAssetNamesTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
 
         this.briefcaseAssetsTableView.setRowFactory(doubleClick -> {
             TableRow<Asset> assetTableRow = new TableRow<>();
 
             assetTableRow.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !assetTableRow.isEmpty()) {
-                    Asset asset = assetTableRow.getItem();
+                    Asset abstractAsset = assetTableRow.getItem();
 
-                    showBriefcaseDetails(asset, this.marketApp.getPlayer());
+                    showBriefcaseDetails(abstractAsset, simulation.getPlayer());
                 }
             });
 
@@ -350,7 +356,8 @@ public class SimulationLayoutController {
         //                                          //
         //##########################################//
 
-        stockExchangeNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        stockExchangeNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
         
         stockExchangeTableView.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue) -> showStockExchange(newValue));
@@ -379,6 +386,9 @@ public class SimulationLayoutController {
         companyTableView.getSelectionModel().selectedItemProperty().addListener(
             (observable, oldValue, newValue) -> showCompany(newValue));
 
+        companyNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
+
         companyTableView.setRowFactory(doubleClick -> {
             TableRow<Company> companyTableRow = new TableRow<>();
 
@@ -399,7 +409,10 @@ public class SimulationLayoutController {
         //##########################################//
 
         indexTableView.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> showIndexDetails(newValue));
+            (observable, oldValue, newValue) -> showIndex(newValue));
+
+        indexNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
 
         indexTableView.setRowFactory(doubleClick -> {
             StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
@@ -409,9 +422,9 @@ public class SimulationLayoutController {
                 if (event.getClickCount() == 2 && (! indexTableRow.isEmpty()) ) {
                     Index index = indexTableRow.getItem();
 
-                    if (stockExchange != null) {
-                        index.updateCompanies(stockExchange.getCompanies());
-                        showIndexDetails(index);
+                    if (nonNull(stockExchange)) {
+                        index.updateIndex(new ArrayList<>(stockExchange.getCompanies()));
+                        showIndex(index);
                     } else {
                         showActionWithoutSelection();
                     }
@@ -428,7 +441,10 @@ public class SimulationLayoutController {
         //##########################################//
 
         indexCompaniesTableView.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> showCompany(newValue));
+            (observable, oldValue, newValue) -> showCompany((Company) newValue));
+
+        indexCompanyNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
 
         //##########################################//
         //                                          //
@@ -436,10 +452,11 @@ public class SimulationLayoutController {
         //                                          //
         //##########################################//
 
-        currencyExchangeNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        currencyExchangeNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
         
         currencyExchangeTableView.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> showCurrencyExchangeDetails(newValue));
+            (observable, oldValue, newValue) -> showCurrencyExchange(newValue));
 
         currencyExchangeTableView.setRowFactory(doubleClick -> {
             TableRow<CurrencyExchange> currencyExchangeTableRow = new TableRow<>();
@@ -448,7 +465,7 @@ public class SimulationLayoutController {
                 if (event.getClickCount() == 2 && (! currencyExchangeTableRow.isEmpty()) ) {
                     CurrencyExchange currencyExchange = currencyExchangeTableRow.getItem();
 
-                    showCurrencyExchangeDetails(currencyExchange);
+                    showCurrencyExchange(currencyExchange);
                 }
             });
 
@@ -462,7 +479,10 @@ public class SimulationLayoutController {
         //##########################################//
 
         currencyTableView.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> showCurrencyDetails(newValue));
+            (observable, oldValue, newValue) -> showCurrency(newValue));
+
+        currencyNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
 
         currencyTableView.setRowFactory(doubleClick -> {
             TableRow<Currency> currencyTableRow = new TableRow<>();
@@ -471,12 +491,15 @@ public class SimulationLayoutController {
                 if (event.getClickCount() == 2 && (! currencyTableRow.isEmpty()) ) {
                     Currency currency = currencyTableRow.getItem();
 
-                    showCurrencyDetails(currency);
+                    showCurrency(currency);
                 }
             });
 
             return currencyTableRow ;
         });
+
+        currencyCountryNameTableView.setCellValueFactory(
+                data -> new SimpleStringProperty(data.getValue()));
 
         //##########################################//
         //                                          //
@@ -484,10 +507,11 @@ public class SimulationLayoutController {
         //                                          //
         //##########################################//
 
-        commodityExchangeNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        commodityExchangeNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
         
         commodityExchangeTableView.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> showCommodityExchangeDetails(newValue));
+            (observable, oldValue, newValue) -> showCommodityExchange(newValue));
 
         commodityExchangeTableView.setRowFactory(doubleClick -> {
             TableRow<CommodityExchange> commodityExchangeTableRow = new TableRow<>();
@@ -496,7 +520,7 @@ public class SimulationLayoutController {
                 if (event.getClickCount() == 2 && (! commodityExchangeTableRow.isEmpty()) ) {
                     CommodityExchange commodityExchange = commodityExchangeTableRow.getItem();
 
-                    showCommodityExchangeDetails(commodityExchange);
+                    showCommodityExchange(commodityExchange);
                 }
             });
 
@@ -510,7 +534,10 @@ public class SimulationLayoutController {
         //##########################################//
 
         commodityTableView.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> showCommodityDetails(newValue));
+            (observable, oldValue, newValue) -> showCommodity(newValue));
+
+        commodityNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
 
         commodityTableView.setRowFactory(doubleClick -> {
             TableRow<Commodity> commodityTableRow = new TableRow<>();
@@ -519,7 +546,7 @@ public class SimulationLayoutController {
                 if (event.getClickCount() == 2 && (! commodityTableRow.isEmpty()) ) {
                     Commodity commodity = commodityTableRow.getItem();
 
-                    showCommodityDetails(commodity);
+                    showCommodity(commodity);
                 }
             });
 
@@ -532,12 +559,14 @@ public class SimulationLayoutController {
         //                                          //
         //##########################################//
 
-        investorFirstNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getFirstNameProperty());
+        investorFirstNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getFirstName()));
 
-        investorLastNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getLastNameProperty());
+        investorLastNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getLastName()));
 
         investorTableView.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> showInvestorDetails(newValue));
+            (observable, oldValue, newValue) -> showInvestor(newValue));
 
         investorTableView.setRowFactory(doubleClick -> {
             TableRow<Investor> investorTableRow = new TableRow<>();
@@ -546,7 +575,7 @@ public class SimulationLayoutController {
                 if (event.getClickCount() == 2 && (! investorTableRow.isEmpty()) ) {
                     Investor investor = investorTableRow.getItem();
 
-                    showInvestorDetails(investor);
+                    showInvestor(investor);
                 }
             });
 
@@ -559,10 +588,11 @@ public class SimulationLayoutController {
         //                                          //
         //##########################################//
 
-        investmentFundNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        investmentFundNameTableColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getName()));
 
         investmentFundTableView.getSelectionModel().selectedItemProperty().addListener(
-            (observable, oldValue, newValue) -> showInvestmentFundDetails(newValue));
+            (observable, oldValue, newValue) -> showInvestmentFund(newValue));
 
         investmentFundTableView.setRowFactory(doubleClick -> {
             TableRow<InvestmentFund> investmentFundTableRow = new TableRow<>();
@@ -571,7 +601,7 @@ public class SimulationLayoutController {
                 if (event.getClickCount() == 2 && (! investmentFundTableRow.isEmpty()) ) {
                     InvestmentFund investmentFund = investmentFundTableRow.getItem();
 
-                    showInvestmentFundDetails(investmentFund);
+                    showInvestmentFund(investmentFund);
                 }
             });
 
@@ -590,15 +620,15 @@ public class SimulationLayoutController {
      * @param asset Asset from player's briefcase.
      * @param player Player from simulation.
      */
-    public void showBriefcaseDetails(Asset asset, Player player) {
-        if(asset != null && player != null){
+    public void showBriefcaseDetails(final Asset asset, final Player player) {
+        if(nonNull(asset) && nonNull(player)){
             briefcaseAssetNameLabel.setText(asset.getName());
             briefcaseAssetCurrentRateLabel.setText(Double.toString(asset.getCurrentRate()));
             briefcaseAssetMinRateLabel.setText(Double.toString(asset.getMinRate()));
             briefcaseAssetMaxRateLabel.setText(Double.toString(asset.getMaxRate()));
 
-            int assetIndex = player.getBriefcase().getAssets().indexOf(asset);
-            int countIndex = player.getBriefcase().getNumbersOfAssets().get(assetIndex);
+            final int assetIndex = player.getBriefcase().getAssets().indexOf(asset);
+            final int countIndex = player.getBriefcase().getNumbers().get(assetIndex);
             briefcaseAssetsNumberLabel.setText(Integer.toString(countIndex));
 
             showAssetLineChart();
@@ -615,29 +645,34 @@ public class SimulationLayoutController {
      * Displays player's characteristics.
      * @param player Player from simulation.
      */
-    public void showPlayerDetails(Player player) {
-        if (player != null) {
-            this.playersFirstNameLabel.setText(player.getFirstName());
-            this.playersLastNameLabel.setText(player.getLastName());
-            this.playersBudgetLabel.setText(Double.toString(player.getBudget()));
+    public void showPlayerDetails(final Player player) {
+        if (nonNull(player)) {
+            playersFirstNameLabel.setText(player.getFirstName());
+            playersLastNameLabel.setText(player.getLastName());
+            playersBudgetLabel.setText(Double.toString(player.getBudget()));
 
-            double summarizedValueOfAssets = 0.0;
-            for(Asset asset : player.getBriefcase().getAssets()) {
-                summarizedValueOfAssets += asset.getCurrentRate();
-            }
-            this.playersAssetsValueLabel.setText(Double.toString(summarizedValueOfAssets));
+            final double summarizedValueOfAssets = player.getBriefcase().stream()
+                    .mapToDouble(tuple -> tuple._1.getCurrentRate() * tuple._2)
+                    .sum();
 
-            int summarizedCountOfAssets = 0;
-            for(Integer count : player.getBriefcase().getNumbersOfAssets()) {
-                summarizedCountOfAssets += count;
-            }
-            this.playersAssetsNumberLabel.setText(Integer.toString(summarizedCountOfAssets));
+            playersAssetsValueLabel.setText(Double.toString(summarizedValueOfAssets));
+
+            final int summarizedCountOfAssets = player.getBriefcase().getNumbers().stream()
+                    .mapToInt(Integer::intValue)
+                    .sum();
+
+            playersAssetsNumberLabel.setText(Integer.toString(summarizedCountOfAssets));
+
+            briefcaseAssetsTableView.setItems(FXCollections.observableArrayList(
+                    simulation.getPlayer().getBriefcase().getAssets()));
         } else {
-            this.playersFirstNameLabel.setText("");
-            this.playersLastNameLabel.setText("");
-            this.playersBudgetLabel.setText("");
-            this.playersAssetsValueLabel.setText("");
-            this.playersAssetsNumberLabel.setText("");
+            playersFirstNameLabel.setText("");
+            playersLastNameLabel.setText("");
+            playersBudgetLabel.setText("");
+            playersAssetsValueLabel.setText("");
+            playersAssetsNumberLabel.setText("");
+
+            briefcaseAssetsTableView.setItems(null);
         }
     }
     
@@ -645,33 +680,15 @@ public class SimulationLayoutController {
      * Allows player to buy a number of asset from their belongings.
      */
     @FXML
-    private synchronized void handleBuyAsset() {
-        Asset asset = briefcaseAssetsTableView.getSelectionModel().getSelectedItem();
-        int number = Integer.parseInt(numberOfAssetsToBuyTextField.getText());
+    private void handleBuyAsset() {
+        final Asset asset = briefcaseAssetsTableView.getSelectionModel().getSelectedItem();
 
-        if(asset != null) {
-            if (asset instanceof Share) {
-                Company company = ((Share) asset).getCompany();
+        if(nonNull(asset)) {
+            final int numberOfAsset = Integer.parseInt(numberOfAssetsToBuyTextField.getText());
+            simulation.buySelectedResource(asset, numberOfAsset, asset.getCurrentRate(), simulation.getPlayer());
 
-                if(company.getNumberOfAssets() - number >= 0) {
-                    this.marketApp.getPlayer().buyAsset(asset, number);
-                } else {
-                    showNotEnoughSharesWarning();
-                }
-            } else if (asset instanceof InvestmentUnit) {
-                InvestmentFund investmentFund =  ((InvestmentUnit) asset).getInvestmentFund();
-
-                if(investmentFund.getNumberOfInvestmentUnits() - number >= 0) {
-                    this.marketApp.getPlayer().buyAsset(asset, number);
-                } else {
-                    showNotEnoughSharesWarning();
-                }
-            } else {
-                this.marketApp.getPlayer().buyAsset(asset, number);
-            }
-
-            this.briefcaseAssetsTableView.setItems(this.marketApp.getPlayer().getBriefcase().getAssetsObservableArrayList());
-            this.showPlayerDetails(this.marketApp.getPlayer());
+            showPlayerDetails(simulation.getPlayer());
+            showUnknownAsset(asset);
             numberOfAssetsToBuyTextField.clear();
         } else {
             showActionWithoutSelection();
@@ -682,42 +699,38 @@ public class SimulationLayoutController {
      * Allows player to sell a number of asset from their briefcase.
      */
     @FXML
-    private synchronized void handleSellAsset() {
-        try {
-            Asset asset = briefcaseAssetsTableView.getSelectionModel().getSelectedItem();
-            int number = Integer.parseInt(numberOfAssetsToSellTextField.getText());
+    private void handleSellAsset() {
+        final Asset asset = briefcaseAssetsTableView.getSelectionModel().getSelectedItem();
 
-            if(asset != null) {
-                if (asset instanceof Share) {
-                    Company company = ((Share) asset).getCompany();
-                    double margin = company.getStock().getMargin();
+        if(nonNull(asset)) {
+            int numberOfAsset = Integer.parseInt(numberOfAssetsToSellTextField.getText());
+            simulation.sellSelectedResource(asset, numberOfAsset, simulation.getPlayer());
 
-                    this.marketApp.getPlayer().sellAsset(asset, number, margin);
-                } else if (asset instanceof InvestmentUnit) {
-                    InvestmentFund investmentFund = ((InvestmentUnit) asset).getInvestmentFund();
-                    double margin = investmentFund.getMargin();
+            showPlayerDetails(simulation.getPlayer());
+            showUnknownAsset(asset);
+            numberOfAssetsToSellTextField.clear();
+        } else {
+            showActionWithoutSelection();
+        }
+    }
 
-                    this.marketApp.getPlayer().sellAsset(asset, number, margin);
-                } else if (asset instanceof Currency) {
-                    CurrencyExchange currencyExchange = ((Currency) asset).getCurrencyExchange();
-                    double margin = currencyExchange.getMargin();
-
-                    this.marketApp.getPlayer().sellAsset(asset, number, margin);
-                } else {
-                    CommodityExchange commodityExchange = ((Commodity) asset).getCommodityExchange();
-                    double margin = commodityExchange.getMargin();
-
-                    this.marketApp.getPlayer().sellAsset(asset, number, margin);
-                }
-
-                this.briefcaseAssetsTableView.setItems(this.marketApp.getPlayer().getBriefcase().getAssetsObservableArrayList());
-                this.showPlayerDetails(this.marketApp.getPlayer());
-                numberOfAssetsToSellTextField.clear();
-            } else {
-                showActionWithoutSelection();
+    private void showUnknownAsset(final Asset asset) {
+        if (asset instanceof Company) {
+            if (Objects.equals(asset, companyTableView.getSelectionModel().getSelectedItem())) {
+                showCompany((Company) asset);
             }
-        } catch (BuyingException error) {
-            showSellingTooMuch();
+        } else if (asset instanceof Commodity) {
+            if (Objects.equals(asset, commodityTableView.getSelectionModel().getSelectedItem())) {
+                showCommodity((Commodity) asset);
+            }
+        } else if (asset instanceof Currency) {
+            if (Objects.equals(asset, currencyTableView.getSelectionModel().getSelectedItem())) {
+                showCurrency((Currency) asset);
+            }
+        } else if (asset instanceof InvestmentFund) {
+            if (Objects.equals(asset, investmentFundTableView.getSelectionModel().getSelectedItem())) {
+                showInvestmentFund((InvestmentFund) asset);
+            }
         }
     }
 
@@ -731,9 +744,8 @@ public class SimulationLayoutController {
      * Shows characteristics of a selected stock exchange.
      * @param stockExchange Stock exchange from simulation.
      */
-    public void showStockExchange(StockExchange stockExchange) {
-        if(stockExchange != null) {
-            /* Set relevant labels to display the characteristics of a selected stock exchange. */
+    public void showStockExchange(final StockExchange stockExchange) {
+        if(nonNull(stockExchange)) {
             stockExchangeNameLabel.setText(stockExchange.getName());
             stockExchangeCountryLabel.setText(stockExchange.getCountry());
             stockExchangeCityLabel.setText(stockExchange.getCity());
@@ -741,15 +753,9 @@ public class SimulationLayoutController {
             stockExchangeCurrencyLabel.setText(stockExchange.getCurrency());
             stockExchangeMarginLabel.setText(Double.toString(stockExchange.getMargin()));
 
-            /* Set companyTableView with companies from selected stock exchange. */
-            companyTableView.setItems(stockExchange.getCompaniesObservableArrayList());
-            companyNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-
-            /* Set indexTableView with indices from selected stock exchange. */
-            indexTableView.setItems(stockExchange.getIndicesObservableArrayList());
-            indexNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+            companyTableView.setItems(FXCollections.observableArrayList(stockExchange.getCompanies()));
+            indexTableView.setItems(FXCollections.observableArrayList(stockExchange.getIndices()));
         } else {
-            /* Set relevant stock exchange labels to none. */
             stockExchangeNameLabel.setText("");
             stockExchangeCountryLabel.setText("");
             stockExchangeCityLabel.setText("");
@@ -757,13 +763,8 @@ public class SimulationLayoutController {
             stockExchangeCurrencyLabel.setText("");
             stockExchangeMarginLabel.setText("");
 
-            /* Set companyTableView to none. */
             companyTableView.setItems(null);
-            companyNameTableColumn.setCellValueFactory(null);
-
-            /* Set indexTableView to none. */
             indexTableView.setItems(null);
-            indexNameTableColumn.setCellValueFactory(null);
         }
     }
     
@@ -772,12 +773,10 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleAddStockExchange() {
-        StockExchange stockExchange = new StockExchange();
-        stockExchange.initialize();
+        final StockExchange stockExchange = simulation.addStockExchange();
+        stockExchangeTableView.getSelectionModel().select(stockExchange);
 
-        this.marketApp.getStockExchanges().add(stockExchange);
-        LOGGER.trace("{} added to simulation: \t{}.",
-                new Object[]{stockExchange.getName(), this.marketApp.getStockExchanges().toArray()});
+        LOGGER.info("[ADDED]: {}", stockExchange);
     }
     
     /**
@@ -785,39 +784,13 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleRemoveStockExchange() {
-        StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
+        final StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
 
-        if(stockExchange != null) {
-            /* Remove stock exchange from simulation. */
-            this.marketApp.getStockExchanges().remove(stockExchange);
-            LOGGER.trace("{} removed from simulation: \t{}.",
-                    new Object[]{stockExchange.getName(), this.marketApp.getStockExchanges().toArray()});
+        if(nonNull(stockExchange)) {
+            simulation.removeStockExchange(stockExchange);
+            stockExchangeTableView.getSelectionModel().select(null);
 
-            /* Remove all companies that belonged to a selected stock exchange from simulation. */
-            for (Company company : stockExchange.getCompanies()) {
-                company.terminate();
-                this.marketApp.getCompanies().remove(company);
-                // TODO remove company's share from simulation
-            }
-            LOGGER.trace("Removed companies that belonged to {} from simulation: \t{}",
-                    new Object[]{stockExchange.getName(), this.marketApp.getCompanies().toArray()});
-
-            /* Set companyTableView to none. */
-            this.companyTableView.setItems(null);
-            this.companyNameTableColumn.setCellValueFactory(null);
-            this.showCompany(null);
-
-            /* Remove all indices that belonged to a selected stock exchange from simulation. */
-            for (Index index : stockExchange.getIndices()) {
-                this.marketApp.getIndices().remove(index);
-            }
-            LOGGER.trace("Removed indices that belonged to {} from simulation: \t{}",
-                    new Object[]{stockExchange.getName(), this.marketApp.getCompanies().toArray()});
-
-            /* Set indexTableView to none. */
-            this.indexTableView.setItems(null);
-            this.indexNameTableColumn.setCellValueFactory(null);
-            this.showIndexDetails(null);
+            LOGGER.info("[REMOVED]: {}", stockExchange);
         } else {
             showActionWithoutSelection();
         }
@@ -827,8 +800,8 @@ public class SimulationLayoutController {
      * Shows characteristics of a selected company.
      * @param company Company that belonged to certain stock exchange.
      */
-    public void showCompany(Company company) {
-        if(company != null) {
+    public void showCompany(final Company company) {
+        if(nonNull(company)) {
             companyNameLabel.setText(company.getName());
             companyDateOfFirstValuationLabel.setText(company.getDateOfFirstValuation());
             companyOpeningQuotationLabel.setText(Double.toString(company.getOpeningQuotation()));
@@ -864,42 +837,18 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleAddCompany() {
-        StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
+        final StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
 
-        if(stockExchange != null) {
-            Company company = new Company();
-            company.initialize(stockExchange);
+        if(nonNull(stockExchange)) {
+            final Company company = simulation.addCompany(stockExchange);
+            companyTableView.getSelectionModel().select(company);
 
-            /* Add new company to a selected stock exchange. */
-            stockExchange.addCompany(company);
-            LOGGER.trace("Company {} added to {}: \t{}",
-                    new Object[]{company.getName(), stockExchange.getName(), stockExchange.getCompanies().toArray()});
+            showStockExchange(stockExchange);
+            showIndex(indexTableView.getSelectionModel().getSelectedItem());
 
-            /* Add new company to simulation. */
-            this.marketApp.getCompanies().add(company);
-            LOGGER.trace("Company {} added to simulation: \t{}.",
-                    new Object[]{company.getName(), this.marketApp.getCompanies().toArray()});
+            simulation.issueEntities();
 
-            /* Add new company's share to simulation. */
-            this.marketApp.getShares().add(company.getShare());
-            LOGGER.trace("{}'s share added to simulation: \t{}.",
-                    new Object[]{company.getName(), this.marketApp.getShares().toArray()});
-
-            /* Set companyTableView with companies from selected stock exchange. */
-            companyTableView.setItems(stockExchange.getCompaniesObservableArrayList());
-            companyNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-
-            /* Start company's thread. */
-            Thread thread = new Thread(company);
-            thread.start();
-            company.setThreadId(thread.getId());
-
-            /* Update selected stock exchange indices. */
-            stockExchange.updateIndices();
-            this.showIndexDetails(this.indexTableView.getSelectionModel().getSelectedItem());
-
-            /* Refresh simulation to add possible new investors and investment funds. */
-            this.marketApp.addEntities();
+            LOGGER.info("[ADDED]: {}", company);
         } else {
             showAddingWithoutMarkingWarning();
         }
@@ -910,41 +859,21 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleRemoveCompany() {
-        StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
-        Company company = companyTableView.getSelectionModel().getSelectedItem();
+        final StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
+        final Company company = companyTableView.getSelectionModel().getSelectedItem();
 
-        if(stockExchange != null && company != null) {
-            try {
-                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        if(nonNull(stockExchange) && nonNull(company)) {
+            simulation.removeCompany(company, stockExchange);
+            companyTableView.getSelectionModel().select(null);
 
-                for (Thread thread : threadSet) {
-                    if (thread.getId() == company.getThreadId()) {
-                        company.terminate();
-                        thread.join();
-                    }
-                }
-            } catch (InterruptedException exception) {
-                exception.printStackTrace();
-            } finally {
-                stockExchange.removeCompany(company);
-                LOGGER.trace("Company {} removed from {}: \t{}.",
-                        new Object[]{company.getName(), stockExchange.getName(), stockExchange.getCompanies().toArray()});
+            showStockExchange(stockExchange);
+            showIndex(indexTableView.getSelectionModel().getSelectedItem());
 
-                this.marketApp.getCompanies().remove(company);
-                LOGGER.trace("Company {} removed from simulation: \t{}.",
-                        new Object[]{company.getName(), this.marketApp.getCompanies().toArray()});
-
-                this.marketApp.getShares().remove(company.getShare());
-                LOGGER.trace("{}'s share removed from simulation: \t{}.",
-                        new Object[]{company.getName(), this.marketApp.getShares().toArray()});
-
-                companyTableView.getItems().remove(company);
-            }
+            LOGGER.info("[REMOVED]: {}", company);
         } else {
             showActionWithoutSelection();
         }
     }
-
 
     /**
      * Allows a player to buy a number of shares from a selected company. Number is taken from a TextField.
@@ -952,17 +881,16 @@ public class SimulationLayoutController {
      */
     @FXML
     private synchronized void handleBuyShares() {
-        Company company = companyTableView.getSelectionModel().getSelectedItem();
+        final Company company = companyTableView.getSelectionModel().getSelectedItem();
 
-        if (company != null) {
-            Share share = company.getShare();
-            int number = Integer.parseInt(numberOfSharesTextField.getText());
+        if (nonNull(company)) {
+            final double originalRate = company.getCurrentRate();
+            final int numberOfAsset = Integer.parseInt(numberOfSharesTextField.getText());
+            simulation.buySelectedResource(company, numberOfAsset, originalRate, simulation.getPlayer());
 
-            this.marketApp.getPlayer().buyAsset(share, number);
-
-            this.briefcaseAssetsTableView.setItems(this.marketApp.getPlayer().getBriefcase().getAssetsObservableArrayList());
-            this.showPlayerDetails(this.marketApp.getPlayer());
-
+            showPlayerDetails(simulation.getPlayer());
+            showCompany(company);
+            showIndex(indexTableView.getSelectionModel().getSelectedItem());
             numberOfSharesTextField.clear();
         } else {
             showActionWithoutSelection();
@@ -973,18 +901,17 @@ public class SimulationLayoutController {
      * Displays a selected Index characteristics.
      * @param index Index that belonged to certain stock exchange.
      */
-    public void showIndexDetails(Index index) {
-        if(index != null) {
+    public void showIndex(final Index index) {
+        if(nonNull(index)) {
             indexValueLabel.setText(Double.toString(index.getValue()));
             indexNameLabel.setText(index.getName());
             
-            indexCompaniesTableView.setItems(index.getCompanyObservableArrayList());
-            indexCompanyNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+            indexCompaniesTableView.setItems(FXCollections.observableArrayList(index.getContent()));
         } else {
             indexValueLabel.setText("");
             indexNameLabel.setText("");
+
             indexCompaniesTableView.setItems(null);
-            indexCompanyNameTableColumn.setCellValueFactory(null);
         }
     }
 
@@ -993,36 +920,23 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleAddIndex() {
-        StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
+        final StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
 
-        try {
-            if (stockExchange != null) {
-                String name = stockExchange.drawIndex();
-                String [] parts = name.split(";");
+        if (nonNull(stockExchange)) {
+            final Optional<Index> optionalIndex = simulation.addIndex(stockExchange);
 
-                Index index = new Index(parts[0], Integer.parseInt(parts[1]), parts[2], stockExchange.getCompanies());
+            if (optionalIndex.isPresent()) {
+                final Index index = optionalIndex.get();
+                indexTableView.getSelectionModel().select(index);
 
-                /* Add new index to a selected stock exchange. */
-                stockExchange.addIndex(index);
-                LOGGER.trace("Index {} added to {}:\t{}.",
-                        new Object[]{index.getName(), stockExchange.toString(), stockExchange.getIndices().toArray()});
+                showStockExchange(stockExchange);
 
-                /* Update new index to check if it should display companies from it's stock exchange. */
-                stockExchange.updateIndices();
-
-                /* Add new index to simulation. */
-                this.marketApp.getIndices().add(index);
-                LOGGER.trace("Index {} added to simulation:\t{}.",
-                        new Object[]{index.getName(), this.marketApp.getIndices().toArray()});
-
-                /* Set indexTableView with indices from a selected stock exchange. */
-                this.indexTableView.setItems(stockExchange.getIndicesObservableArrayList());
-                this.indexNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+                LOGGER.info("[ADDED]: {}", index);
             } else {
-                showAddingWithoutMarkingWarning();
+                showAddingObjectWarning();
             }
-        } catch (AddingObjectException addingObjectException) {
-            addingObjectException.printStackTrace();
+        } else {
+            showAddingWithoutMarkingWarning();
         }
     }
 
@@ -1031,19 +945,16 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleRemoveIndex() {
-        StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
-        Index index = indexTableView.getSelectionModel().getSelectedItem();
+        final StockExchange stockExchange = stockExchangeTableView.getSelectionModel().getSelectedItem();
+        final Index index = indexTableView.getSelectionModel().getSelectedItem();
 
-        if(stockExchange != null && index != null) {
-            String name = index.getName();
-            int maxSize = index.getMaxSize();
-            String accessCondition = index.getAccessCondition();
+        if(nonNull(stockExchange) && nonNull(index)) {
+            simulation.removeIndex(index, stockExchange);
+            indexTableView.getSelectionModel().select(null);
 
-            stockExchange.addIndexRaw(name + ";" + maxSize + ";" + accessCondition);
-            stockExchange.removeIndex(index);
+            showStockExchange(stockExchange);
 
-            this.marketApp.getIndices().remove(index);
-            indexTableView.getItems().remove(index);
+            LOGGER.info("[REMOVED]: {}", index);
         } else {
             showActionWithoutSelection();
         }
@@ -1059,17 +970,16 @@ public class SimulationLayoutController {
      * Displays a selected currency exchange characteristics.
      * @param currencyExchange CurrencyExchange from simulation.
      */
-    public void showCurrencyExchangeDetails(CurrencyExchange currencyExchange) {
-        if(currencyExchange != null) {
+    public void showCurrencyExchange(final CurrencyExchange currencyExchange) {
+        if (nonNull(currencyExchange)) {
             currencyExchangeNameLabel.setText(currencyExchange.getName());
             currencyExchangeCountryLabel.setText(currencyExchange.getCountry());
             currencyExchangeCityLabel.setText(currencyExchange.getCity());
             currencyExchangeAddressLabel.setText(currencyExchange.getAddress());
             currencyExchangeCurrencyLabel.setText(currencyExchange.getCurrency());
             currencyExchangeMarginLabel.setText(Double.toString(currencyExchange.getMargin()));
-            
-            currencyTableView.setItems(currencyExchange.getCurrenciesObservableArrayList());
-            currencyNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+
+            currencyTableView.setItems(FXCollections.observableArrayList(currencyExchange.getCurrencies()));
         } else {
             currencyExchangeNameLabel.setText("");
             currencyExchangeCountryLabel.setText("");
@@ -1077,9 +987,8 @@ public class SimulationLayoutController {
             currencyExchangeAddressLabel.setText("");
             currencyExchangeCurrencyLabel.setText("");
             currencyExchangeMarginLabel.setText("");
-            
+
             currencyTableView.setItems(null);
-            currencyNameTableColumn.setCellValueFactory(null);
         }
     }
 
@@ -1088,12 +997,10 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleAddCurrencyExchange() {
-        CurrencyExchange currencyExchange = new CurrencyExchange();
-        currencyExchange.initialize();
+        final CurrencyExchange currencyExchange = simulation.addCurrencyExchange();
+        currencyExchangeTableView.getSelectionModel().select(currencyExchange);
 
-        this.marketApp.getCurrencyExchanges().add(currencyExchange);
-        LOGGER.trace("{} added to simulation:\t{}.",
-                new Object[]{currencyExchange.getName(), this.marketApp.getCurrencyExchanges().toArray()});
+        LOGGER.trace("[ADDED]: {}", currencyExchange);
     }
 
     /**
@@ -1101,24 +1008,15 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleRemoveCurrencyExchange() {
-        CurrencyExchange currencyExchange = this.currencyExchangeTableView.getSelectionModel().getSelectedItem();
+        final CurrencyExchange currencyExchange = currencyExchangeTableView.getSelectionModel().getSelectedItem();
 
-        if(currencyExchange != null) {
-            /* Remove a selected currency exchange from simulation. */
-            this.marketApp.getCurrencyExchanges().remove(currencyExchange);
-            LOGGER.trace("{} removed from simulation:\t{}.",
-                    new Object[]{currencyExchange.getName(), this.marketApp.getCurrencyExchanges().toArray()});
+        if (nonNull(currencyExchange)) {
+            simulation.removeCurrencyExchange(currencyExchange);
+            currencyExchangeTableView.getSelectionModel().select(null);
 
-            /* Remove currencies that belonged to a selected currency exchange from simulation. */
-            for (Currency currency : currencyExchange.getCurrencies()) {
-                this.marketApp.getCurrencies().remove(currency);
-            }
-            LOGGER.trace("{} removed from simulation:\t{}.",
-                    new Object[]{currencyExchange.getCurrencies().toArray(), this.marketApp.getCurrencies().toArray()});
-
-            // TODO remove currencies that belonged to a selected currency exchange from all briefcases.
+            LOGGER.trace("[REMOVED]: {}", currencyExchange);
         } else {
-            this.showAddingWithoutMarkingWarning();
+            showAddingWithoutMarkingWarning();
         }
     }
 
@@ -1126,29 +1024,23 @@ public class SimulationLayoutController {
      * Displays a selected currency characteristics.
      * @param currency Currency from a selected currency exchange.
      */
-    public void showCurrencyDetails(Currency currency) {
-        if (currency != null) {
-            /* Set relevant labels with a selected currency characteristics. */
-            this.currencyNameLabel.setText(currency.getName());
-            this.currencyCurrentRateLabel.setText(Double.toString(currency.getCurrentRate()));
-            this.currencyMinRateLabel.setText(Double.toString(currency.getMinRate()));
-            this.currencyMaxRateLabel.setText(Double.toString(currency.getMaxRate()));
-            this.currencyUberCurrencyLabel.setText(currency.getComparisonCurrency().getName());
+    public void showCurrency(final Currency currency) {
+        if (nonNull(currency)) {
+            currencyNameLabel.setText(currency.getName());
+            currencyCurrentRateLabel.setText(Double.toString(currency.getCurrentRate()));
+            currencyMinRateLabel.setText(Double.toString(currency.getMinRate()));
+            currencyMaxRateLabel.setText(Double.toString(currency.getMaxRate()));
+            currencyUberCurrencyLabel.setText(currency.getComparisonCurrency().getName());
 
-            /* Set currencyCountriesTableView with countries from currency. */
-            this.currencyCountriesTableView.setItems(currency.getCountriesObservableArrayList());
-            this.currencyCountryNameTableView.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+            currencyCountriesTableView.setItems(FXCollections.observableArrayList(currency.getCountries()));
         } else {
-            /* Set relevant labels to none. */
-            this.currencyNameLabel.setText("");
-            this.currencyCurrentRateLabel.setText("");
-            this.currencyMinRateLabel.setText("");
-            this.currencyMaxRateLabel.setText("");
-            this.currencyUberCurrencyLabel.setText("");
+            currencyNameLabel.setText("");
+            currencyCurrentRateLabel.setText("");
+            currencyMinRateLabel.setText("");
+            currencyMaxRateLabel.setText("");
+            currencyUberCurrencyLabel.setText("");
 
-            /* Set currencyCountriesTableView to none. */
-            this.currencyCountriesTableView.setItems(null);
-            this.currencyCountryNameTableView.setCellValueFactory(null);
+            currencyCountriesTableView.setItems(null);
         }
     }
 
@@ -1157,32 +1049,22 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleAddCurrency() {
-        CurrencyExchange currencyExchange = currencyExchangeTableView.getSelectionModel().getSelectedItem();
+        final CurrencyExchange currencyExchange = currencyExchangeTableView.getSelectionModel().getSelectedItem();
 
-        if(currencyExchange != null) {
-            try {
-                Currency currency = new Currency();
-                currency.initializeValues(currencyExchange.drawCurrency(), currencyExchange);
+        if(nonNull(currencyExchange)) {
+            final Optional<Currency> optionalCurrency = simulation.addCurrency(currencyExchange);
 
-                /* Add new currency to a selected currency exchange. */
-                currencyExchange.addCurrency(currency);
-                LOGGER.trace("{} added to {}:\t{}.",
-                        new Object[]{currency.getName(), currencyExchange.getName(), currencyExchange.getCurrencies().toArray()});
+            if (optionalCurrency.isPresent()) {
+                final Currency currency = optionalCurrency.get();
+                currencyTableView.getSelectionModel().select(currency);
 
-                /* Add new currency to simulation. */
-                this.marketApp.getCurrencies().add(currency);
-                LOGGER.trace("{} added to simulation:\t{}.",
-                        new Object[]{currency.getName(), this.marketApp.getCurrencies().toArray()});
+                showCurrencyExchange(currencyExchange);
 
-                /* Add currency to currencyTableView and display it's characteristics. */
-                this.currencyTableView.getItems().add(currency);
-                this.currencyTableView.getSelectionModel().select(currency);
-                this.showCurrencyDetails(currency);
+                simulation.issueEntities();
 
-                /* Refresh simulation to add possible new investors and investment funds. */
-                this.marketApp.addEntities();
-            } catch (AddingObjectException addingObjectException) {
-                this.showAddingObjectWarning();
+                LOGGER.info("[ADDED]: {}", currency);
+            } else {
+                showAddingObjectWarning();
             }
         } else {
             showAddingWithoutMarkingWarning();
@@ -1194,29 +1076,16 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleRemoveCurrency() {
-        CurrencyExchange currencyExchange = currencyExchangeTableView.getSelectionModel().getSelectedItem();
-        Currency currency = currencyTableView.getSelectionModel().getSelectedItem();
+        final CurrencyExchange currencyExchange = currencyExchangeTableView.getSelectionModel().getSelectedItem();
+        final Currency currency = currencyTableView.getSelectionModel().getSelectedItem();
 
-        if(currencyExchange != null && currency != null) {
-            String name = currency.getName();
+        if(nonNull(currencyExchange) && nonNull(currency)) {
+            simulation.removeCurrency(currency, currencyExchange);
+            currencyTableView.getSelectionModel().select(null);
 
-            /* Remove a selected currency from a selected currency exchange. */
-            currencyExchange.addCurrencyRaw(name);
-            currencyExchange.removeCurrency(currency);
-            LOGGER.trace("{} removed from {}:\t{}.",
-                    new Object[]{currency.getName(), currencyExchange.getName(), currencyExchange.getCurrencies().toArray()});
+            showCurrencyExchange(currencyExchange);
 
-            /* Remove a selected currency from simulation. */
-            this.marketApp.getCurrencies().remove(currency);
-            LOGGER.trace("{} removed from simulation:\t{}.",
-                    new Object[]{currency.getName(), this.marketApp.getCurrencies().toArray()});
-
-            // TODO remove currency from all briefcases.
-
-            /* Stop displaying a selected currency. */
-            this.currencyTableView.getItems().remove(currency);
-            this.currencyTableView.getSelectionModel().clearSelection();
-            this.showCurrencyDetails(null);
+            LOGGER.info("[REMOVED]: {}", currency);
         } else {
             showActionWithoutSelection();
         }
@@ -1227,16 +1096,16 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleBuyCurrency() {
-        Currency currency = currencyTableView.getSelectionModel().getSelectedItem();
+        final Currency currency = currencyTableView.getSelectionModel().getSelectedItem();
 
-        if(currency != null) {
-            int number = Integer.parseInt(numberOfCurrenciesTextField.getText());
-            this.marketApp.getPlayer().buyAsset(currency, number);
+        if(nonNull(currency)) {
+            final double originalRate = currency.getCurrentRate();
+            final int numberOfAsset = Integer.parseInt(numberOfCurrenciesTextField.getText());
+            simulation.buySelectedResource(currency, numberOfAsset, originalRate, simulation.getPlayer());
 
-            this.briefcaseAssetsTableView.setItems(this.marketApp.getPlayer().getBriefcase().getAssetsObservableArrayList());
-            this.showPlayerDetails(this.marketApp.getPlayer());
-
-            this.numberOfCurrenciesTextField.clear();
+            showPlayerDetails(simulation.getPlayer());
+            showCurrency(currency);
+            numberOfCurrenciesTextField.clear();
         } else {
             showActionWithoutSelection();
         }
@@ -1252,17 +1121,16 @@ public class SimulationLayoutController {
      * Displays a selected commodity exchange characteristics.
      * @param commodityExchange CommodityExchange from simulation.
      */
-    public void showCommodityExchangeDetails(CommodityExchange commodityExchange) {
-        if(commodityExchange != null) {
+    public void showCommodityExchange(final CommodityExchange commodityExchange) {
+        if(nonNull(commodityExchange)) {
             commodityExchangeNameLabel.setText(commodityExchange.getName());
             commodityExchangeCountryLabel.setText(commodityExchange.getCountry());
             commodityExchangeCityLabel.setText(commodityExchange.getCity());
             commodityExchangeAddressLabel.setText(commodityExchange.getAddress());
             commodityExchangeCurrencyLabel.setText(commodityExchange.getCurrency());
             commodityExchangeMarginLabel.setText(Double.toString(commodityExchange.getMargin()));
-            
-            commodityTableView.setItems(commodityExchange.getCommoditiesObservableArrayList());
-            commodityNameTableColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+
+            commodityTableView.setItems(FXCollections.observableArrayList(commodityExchange.getCommodities()));
         } else {
             commodityExchangeNameLabel.setText("");
             commodityExchangeCountryLabel.setText("");
@@ -1270,9 +1138,8 @@ public class SimulationLayoutController {
             commodityExchangeAddressLabel.setText("");
             commodityExchangeCurrencyLabel.setText("");
             commodityExchangeMarginLabel.setText("");
-            
+
             commodityTableView.setItems(null);
-            commodityNameTableColumn.setCellValueFactory(null);
         }
     }
 
@@ -1281,13 +1148,10 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleAddCommodityExchange() {
-        CommodityExchange commodityExchange = new CommodityExchange();
-        commodityExchange.initialize();
+        final CommodityExchange commodityExchange = simulation.addCommodityExchange();
+        commodityExchangeTableView.getSelectionModel().select(commodityExchange);
 
-        /* Add new commodity exchange to simulation. */
-        this.marketApp.getCommodityExchanges().add(commodityExchange);
-        LOGGER.trace("{} added to simulation:\t{}.",
-                new Object[]{commodityExchange.getName(), this.marketApp.getCommodityExchanges().toArray()});
+        LOGGER.info("[ADDED]: {}", commodityExchange);
     }
 
     /**
@@ -1295,26 +1159,13 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleRemoveCommodityExchange() {
-        CommodityExchange commodityExchange = this.commodityExchangeTableView.getSelectionModel().getSelectedItem();
+        final CommodityExchange commodityExchange = commodityExchangeTableView.getSelectionModel().getSelectedItem();
 
-        if(commodityExchange != null) {
-            /* Remove a selected commodity exchange from simulation. */
-            this.marketApp.getCommodityExchanges().remove(commodityExchange);
-            LOGGER.trace("{} removed from simulation:\t{}.",
-                    new Object[]{commodityExchange.getName(), this.marketApp.getCommodityExchanges().toArray()});
+        if(nonNull(commodityExchange)) {
+            simulation.removeCommodityExchange(commodityExchange);
+            commodityExchangeTableView.getSelectionModel().select(null);
 
-            /* Remove commodities that belonged to a selected commodity exchange. */
-            for (Commodity commodity : commodityExchange.getCommodities()) {
-                this.marketApp.getCommodities().remove(commodity);
-            }
-            LOGGER.trace("{} removed from simulation:\t{}.",
-                    new Object[]{commodityExchange.getCommodities().toArray(), this.marketApp.getCommodities().toArray()});
-
-            // TODO remove commodities that belonged to a selected commodity exchange from all briefcases.
-
-            /* Set commodityTableView to none. */
-            this.commodityTableView.setItems(null);
-            this.commodityNameTableColumn.setCellValueFactory(null);
+            LOGGER.info("[REMOVED]: {}", commodityExchange);
         } else {
             showActionWithoutSelection();
         }
@@ -1324,8 +1175,8 @@ public class SimulationLayoutController {
      * Displays a selected commodity characteristics.
      * @param commodity Commodity from a selected commodity exchange.
      */
-    public void showCommodityDetails(Commodity commodity) {
-        if(commodity != null) {
+    public void showCommodity(Commodity commodity) {
+        if(nonNull(commodity)) {
             commodityNameLabel.setText(commodity.getName());
             commodityCurrentRateLabel.setText(Double.toString(commodity.getCurrentRate()));
             commodityMinRateLabel.setText(Double.toString(commodity.getMinRate()));
@@ -1347,32 +1198,22 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleAddCommodity() {
-        CommodityExchange commodityExchange = commodityExchangeTableView.getSelectionModel().getSelectedItem();
+        final CommodityExchange commodityExchange = commodityExchangeTableView.getSelectionModel().getSelectedItem();
 
-        if(commodityExchange != null) {
-            try {
-                Commodity commodity = new Commodity();
-                commodity.initialize(commodityExchange.drawResource(), commodityExchange);
+        if(nonNull(commodityExchange)) {
+            Optional<Commodity> optionalCommodity = simulation.addCommodity(commodityExchange);
 
-                /* Add new commodity to a selected commodity exchange. */
-                commodityExchange.addResource(commodity);
-                LOGGER.trace("{} added to {}:\t{}.",
-                        new Object[]{commodity.getName(), commodityExchange.getName(), commodityExchange.getCommodities().toArray()});
+            if (optionalCommodity.isPresent()) {
+                final Commodity commodity = optionalCommodity.get();
+                commodityTableView.getSelectionModel().select(commodity);
 
-                /* Add new commodity to simulation. */
-                this.marketApp.getCommodities().add(commodity);
-                LOGGER.trace("{} added to simulation:\t{}",
-                        new Object[]{commodity.getName(), this.marketApp.getCommodities().toArray()});
+                showCommodityExchange(commodityExchange);
 
-                /* Add commodity to commodityTableView and display its characteristics. */
-                this.commodityTableView.getItems().add(commodity);
-                this.commodityTableView.getSelectionModel().select(commodity);
-                this.showCommodityDetails(commodity);
+                simulation.issueEntities();
 
-                /* Refresh simulation to add possible new investors and investment funds. */
-                this.marketApp.addEntities();
-            } catch (AddingObjectException addingObjectException) {
-                this.showAddingObjectWarning();
+                LOGGER.info("[ADDED]: {}", commodity);
+            } else {
+                showAddingObjectWarning();
             }
         } else {
             showAddingWithoutMarkingWarning();
@@ -1384,28 +1225,16 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleRemoveCommodity() {
-        CommodityExchange commodityExchange = commodityExchangeTableView.getSelectionModel().getSelectedItem();
-        Commodity commodity = commodityTableView.getSelectionModel().getSelectedItem();
+        final CommodityExchange commodityExchange = commodityExchangeTableView.getSelectionModel().getSelectedItem();
+        final Commodity commodity = commodityTableView.getSelectionModel().getSelectedItem();
 
-        if(commodityExchange != null && commodity != null) {
-            String name = commodity.getName();
-            String unitOfTrading = commodity.getUnitOfTrading();
+        if (nonNull(commodityExchange) && nonNull(commodity)) {
+            simulation.removeCommodity(commodity, commodityExchange);
+            commodityTableView.getSelectionModel().select(null);
 
-            /* Remove commodity from a selected commodity exchange. */
-            commodityExchange.addResourceRaw(name+ ";" + unitOfTrading);
-            commodityExchange.removeResource(commodity);
-            LOGGER.trace("{} removed from {}:\t{}.",
-                    new Object[]{commodity.getName(), commodityExchange.getName(), commodityExchange.getCommodities().toArray()});
+            showCommodityExchange(commodityExchange);
 
-            /* Remove commodity from simulation. */
-            this.marketApp.getCommodities().remove(commodity);
-            LOGGER.trace("{} removed from simulation:\t{}.",
-                    new Object[]{commodity.getName(), this.marketApp.getCommodities().toArray()});
-
-            /* Stop displaying selected commodity. */
-            this.commodityTableView.getItems().remove(commodity);
-            this.commodityTableView.getSelectionModel().clearSelection();
-            this.showCommodityDetails(null);
+            LOGGER.info("[REMOVED]: {}", commodity);
         } else {
             showActionWithoutSelection();
         }
@@ -1416,16 +1245,16 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleBuyCommodity() {
-        Commodity commodity = commodityTableView.getSelectionModel().getSelectedItem();
+        final Commodity commodity = commodityTableView.getSelectionModel().getSelectedItem();
 
-        if (commodity != null) {
-            int number = Integer.parseInt(numberOfCommoditiesTextField.getText());
-            this.marketApp.getPlayer().buyAsset(commodity, number);
+        if (nonNull(commodity)) {
+            final double originalRate = commodity.getCurrentRate();
+            final int numberOfAsset = Integer.parseInt(numberOfCommoditiesTextField.getText());
+            simulation.buySelectedResource(commodity, numberOfAsset, originalRate, simulation.getPlayer());
 
-            this.briefcaseAssetsTableView.setItems(this.marketApp.getPlayer().getBriefcase().getAssetsObservableArrayList());
-            this.showPlayerDetails(this.marketApp.getPlayer());
-
-            this.numberOfCommoditiesTextField.clear();
+            showPlayerDetails(simulation.getPlayer());
+            showCommodity(commodity);
+            numberOfCommoditiesTextField.clear();
         } else {
             showActionWithoutSelection();
         }
@@ -1442,33 +1271,15 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleRemoveInvestor() {
-        Investor investor = investorTableView.getSelectionModel().getSelectedItem();
-        if(investor != null) {
-            try {
-                Set<Thread> tempThreadSet = Thread.getAllStackTraces().keySet();
+        final Investor investor = investorTableView.getSelectionModel().getSelectedItem();
 
-                for(Thread thread : tempThreadSet) {
-                    if(thread.getId() == investor.getThreadId()) {
-                        investor.terminate();
-                        thread.join();
-                    }
-                }
+        if(nonNull(investor)) {
+            simulation.removeInvestor(investor);
+            investorTableView.getSelectionModel().select(null);
 
-                LOGGER.warn("Investor's thread {} was successfully stopped.", investor.getThreadId());
-            } catch (InterruptedException exception) {
-                LOGGER.warn("Investor's thread {} couldn't be stopped.", investor.getThreadId());
-                LOGGER.error(exception.getMessage(), exception);
-            } finally {
-                this.marketApp.getInvestors().remove(investor);
-                investorTableView.getItems().remove(investor);
-
-                LOGGER.info("Investor {} {} was removed from simulation.",
-                        new Object[]{investor.getFirstName(), investor.getFirstName()});
-            }
+            LOGGER.info("[REMOVED]: {}", investor);
         } else {
             showActionWithoutSelection();
-
-            LOGGER.warn("No investor was selected.");
         }
     }
     
@@ -1476,17 +1287,18 @@ public class SimulationLayoutController {
      * Displays a selected investor characteristics.
      * @param investor Investor from a simulation.
      */
-    private void showInvestorDetails(Investor investor) {
-        if(investor != null) {
+    private void showInvestor(final Investor investor) {
+        if(nonNull(investor)) {
             investorFirstNameLabel.setText(investor.getFirstName());
             investorLastNameLabel.setText(investor.getLastName());
             investorPESELLabel.setText(investor.getPESEL());
             investorBudgetLabel.setText(Double.toString(investor.getBudget()));
 
-            double summarizedValueOfAssets = 0.0;
-            for(Asset asset : investor.getBriefcase().getAssets()) {
-                summarizedValueOfAssets += asset.getCurrentRate();
-            }
+            final double summarizedValueOfAssets = investor.getBriefcase().getAssets()
+                    .stream()
+                    .map(Asset::getCurrentRate)
+                    .mapToDouble(x -> x)
+                    .sum();
             investorAssetsValueLabel.setText(Double.toString(summarizedValueOfAssets));
         } else {
             investorFirstNameLabel.setText("");
@@ -1502,36 +1314,15 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleRemoveInvestmentFund() {
-        InvestmentFund investmentFund = investmentFundTableView.getSelectionModel().getSelectedItem();
+        final InvestmentFund investmentFund = investmentFundTableView.getSelectionModel().getSelectedItem();
 
-        if(investmentFund != null) {
-            try {
-                Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        if(nonNull(investmentFund)) {
+            simulation.removeInvestmentFund(investmentFund);
+            investmentFundTableView.getSelectionModel().select(null);
 
-                for (Thread thread : threadSet) {
-                    if(thread.getId() == investmentFund.getThreadId()) {
-                        investmentFund.terminate();
-                        thread.join();
-                    }
-                }
-
-                LOGGER.warn("Investment fund's thread {} was successfully stopped.", investmentFund.getThreadId());
-            } catch (InterruptedException exception) {
-                LOGGER.warn("Investment fund's thread {} couldn't be stopped.", investmentFund.getThreadId());
-                LOGGER.error(exception.getMessage(), exception);
-            } finally {
-                InvestmentUnit investmentUnit = investmentFund.getInvestmentUnit();
-
-                this.marketApp.getInvestmentUnits().remove(investmentUnit);
-                this.marketApp.getInvestmentFunds().remove(investmentFund);
-                investmentFundTableView.getItems().remove(investmentFund);
-
-                LOGGER.info("Investment fund {} was removed from simulation.", investmentFund.getName());
-            }
+            LOGGER.info("[REMOVED]: {}", investmentFund);
         } else {
             showActionWithoutSelection();
-
-            LOGGER.warn("No investment fund was selected.");
         }
     } 
     
@@ -1539,31 +1330,21 @@ public class SimulationLayoutController {
      * Shows a selected investment fund characteristics.
      * @param investmentFund InvestmentFund from a simulation
      */
-    private void showInvestmentFundDetails(InvestmentFund investmentFund) {
-        if(investmentFund != null) {
-            investmentFundFirstNameLabel.setText(investmentFund.getFirstName());
-            investmentFundLastNameLabel.setText(investmentFund.getLastName());
+    private void showInvestmentFund(final InvestmentFund investmentFund) {
+        if(nonNull(investmentFund)) {
             investmentFundNameLabel.setText(investmentFund.getName());
+            investmentFundCurrentRateLabel.setText(Double.toString(investmentFund.getCurrentRate()));
+            investmentFundMinRateLabel.setText(Double.toString(investmentFund.getMinRate()));
+            investmentFundMaxRateLabel.setText(Double.toString(investmentFund.getMaxRate()));
             investmentFundBudgetLabel.setText(Double.toString(investmentFund.getBudget()));
-            investmentUnitNumberLabel.setText(Integer.toString(investmentFund.getNumberOfInvestmentUnits()));
-
-            InvestmentUnit investmentUnit = investmentFund.getInvestmentUnit();
-
-            investmentUnitCurrentRateLabel.setText(Double.toString(investmentUnit.getCurrentRate()));
-            investmentUnitMinRateLabel.setText(Double.toString(investmentUnit.getMinRate()));
-            investmentUnitMaxRateLabel.setText(Double.toString(investmentUnit.getMaxRate()));
-            investmentUnitNameLabel.setText(investmentUnit.getName());
+            investmentUnitNumberLabel.setText(Integer.toString(investmentFund.getNumberOfAssets()));
         } else {
-            investmentFundFirstNameLabel.setText("");
-            investmentFundLastNameLabel.setText("");
             investmentFundNameLabel.setText("");
+            investmentFundCurrentRateLabel.setText("");
+            investmentFundMinRateLabel.setText("");
+            investmentFundMaxRateLabel.setText("");
             investmentFundBudgetLabel.setText("");
             investmentUnitNumberLabel.setText("");
-
-            investmentUnitCurrentRateLabel.setText("");
-            investmentUnitMinRateLabel.setText("");
-            investmentUnitMaxRateLabel.setText("");
-            investmentUnitNameLabel.setText("");
         }
     }
     
@@ -1572,18 +1353,15 @@ public class SimulationLayoutController {
      */
     @FXML
     private void handleBuyInvestmentUnits() {
-        InvestmentFund investmentFund = investmentFundTableView.getSelectionModel().getSelectedItem();
+        final InvestmentFund investmentFund = investmentFundTableView.getSelectionModel().getSelectedItem();
 
-        if(investmentFund != null) {
-            InvestmentUnit investmentUnit = investmentFund.getInvestmentUnit();
-            int number =  Integer.parseInt(numberOfInvestmentUnitsTextField.getText());
+        if(nonNull(investmentFund)) {
+            final double originalRate = investmentFund.getCurrentRate();
+            final int numberOfAsset =  Integer.parseInt(numberOfInvestmentUnitsTextField.getText());
+            simulation.buySelectedResource(investmentFund, numberOfAsset, originalRate, simulation.getPlayer());
 
-            this.marketApp.getPlayer().buyAsset(investmentUnit, number);
-
-            this.briefcaseAssetsTableView.setItems(this.marketApp.getPlayer().getBriefcase().getAssetsObservableArrayList());
-            this.showPlayerDetails(this.marketApp.getPlayer());
-
-            investmentFund.setNumberOfInvestmentUnits(investmentFund.getNumberOfInvestmentUnits() - number);
+            showPlayerDetails(simulation.getPlayer());
+            showInvestmentFund(investmentFund);
             numberOfInvestmentUnitsTextField.clear();
         } else {
             showActionWithoutSelection();
@@ -1597,39 +1375,39 @@ public class SimulationLayoutController {
            assetLineChart.getXAxis().setAutoRanging(true);
            assetLineChart.getYAxis().setAutoRanging(true);
            
-           if(briefcaseAssetsTableView.getSelectionModel().getSelectedItems().size() < 2) {
-                Asset asset = briefcaseAssetsTableView.getSelectionModel().getSelectedItem();
+           if (briefcaseAssetsTableView.getSelectionModel().getSelectedItems().size() < 2) {
+                Asset abstractAsset = briefcaseAssetsTableView.getSelectionModel().getSelectedItem();
 
                 xAxisTime = new NumberAxis(0,1,1);
                 xAxisTime.setLabel("Time");
 
-                yAxisValue = new NumberAxis(asset.getMinRate(), asset.getMaxRate(),10);
+                yAxisValue = new NumberAxis(abstractAsset.getMinRate(), abstractAsset.getMaxRate(),10);
                 yAxisValue.setLabel("Value");
 
-                XYChart.Series<Integer, Double> series = new XYChart.Series<>();
+                final XYChart.Series<Integer, Double> series = new XYChart.Series<>();
                 int iterator = 0;
-                for (double rate : asset.getRateChangeArrayList()) {
+                for (double rate : abstractAsset.getRateChanges()) {
                     series.getData().add(new XYChart.Data<>(iterator, rate));
                     iterator++;
                 }
 
-                series.setName(asset.getName());
+                series.setName(abstractAsset.getName());
                 assetLineChart.getData().add(series);
            } else {
-               for (Asset asset : briefcaseAssetsTableView.getSelectionModel().getSelectedItems()) {
+               for (final Asset abstractAsset : briefcaseAssetsTableView.getSelectionModel().getSelectedItems()) {
                    xAxisTime =  new NumberAxis(0, 1, 1);
                    yAxisValue = new NumberAxis(-100, 100, 0);
 
-                   XYChart.Series<Integer, Double> series = new XYChart.Series<>();
+                   final XYChart.Series<Integer, Double> series = new XYChart.Series<>();
                    int iterator = 0;
-                   for (double rate : asset.getRateChangeArrayList()) {
-                       double ratio = rate / asset.getRateChangeArrayList().get(0);
+                   for (double rate : abstractAsset.getRateChanges()) {
+                       double ratio = rate / abstractAsset.getRateChanges().get(0);
 
                        series.getData().add(new XYChart.Data<>(iterator, ratio));
                        iterator++;
                    }
 
-                   series.setName(asset.getName());
+                   series.setName(abstractAsset.getName());
                    assetLineChart.getData().add(series);
                }
            }

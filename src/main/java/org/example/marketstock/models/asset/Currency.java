@@ -1,116 +1,100 @@
 package org.example.marketstock.models.asset;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.example.marketstock.models.exchange.CurrencyExchange;
+import java.util.List;
+
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 /**
  *
  * @author Dominik Szmyt
  * @since 1.0.0
  */
-public class Currency extends Asset implements Serializable {
+public class Currency extends AbstractAsset implements Serializable {
     
-    private Currency comparisonCurrency;
-    private ArrayList<String> countriesArrayList;
-    private CurrencyExchange currencyExchange;
+    private final Currency comparisonCurrency;
+    private final List<String> countries;
 
-    @Deprecated
-    public Currency() {
-       this.countriesArrayList = new ArrayList<>();
-       this.comparisonCurrency = null;
+    public Currency(final String name,
+                    final double currentRate,
+                    final double minRate,
+                    final double maxRate,
+                    final double exchangeMargin,
+                    final List<Double> rateChangeArrayList,
+                    final Currency comparisonCurrency,
+                    final List<String> countries) {
+
+        super(name, currentRate, minRate, maxRate, exchangeMargin, rateChangeArrayList);
+
+        this.comparisonCurrency = comparisonCurrency;
+        this.countries = countries;
     }
 
-    @Deprecated
-    public void initializeValues(String name, CurrencyExchange currencyExchange) {
-        Random rand = new Random ();
-        double value = (double) rand.nextInt(10) + rand.nextDouble();
-        
-        this.setName(name);
-        this.setCurrentRate(value);
-        this.setMaxRate(0.0);
-        this.setMinRate(0.0);
-        this.addRate(value);
-        this.comparisonCurrency = new Currency();
-        this.initializeUberCurrency();
-        this.initializeCountriesArrayList();
-        this.setCurrencyExchange(currencyExchange);
-        this.setExchangeMargin(currencyExchange.getMargin());
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", name)
+                .add("currentRate", currentRate)
+                .add("minRate", minRate)
+                .add("maxRate", maxRate)
+                .add("rateChanges", rateChanges)
+                .add("margin", margin)
+                .add("countries", countries)
+                .add("comparisonCurrency", comparisonCurrency)
+                .toString();
     }
 
-    @Deprecated
-    public void initializeUberCurrency() {
-        this.getComparisonCurrency().setName("Denar");
-        this.getComparisonCurrency().setCurrentRate(1.0);
-        this.getComparisonCurrency().setMaxRate(1.0);
-        this.getComparisonCurrency().setMinRate(1.0);
-        this.getComparisonCurrency().setComparisonCurrency(null);
-
-        String [] countries = new String[] {"Zasiedmiogórogród","Redania",
-            "Rivia","Kaedwen","Temeria","Lyria","Dekuuna","Noveria","Tuchanka",
-            "Irune","Palaven","Rannoch","Thessia","Irune","Elysium","Feros","Tatooine",
-            "Coruscant","Naboo","Endor"};
-
-        this.getComparisonCurrency().getCountriesArrayList().addAll(Arrays.asList(countries));
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Currency)) return false;
+        if (!super.equals(o)) return false;
+        Currency currency = (Currency) o;
+        return Objects.equal(comparisonCurrency, currency.comparisonCurrency) &&
+                Objects.equal(countries, currency.countries);
     }
 
-    @Deprecated
-    public void initializeCountriesArrayList() {
-        Random rand = new Random();
-        String [] countries = new String[] {"Zasiedmiogórogród","Redania",
-            "Rivia","Kaedwen","Temeria","Lyria","Dekuuna","Noveria","Tuchanka",
-            "Irune","Palaven","Rannoch","Thessia","Irune","Elysium","Feros","Tatooine",
-            "Coruscant","Naboo","Endor"};
-
-        ArrayList<String> allCountries = new ArrayList<>(Arrays.asList(countries));
-        int number = rand.nextInt(allCountries.size()) + 1;
-        int indeks;
-             
-        for (int i = 0; i < number; i++) {
-            indeks = rand.nextInt(allCountries.size());
-
-            this.addCountry(allCountries.get(indeks));
-            allCountries.remove(indeks);
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(super.hashCode(), comparisonCurrency, countries);
     }
 
-    public ArrayList<String> getCountriesArrayList() {
-        return this.countriesArrayList;
+    @Override
+    public String getName() {
+        return name;
     }
 
-    public ObservableList<String> getCountriesObservableArrayList() {
-        return FXCollections.observableArrayList(this.countriesArrayList);
+    @Override
+    public double getCurrentRate() {
+        return currentRate;
     }
 
-    public void setCountriesArrayList(ArrayList<String> countriesArrayList) {
-        this.countriesArrayList = countriesArrayList;
+    @Override
+    public double getMinRate() {
+        return minRate;
     }
 
-    public void addCountry(String country) {
-        this.countriesArrayList.add(country);
+    @Override
+    public double getMaxRate() {
+        return maxRate;
     }
 
-    public void removeCountry(String country) {
-        this.countriesArrayList.remove(country);
+    @Override
+    public double getMargin() {
+        return margin;
+    }
+
+    @Override
+    public List<Double> getRateChanges() {
+        return rateChanges;
+    }
+
+    public List<String> getCountries() {
+        return this.countries;
     }
 
     public Currency getComparisonCurrency() {
         return this.comparisonCurrency;
-    }
-
-    public void setComparisonCurrency(Currency currency) {
-        this.comparisonCurrency = currency;
-    }
-
-    public CurrencyExchange getCurrencyExchange() {
-        return currencyExchange;
-    }
-
-    public void setCurrencyExchange(CurrencyExchange currencyExchange) {
-        this.currencyExchange = currencyExchange;
     }
 }
