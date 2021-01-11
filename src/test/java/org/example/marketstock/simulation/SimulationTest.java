@@ -422,6 +422,8 @@ public class SimulationTest {
                 .contains(initialCurrentRate, atIndex(0))
                 .contains(newCurrentRate, atIndex(1));
         assertThat(company.getNumberOfAssets()).isEqualTo(initialNumberOfAssets - 1);
+        assertThat(company.getTurnover()).isEqualTo(initialCurrentRate);
+        assertThat(company.getVolume()).isOne();
         assertThat(index.getValue()).isEqualTo(newCurrentRate);
         assertThat(player.getBriefcase().getMap()).containsAllEntriesOf(map);
         assertThat(player.getBudget()).isEqualTo(initialBudget - initialCurrentRate);
@@ -462,11 +464,18 @@ public class SimulationTest {
         final double actualNumberOfAsset = subject.buySelectedResource(commodity, numberOfAsset, startRate, investor);
 
         // then
+        final double expectedRate = finalRate + finalRate * 0.05;
         final int expectedNumberOfAsset = (int) Math.floor((numberOfAsset * startRate) / finalRate);
 
         assertThat(actualNumberOfAsset).isEqualTo(expectedNumberOfAsset);
         assertThat(investor.getBudget()).isEqualTo(budget - (expectedNumberOfAsset * finalRate));
         assertThat(investor.getBriefcase().contains(commodity, expectedNumberOfAsset)).isTrue();
+        assertThat(commodity.getCurrentRate()).isEqualTo(expectedRate);
+        assertThat(commodity.getMinRate()).isIn(startRate, finalRate, expectedRate);
+        assertThat(commodity.getMaxRate()).isIn(startRate, finalRate, expectedRate);
+        assertThat(commodity.getRateChanges())
+                .hasSize(3)
+                .containsExactly(startRate, finalRate, expectedRate);
     }
 
     @ParameterizedTest
@@ -479,6 +488,7 @@ public class SimulationTest {
                                                                                  final double startRate,
                                                                                  final double finalRate) {
 
+        // given
         final Investor investor = InvestorBuilder.builder()
                 .withFirstName("John")
                 .withLastName("Broke")
@@ -504,6 +514,12 @@ public class SimulationTest {
         assertThat(actualNumberOfAsset).isZero();
         assertThat(investor.getBudget()).isEqualTo(budget);
         assertThat(investor.getBriefcase().isEmpty()).isTrue();
+        assertThat(commodity.getCurrentRate()).isEqualTo(finalRate);
+        assertThat(commodity.getMinRate()).isIn(startRate, finalRate);
+        assertThat(commodity.getMaxRate()).isIn(startRate, finalRate);
+        assertThat(commodity.getRateChanges())
+                .hasSize(2)
+                .containsExactly(startRate, finalRate);
     }
 
     @Test
@@ -624,6 +640,8 @@ public class SimulationTest {
                 .contains(rateAfterPurchase, atIndex(1))
                 .contains(newCurrentRate, atIndex(2));
         assertThat(company.getNumberOfAssets()).isEqualTo(numberOfAssetsAfterPurchase + 1);
+        assertThat(company.getTurnover()).isEqualTo(company.getRateChanges().get(0) * 2 + rateAfterPurchase);
+        assertThat(company.getVolume()).isEqualTo(3);
         assertThat(index.getValue()).isEqualTo(newCurrentRate);
         assertThat(player.getBriefcase().getMap()).containsAllEntriesOf(map);
         assertThat(player.getBudget()).isEqualTo(budgetAfterPurchase + newCurrentRateMinusMargin);
