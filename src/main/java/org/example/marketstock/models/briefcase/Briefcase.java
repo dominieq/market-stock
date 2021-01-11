@@ -30,8 +30,8 @@ public class Briefcase implements Serializable {
      * @param asset - {@link Asset} from {@link Briefcase} or a new {@link Asset}.
      * @param number - Count of asset.
      */
-    public void addOrIncrease(Asset asset, Integer number) {
-        if (map.containsKey(asset)) {
+    public void addOrIncrease(final Asset asset, final Integer number) {
+        if (contains(asset)) {
             final int initial = map.get(asset);
             final int sum = initial + number;
 
@@ -49,8 +49,8 @@ public class Briefcase implements Serializable {
      * @param number - Count of asset.
      * @return Number of successfully removed assets
      */
-    public int decreaseOrRemove(Asset asset, Integer number) {
-        if (map.containsKey(asset)) {
+    public int decreaseOrRemove(final Asset asset, final Integer number) {
+        if (contains(asset)) {
             final int initial = map.get(asset);
             final int difference = initial - number;
 
@@ -69,7 +69,7 @@ public class Briefcase implements Serializable {
         return 0;
     }
 
-    public boolean contains(Asset asset) {
+    public boolean contains(final Asset asset) {
         return map.containsKey(asset);
     }
 
@@ -90,7 +90,7 @@ public class Briefcase implements Serializable {
         return new ArrayList<>(map.values());
     }
 
-    public int getCount(Asset asset) {
+    public int getCount(final Asset asset) {
         return map.getOrDefault(asset, 0);
     }
 

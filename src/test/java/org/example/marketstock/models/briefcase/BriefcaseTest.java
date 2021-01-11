@@ -1,5 +1,6 @@
 package org.example.marketstock.models.briefcase;
 
+import io.vavr.Tuple2;
 import org.example.marketstock.models.asset.Asset;
 import org.example.marketstock.models.asset.Commodity;
 import org.example.marketstock.models.asset.Currency;
@@ -13,8 +14,11 @@ import org.example.marketstock.models.entity.builder.InvestmentFundBuilder;
 import org.example.marketstock.simulation.builder.SimulationBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -136,6 +140,154 @@ public class BriefcaseTest {
 
         // then
         assertThat(subject.getMap()).isEmpty();
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1, 1, 100, 100, true",
+            "2, 1, 100, 100, false",
+            "1, 1, 200, 100, false",
+            "2, 1, 200, 100, false"
+    })
+    public void should_correctly_asses_that_briefcase_contains_asset(final int actualIndex,
+                                                                     final int expectedIndex,
+                                                                     final int actualNumber,
+                                                                     final int expectedNumber,
+                                                                     final boolean expectedResult) {
+
+        // given
+        final Map<Asset, Integer> map = new LinkedHashMap<>();
+        map.put(getTestCommodityBuilder(actualIndex).build(), actualNumber);
+
+        subject = BriefcaseBuilder.builder().withMap(map).build();
+
+        // when
+        final boolean actualResult = subject.contains(getTestCommodityBuilder(expectedIndex).build(), expectedNumber);
+
+        // then
+        assertThat(actualResult).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void should_create_valid_stream() {
+
+        // given
+        final Map<Asset, Integer> map = new LinkedHashMap<>();
+        map.put(getTestCommodityBuilder(1).build(), 100);
+
+        subject = BriefcaseBuilder.builder().withMap(map).build();
+
+        // when
+        final List<Tuple2<Asset, Integer>> actual = subject.stream()
+                .collect(Collectors.toList());
+
+        // then
+        final List<Tuple2<Asset, Integer>> expected = map.entrySet().stream()
+                .map(entry -> new Tuple2<>(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        assertThat(actual).hasSameElementsAs(expected);
+    }
+
+    @Test
+    public void should_return_list_of_assets() {
+
+        // given
+        final Map<Asset, Integer> map = new LinkedHashMap<>();
+        map.put(getTestCommodityBuilder(1).build(), 100);
+
+        subject = BriefcaseBuilder.builder().withMap(map).build();
+
+        // when
+        final List<Asset> actual = subject.getAssets();
+
+        // then
+        final List<Asset> expected = new ArrayList<>(map.keySet());
+
+        assertThat(actual).hasSameElementsAs(expected);
+    }
+
+    @Test
+    public void should_return_list_of_numbers() {
+
+        // given
+        final Map<Asset, Integer> map = new LinkedHashMap<>();
+        map.put(getTestCommodityBuilder(1).build(), 100);
+
+        subject = BriefcaseBuilder.builder().withMap(map).build();
+
+        // when
+        final List<Integer> actual = subject.getNumbers();
+
+        // then
+        final List<Integer> expected = new ArrayList<>(map.values());
+
+        assertThat(actual).hasSameElementsAs(expected);
+    }
+
+    @Test
+    public void should_get_count_of_asset() {
+
+        // given
+        final Asset asset = getTestCommodityBuilder(1).build();
+
+        final Map<Asset, Integer> map = new LinkedHashMap<>();
+        map.put(asset, 100);
+
+        subject = BriefcaseBuilder.builder().withMap(map).build();
+
+        // when
+        final int count = subject.getCount(asset);
+
+        // then
+        assertThat(count).isEqualTo(map.get(asset));
+    }
+
+    @Test
+    public void should_get_zero_when_asset_not_present() {
+
+        // given
+        final Asset asset = getTestCommodityBuilder(1).build();
+
+        // when
+        final int count = subject.getCount(asset);
+
+        // then
+        assertThat(count).isZero();
+    }
+
+    @Test
+    public void should_correctly_asses_that_briefcase_is_empty() {
+
+        // given
+        final Map<Asset, Integer> map = new LinkedHashMap<>();
+        subject = BriefcaseBuilder.builder().withMap(map).build();
+
+        // when
+        final boolean actual = subject.isEmpty();
+
+        // then
+        assertThat(actual).isEqualTo(map.isEmpty());
+    }
+
+    @Test
+    public void should_remove_asset_entirely() {
+
+        // given
+        final Asset asset = getTestCommodityBuilder(1).build();
+        final int numberOfAsset = 100;
+
+        final Map<Asset, Integer> map = new LinkedHashMap<>();
+        map.put(asset, numberOfAsset);
+
+        subject = BriefcaseBuilder.builder().withMap(map).build();
+
+        // when
+        final int actual = subject.removeEntirely(asset);
+
+        // then
+        assertThat(actual).isEqualTo(numberOfAsset);
+        assertThat(subject.contains(asset)).isFalse();
     }
 
     private CommodityBuilder getTestCommodityBuilder(int index) {
