@@ -85,11 +85,29 @@ public class Simulation {
         final double currentRate = asset.getCurrentRate();
         int finalNumber = number;
 
+        // If asset's rate has changed between choosing an asset and buying it,
+        // count how many asset can be purchased with current rate.
         if (Double.compare(currentRate, originalRate) != 0) {
             final double originalPrice = number * originalRate;
             finalNumber = (int) Math.floor(originalPrice / currentRate);
 
             if (finalNumber == 0) return finalNumber;
+            else if (finalNumber < 0) {
+                // FIXME should throw exception because unacceptable
+                return 0;
+            }
+        }
+
+        // If available number has changed between choosing an asset and buying it,
+        // assign new possible number to final number of asset.
+        if (asset instanceof Countable && number > ((Countable) asset).getNumberOfAssets()) {
+            finalNumber = ((Countable) asset).getNumberOfAssets();
+
+            if (finalNumber == 0) return finalNumber;
+            else if (finalNumber < 0) {
+                // FIXME should throw exception because unacceptable
+                return 0;
+            }
         }
 
         final double price = currentRate * finalNumber;
@@ -135,48 +153,49 @@ public class Simulation {
     public synchronized Optional<Tuple3<Asset, Integer, Double>> chooseAssetToBuy(final Entity entity) {
         final List<Asset> assets = getAvailableAssets();
 
-        if (entity instanceof Asset) {
-            assets.remove(entity);
+        // Entity shouldn't buy itself so let's remove any possible entities that are assets as well.
+        if (entity instanceof Asset) assets.remove(entity);
+
+        if (assets.isEmpty()) return Optional.empty();
+
+        final Asset chosenAsset = assets.stream()
+                .min((asset1, asset2) -> {
+                    if (asset1.getCurrentRate() == asset2.getCurrentRate()) {
+                        return 0;
+                    }
+
+                    return asset1.getCurrentRate() > asset2.getCurrentRate() ? 1 : -1;
+                }).get();
+
+        int possibleNumber = (int) Math.floor(entity.getBudget() / chosenAsset.getCurrentRate());
+
+        // Entity shouldn't buy more than it's currently available
+        if (chosenAsset instanceof Countable && possibleNumber > ((Countable) chosenAsset).getNumberOfAssets()) {
+            possibleNumber = ((Countable) chosenAsset).getNumberOfAssets();
         }
 
-        if (assets.isEmpty()) {
-            return Optional.empty();
-        }
+        final int chosenNumber = possibleNumber > 0 ? croupier.getRandom().nextInt(possibleNumber) + 1 : 0;
 
-        final Optional<Asset> optionalAsset = assets.stream().min((asset1, asset2) -> {
-            if (asset1.getCurrentRate() == asset2.getCurrentRate()) {
-                return 0;
-            }
-
-            return asset1.getCurrentRate() > asset2.getCurrentRate() ? 1 : -1;
-        });
-
-        final Asset chosenAsset = optionalAsset.get();
-        final int numberOfAsset = (int) Math.floor(entity.getBudget() / chosenAsset.getCurrentRate());
-
-        return numberOfAsset > 0 ?
-                Optional.of(new Tuple3<>(chosenAsset, numberOfAsset, chosenAsset.getCurrentRate())) : Optional.empty();
+        return chosenNumber > 0 ?
+                Optional.of(new Tuple3<>(chosenAsset, chosenNumber, chosenAsset.getCurrentRate())) : Optional.empty();
     }
 
     public synchronized Optional<Tuple3<Asset, Integer, Double>> chooseAssetToSell(final Entity entity) {
         final List<Asset> assets = entity.getBriefcase().getAssets();
 
-        if (assets.isEmpty()) {
-            return Optional.empty();
-        }
+        if (assets.isEmpty()) return Optional.empty();
 
-        final Optional<Asset> optionalAsset = assets.stream().max((asset1, asset2) -> {
-            if (asset1.getCurrentRate() == asset2.getCurrentRate()) {
-                return 0;
-            }
+        final Asset chosenAsset = assets.stream()
+                .max((asset1, asset2) -> {
+                    if (asset1.getCurrentRate() == asset2.getCurrentRate()) {
+                        return 0;
+                    }
 
-            return asset1.getCurrentRate() > asset2.getCurrentRate() ? 1 : -1;
-        });
+                    return asset1.getCurrentRate() > asset2.getCurrentRate() ? 1 : -1;
+                }).get();
 
-        final Random random = new Random();
-        final Asset chosenAsset = optionalAsset.get();
-        final int numberOfAsset = entity.getBriefcase().getCount(chosenAsset);
-        return Optional.of(new Tuple3<>(chosenAsset, random.nextInt(numberOfAsset) + 1, chosenAsset.getCurrentRate()));
+        final int chosenNumber = croupier.getRandom().nextInt(entity.getBriefcase().getCount(chosenAsset)) + 1;
+        return Optional.of(new Tuple3<>(chosenAsset, chosenNumber, chosenAsset.getCurrentRate()));
     }
 
     public synchronized void issueEntities() {

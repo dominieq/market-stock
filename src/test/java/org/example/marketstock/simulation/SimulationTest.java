@@ -9,6 +9,7 @@ import org.example.marketstock.models.asset.builder.CommodityBuilder;
 import org.example.marketstock.models.asset.builder.CurrencyBuilder;
 import org.example.marketstock.models.briefcase.builder.BriefcaseBuilder;
 import org.example.marketstock.models.company.Company;
+import org.example.marketstock.models.company.builder.CompanyBuilder;
 import org.example.marketstock.models.entity.Entity;
 import org.example.marketstock.models.entity.InvestmentFund;
 import org.example.marketstock.models.entity.Investor;
@@ -33,8 +34,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.atIndex;
+import static org.assertj.core.api.Assertions.*;
 
 public class SimulationTest {
 
@@ -507,6 +507,84 @@ public class SimulationTest {
     }
 
     @Test
+    public void should_buy_different_number_because_number_has_changed_before_purchase() {
+
+
+        final Investor investor = InvestorBuilder.builder()
+                .withFirstName("Jordan")
+                .withLastName("Belfort")
+                .withBudget(1000)
+                .withBriefcase(BriefcaseBuilder.emptyBriefcase().build())
+                .build();
+
+        final Company company = CompanyBuilder.builder()
+                .withName("Stratton Oakmont")
+                .withCurrentRate(5D)
+                .withMinRate(5D)
+                .withMaxRate(5D)
+                .withNumberOfAssets(20)
+                .withRateChanges(new ArrayList<>(Collections.singletonList(5D)))
+                .build();
+
+        // when
+        company.decreaseNumberOfAssets(15);
+        final int actualNumberOfAsset = subject.buySelectedResource(company, 10, 5D, investor);
+
+        // then
+        final double expectedRate = 5D + 5D * 0.05;
+
+        assertThat(actualNumberOfAsset).isEqualTo(5);
+        assertThat(investor.getBriefcase().contains(company)).isTrue();
+        assertThat(investor.getBriefcase().getCount(company)).isEqualTo(5);
+        assertThat(investor.getBudget()).isEqualTo(975D);
+        assertThat(company.getNumberOfAssets()).isZero();
+        assertThat(company.getCurrentRate()).isEqualTo(expectedRate);
+        assertThat(company.getMinRate()).isEqualTo(5D);
+        assertThat(company.getMaxRate()).isEqualTo(expectedRate);
+        assertThat(company.getRateChanges())
+                .hasSize(2)
+                .contains(5D, atIndex(0))
+                .contains(expectedRate, atIndex(1));
+        assertThat(company.getTurnover()).isEqualTo(25D);
+        assertThat(company.getVolume()).isEqualTo(5);
+    }
+
+    @Test
+    public void should_not_buy_asset_because_not_enough_asset() {
+
+        final Investor investor = InvestorBuilder.builder()
+                .withFirstName("Joshua")
+                .withLastName("Bad Luck")
+                .withBudget(1000D)
+                .withBriefcase(BriefcaseBuilder.emptyBriefcase().build())
+                .build();
+
+        final Company company = CompanyBuilder.builder()
+                .withName("Stratton Oakmont")
+                .withCurrentRate(5D)
+                .withMinRate(5D)
+                .withMaxRate(5D)
+                .withNumberOfAssets(20)
+                .withRateChanges(new ArrayList<>(Collections.singletonList(5D)))
+                .build();
+
+        company.decreaseNumberOfAssets(company.getNumberOfAssets());
+        final int actualNumberOfAsset = subject.buySelectedResource(company, 10, 5D, investor);
+
+        assertThat(actualNumberOfAsset).isZero();
+        assertThat(investor.getBriefcase().contains(company)).isFalse();
+        assertThat(investor.getBudget()).isEqualTo(1000D);
+        assertThat(company.getCurrentRate()).isEqualTo(5D);
+        assertThat(company.getMinRate()).isEqualTo(5D);
+        assertThat(company.getMaxRate()).isEqualTo(5D);
+        assertThat(company.getRateChanges())
+                .hasSize(1)
+                .contains(5D, atIndex(0));
+        assertThat(company.getTurnover()).isZero();
+        assertThat(company.getVolume()).isZero();
+    }
+
+    @Test
     public void should_sell_selected_asset_with_company_implementation() throws InterruptedException {
 
         // given
@@ -581,7 +659,7 @@ public class SimulationTest {
         final Asset expectedAsset = commodityExchange.getCommodities().get(0);
 
         assertThat(actual._1).isEqualTo(expectedAsset);
-        assertThat(actual._2).isEqualTo((int) (Math.floor(investor.getBudget() / expectedAsset.getCurrentRate())));
+        assertThat(actual._2).isBetween(1, (int) (Math.floor(investor.getBudget() / expectedAsset.getCurrentRate())));
         assertThat(actual._3).isEqualTo(expectedAsset.getCurrentRate());
     }
 
@@ -615,8 +693,55 @@ public class SimulationTest {
         final Tuple3<Asset, Integer, Double> actual = selection.get();
 
         assertThat(actual._1).isEqualTo(expectedAsset);
-        assertThat(actual._2).isEqualTo((int) (Math.floor(investmentFund.getBudget()) / expectedAsset.getCurrentRate()));
+        assertThat(actual._2).isBetween(1, (int) (Math.floor(investmentFund.getBudget()) / expectedAsset.getCurrentRate()));
         assertThat(actual._3).isEqualTo(expectedAsset.getCurrentRate());
+    }
+
+    @Test
+    public void should_choose_number_between_one_and_maximum_number_of_countable_asset() {
+
+        // given
+        final Investor investor = InvestorBuilder.builder()
+                .withFirstName("Joshua")
+                .withLastName("Bad Luck")
+                .withBudget(1000D)
+                .withBriefcase(BriefcaseBuilder.emptyBriefcase().build())
+                .build();
+
+        final CommodityExchange commodityExchange = subject.addCommodityExchange();
+        final Commodity commodity = CommodityBuilder.builder()
+                .withName("Gold")
+                .withUnitOfTrading("kg")
+                .withCurrentRate(5D)
+                .withMinRate(5D)
+                .withMaxRate(5D)
+                .withRateChanges(new ArrayList<>(Collections.singletonList(5D)))
+                .build();
+
+        commodityExchange.addResource(commodity);
+
+        final StockExchange stockExchange = subject.addStockExchange();
+        final Company company = CompanyBuilder.builder()
+                .withName("Stratton Oakmont")
+                .withCurrentRate(3D)
+                .withMinRate(3D)
+                .withMaxRate(3D)
+                .withNumberOfAssets(10)
+                .withRateChanges(new ArrayList<>(Collections.singletonList(3D)))
+                .build();
+
+        stockExchange.addCompany(company);
+
+        // when
+        final Optional<Tuple3<Asset, Integer, Double>> selection = subject.chooseAssetToBuy(investor);
+
+        // then
+        assertThat(selection).isPresent();
+        final Tuple3<Asset, Integer, Double> actual = selection.get();
+
+        assertThat(actual._1).isEqualTo(company);
+        assertThat(actual._2).isBetween(1, company.getNumberOfAssets());
+        assertThat(actual._3).isEqualTo(company.getCurrentRate());
     }
 
     @Test
