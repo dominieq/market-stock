@@ -60,7 +60,7 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
 
     @Override
     public void run () {
-        LOGGER.info("Investment fund {} starts.", this);
+        LOGGER.debug("Investment fund {} starts.", this);
 
         try {
             final Random rand = new Random();
@@ -95,11 +95,11 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
             }  
         } catch (InterruptedException exception) {
             active = false;
-            LOGGER.warn("Investment fund {} stopped with InterruptedException.", this);
+            LOGGER.debug("Investment fund {} stopped with InterruptedException.", this);
         }
 
         terminated = true;
-        LOGGER.info("Investment fund {} stops", this);
+        LOGGER.debug("Investment fund {} stops", this);
     }
 
     public void terminate () {
@@ -110,7 +110,7 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
         final Random random = new Random();
         final int timeout = random.nextInt(6) + 10;
 
-        LOGGER.info("Investment fund sleeps for {} seconds.", timeout);
+        LOGGER.debug("Investment fund sleeps for {} seconds.", timeout);
 
         TimeUnit.SECONDS.sleep(timeout);
     }

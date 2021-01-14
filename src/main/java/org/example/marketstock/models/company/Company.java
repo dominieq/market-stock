@@ -61,7 +61,7 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     
     @Override
     public void run () {
-        LOGGER.info("Company {} starts.", this);
+        LOGGER.debug("Company {} starts.", this);
 
         try {
             while(active) {
@@ -77,11 +77,11 @@ public class Company extends CountableAsset implements Serializable, Runnable {
             }
         } catch (InterruptedException exception) {
             active = false;
-            LOGGER.warn("Company {} stopped with InterruptedException.", this);
+            LOGGER.debug("Company {} stopped with InterruptedException.", this);
         }
 
         terminated = true;
-        LOGGER.info("Company {} stops.", this);
+        LOGGER.debug("Company {} stops.", this);
     }
     
     public void terminate () {
@@ -92,7 +92,8 @@ public class Company extends CountableAsset implements Serializable, Runnable {
         final Random random = new Random();
         final int timeout = random.nextInt(15) + 1;
 
-        LOGGER.info("Company {} sleeps for {}.", this, timeout);
+        LOGGER.debug("Company {} sleeps for {}.", this, timeout);
+
         TimeUnit.SECONDS.sleep(timeout);
     }
 
