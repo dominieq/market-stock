@@ -1000,7 +1000,7 @@ public class SimulationLayoutController {
         final CurrencyExchange currencyExchange = simulation.addCurrencyExchange();
         currencyExchangeTableView.getSelectionModel().select(currencyExchange);
 
-        LOGGER.trace("[ADDED]: {}", currencyExchange);
+        LOGGER.info("[ADDED]: {}", currencyExchange);
     }
 
     /**
@@ -1014,7 +1014,7 @@ public class SimulationLayoutController {
             simulation.removeCurrencyExchange(currencyExchange);
             currencyExchangeTableView.getSelectionModel().select(null);
 
-            LOGGER.trace("[REMOVED]: {}", currencyExchange);
+            LOGGER.info("[REMOVED]: {}", currencyExchange);
         } else {
             showAddingWithoutMarkingWarning();
         }

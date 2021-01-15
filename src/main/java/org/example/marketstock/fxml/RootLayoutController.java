@@ -1,8 +1,8 @@
 package org.example.marketstock.fxml;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.marketstock.app.MarketApp;
-
-import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 
@@ -13,7 +13,7 @@ import javafx.fxml.FXML;
  */
 public class RootLayoutController {
 
-    private static final Logger LOGGER = Logger.getLogger(RootLayoutController.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(RootLayoutController.class);
     private MarketApp marketApp;
 
     @FXML
@@ -26,8 +26,10 @@ public class RootLayoutController {
 
     @FXML
     private void handleSaveAndCloseFile() {
+        LOGGER.info("[APP]: Shutting down simulation...");
         marketApp.shutdownSimulation();
         serializeSimulation();
+        LOGGER.debug("[APP]: Shutting down application...");
         marketApp.getPrimaryStage().close();
     }
 
@@ -42,7 +44,9 @@ public class RootLayoutController {
 
     @FXML
     private void handleClose () {
+        LOGGER.info("[APP]: Shutting down simulation...");
         marketApp.shutdownSimulation();
+        LOGGER.debug("[APP]: Shutting down application...");
         marketApp.getPrimaryStage().close();
     }
 
