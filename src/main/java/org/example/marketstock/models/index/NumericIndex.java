@@ -1,5 +1,7 @@
 package org.example.marketstock.models.index;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.marketstock.models.asset.Asset;
 
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ import static java.util.Objects.nonNull;
  * @since 1.1.0
  */
 public abstract class NumericIndex implements Index {
+
+    protected static final Logger LOGGER = LogManager.getLogger(NumericIndex.class);
 
     protected String name;
     protected long size;
@@ -42,6 +46,7 @@ public abstract class NumericIndex implements Index {
                     .sorted(this::compare)
                     .limit(size)
                     .collect(Collectors.toList());
+            LOGGER.debug("[INDEX]: Content changes in {}", this);
         }
 
         calculateValue();
@@ -55,6 +60,7 @@ public abstract class NumericIndex implements Index {
                     .map(Asset::getCurrentRate)
                     .mapToDouble(Double::doubleValue)
                     .sum();
+            LOGGER.debug("[INDEX]: Value changes to {} in {}.", value, this);
         }
     }
 

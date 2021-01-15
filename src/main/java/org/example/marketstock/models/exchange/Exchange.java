@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -14,7 +12,6 @@ import org.apache.logging.log4j.Logger;
  */
 public abstract class Exchange implements Serializable {
 
-    protected static Logger LOGGER = LogManager.getLogger(Exchange.class);
     protected final String name;
     protected final String country;
     protected final String city;
