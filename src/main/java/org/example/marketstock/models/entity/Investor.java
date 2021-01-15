@@ -39,7 +39,7 @@ public class Investor extends AbstractInvestor implements Serializable, Runnable
 
     @Override
     public void run () {
-        LOGGER.debug( "Investor {} starts.", this);
+        LOGGER.debug( "[THREAD]: Investor {} starts.", this);
 
         try {
             Random rand = new Random();
@@ -71,11 +71,11 @@ public class Investor extends AbstractInvestor implements Serializable, Runnable
             }  
         } catch (InterruptedException exception) {
             active = false;
-            LOGGER.debug("Investor {} stopped with InterruptedException.", this);
+            LOGGER.debug("[THREAD]: Investor {} stopped with InterruptedException.", this);
         }
 
         terminated = true;
-        LOGGER.debug("Investor {} stops.", this);
+        LOGGER.debug("[THREAD]: Investor {} stops.", this);
     }
 
     public void terminate () {
@@ -86,7 +86,7 @@ public class Investor extends AbstractInvestor implements Serializable, Runnable
         final Random random = new Random();
         final int timeout = random.nextInt(6) + 10;
 
-        LOGGER.debug("Investor sleeps for {} seconds.", timeout);
+        LOGGER.debug("[THREAD]: Investor sleeps for {} seconds.", timeout);
 
         TimeUnit.SECONDS.sleep(timeout);
     }

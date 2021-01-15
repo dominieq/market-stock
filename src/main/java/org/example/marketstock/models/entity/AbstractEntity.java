@@ -35,11 +35,14 @@ public abstract class AbstractEntity implements Entity, Serializable {
     @Override
     public void addAsset(final double price, final Asset asset, final Integer numberOfAsset) {
         if (budget - price < 0.0) {
+            LOGGER.warn("[PURCHASE]: Not enough budget to add {} by {}.", asset, this);
             return;
         }
 
         budget -= price;
         briefcase.addOrIncrease(asset, numberOfAsset);
+        LOGGER.info("[PURCHASE]: {} bought {} of {} for {} and their budget equals {}.",
+                this, numberOfAsset, asset, price, budget);
     }
 
     @Override
@@ -48,6 +51,12 @@ public abstract class AbstractEntity implements Entity, Serializable {
 
         if (numberOfRemovedAssets == numberOfAsset) {
             budget += price;
+            LOGGER.info("[PURCHASE]: {} sold {} of {} for {} and their budget equals {}.",
+                    this, numberOfAsset, asset, price, budget);
+        } else if (numberOfRemovedAssets == 0) {
+            LOGGER.warn("[PURCHASE]: {} didn't sell {} because they didn't have it.", this, asset);
+        } else if (numberOfRemovedAssets < 0) {
+            LOGGER.error("[PURCHASE]: {} didn't sell {} because they didn't have enough.", this, asset);
         }
     }
     
@@ -57,9 +66,11 @@ public abstract class AbstractEntity implements Entity, Serializable {
      */
     protected void increaseBudget() {
         final Random rand = new Random();
-
-        budget += BUDGET_UPDATE_LOWER_BOUNDARY
+        final double sum = budget + BUDGET_UPDATE_LOWER_BOUNDARY
                 + (BUDGET_UPDATE_UPPER_BOUNDARY - BUDGET_UPDATE_LOWER_BOUNDARY) * rand.nextDouble();
+
+        LOGGER.info("[ENTITY]: Budget increases from {} to {} in {}.", budget, sum, this);
+        budget = sum;
     }
 
     @Override

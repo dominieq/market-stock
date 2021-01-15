@@ -60,7 +60,7 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
 
     @Override
     public void run () {
-        LOGGER.debug("Investment fund {} starts.", this);
+        LOGGER.debug("[THREAD]: Investment fund {} starts.", this);
 
         try {
             final Random rand = new Random();
@@ -95,11 +95,11 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
             }  
         } catch (InterruptedException exception) {
             active = false;
-            LOGGER.debug("Investment fund {} stopped with InterruptedException.", this);
+            LOGGER.debug("[THREAD]: Investment fund {} stopped with InterruptedException.", this);
         }
 
         terminated = true;
-        LOGGER.debug("Investment fund {} stops", this);
+        LOGGER.debug("[THREAD]: Investment fund {} stops", this);
     }
 
     public void terminate () {
@@ -110,7 +110,7 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
         final Random random = new Random();
         final int timeout = random.nextInt(6) + 10;
 
-        LOGGER.debug("Investment fund sleeps for {} seconds.", timeout);
+        LOGGER.debug("[THREAD]: Investment fund sleeps for {} seconds.", timeout);
 
         TimeUnit.SECONDS.sleep(timeout);
     }
@@ -120,17 +120,17 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
      * and adds it to the current number of investment units.
      */
     protected void issueAssets() {
-        Random rand = new Random();
-        int numberOfNewInvestmentUnits = rand.nextInt(100000) + 100;
+        final Random rand = new Random();
+        final int number = rand.nextInt(100_000) + 100;
 
-        increaseNumberOfAssets(numberOfNewInvestmentUnits);
-
-        LOGGER.info("Investment fund {} issued {} new investment units.",
-                new Object[]{this.name, numberOfNewInvestmentUnits});
+        increaseNumberOfAssets(number);
+        LOGGER.info("[INVESTMENT_FUND]: {} new investment units issued by {}.", number, this);
     }
 
     @Override
     public double updateRate(double rate) {
+        LOGGER.info("[ASSET]: Rate changes from {} to {} in {}.", currentRate, rate, this);
+
         currentRate = rate;
         rateChanges.add(rate);
 
@@ -147,7 +147,9 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
     @Override
     public double increaseNumberOfAssets(int addend) {
         synchronized (NUMBER_OF_ASSET) {
-            numberOfAssets += addend;
+            final int sum = numberOfAssets + addend;
+            LOGGER.info("[COUNTABLE]: Number increases from {} to {} in {}.", numberOfAssets, sum, this);
+            numberOfAssets = sum;
             return numberOfAssets;
         }
     }
@@ -156,10 +158,13 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
     public double decreaseNumberOfAssets(int subtrahend) {
         synchronized (NUMBER_OF_ASSET) {
             if (numberOfAssets - subtrahend < 0) {
+                LOGGER.warn("[COUNTABLE]: Aborting decrease in {} because negative difference.", this);
                 return numberOfAssets;
             }
 
-            numberOfAssets -= subtrahend;
+            final int difference = numberOfAssets - subtrahend;
+            LOGGER.info("[COUNTABLE]: Number decreases from {} to {} in {}.", numberOfAssets, difference, this);
+            numberOfAssets = difference;
             return numberOfAssets;
         }
     }
