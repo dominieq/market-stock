@@ -3,6 +3,8 @@ package org.example.marketstock.simulation.serialization;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import org.example.marketstock.models.entity.InvestmentFund;
+import org.example.marketstock.models.entity.Investor;
 import org.example.marketstock.models.exchange.CommodityExchange;
 import org.example.marketstock.models.exchange.CurrencyExchange;
 import org.example.marketstock.models.exchange.StockExchange;
@@ -27,6 +29,12 @@ public class SimulationSerializer extends StdSerializer<Simulation> {
             throws IOException {
 
         jsonGenerator.writeStartObject();
+
+        // Serialize player
+        jsonGenerator.writeObjectField("player", simulation.getPlayer());
+
+        // Serialize main currency
+        jsonGenerator.writeObjectField("mainCurrency", simulation.getMainCurrency());
 
         // Serialize Stock Exchanges
         jsonGenerator.writeArrayFieldStart("stockExchanges");
@@ -55,8 +63,24 @@ public class SimulationSerializer extends StdSerializer<Simulation> {
 
         jsonGenerator.writeEndArray();
 
-        // Serialize main currency
-        jsonGenerator.writeObjectField("mainCurrency", simulation.getMainCurrency());
+        // Serialize investors
+        jsonGenerator.writeArrayFieldStart("investors");
+
+        for (Investor investor : simulation.getInvestors()) {
+            jsonGenerator.writeObject(investor);
+        }
+
+        jsonGenerator.writeEndArray();
+
+        // Serialize investment funds
+        jsonGenerator.writeArrayFieldStart("investmentFunds");
+
+        for (InvestmentFund investmentFund : simulation.getInvestmentFunds()) {
+            jsonGenerator.writeObject(investmentFund);
+        }
+
+        jsonGenerator.writeEndArray();
+
         jsonGenerator.writeEndObject();
     }
 }

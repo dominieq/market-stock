@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.vavr.Tuple3;
@@ -31,8 +32,14 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
     private final List<Double> rateChanges;
     private final double margin;
     private volatile int numberOfAssets;
+
+    @JsonIgnore
     private final transient Simulation simulation;
+
+    @JsonIgnore
     private volatile transient boolean active = true;
+
+    @JsonIgnore
     private volatile transient boolean terminated = false;
 
     public InvestmentFund(final String name,

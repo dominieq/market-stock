@@ -1,5 +1,6 @@
 package org.example.marketstock.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.marketstock.models.briefcase.Briefcase;
 
 /**
@@ -8,6 +9,7 @@ import org.example.marketstock.models.briefcase.Briefcase;
  */
 public class Player extends AbstractInvestor {
 
+    @JsonIgnore
     private static Player PLAYER;
 
     private Player(final String firstName,

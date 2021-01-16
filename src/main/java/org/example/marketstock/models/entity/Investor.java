@@ -1,5 +1,6 @@
 package org.example.marketstock.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.vavr.Tuple3;
@@ -22,8 +23,14 @@ import java.util.concurrent.TimeUnit;
 public class Investor extends AbstractInvestor implements Serializable, Runnable {
 
     private final String PESEL;
+
+    @JsonIgnore
     private final transient Simulation simulation;
+
+    @JsonIgnore
     private volatile transient boolean active = true;
+
+    @JsonIgnore
     private volatile transient boolean terminated = false;
 
     public Investor(final String firstName,
