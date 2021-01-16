@@ -208,10 +208,12 @@ public class MarketApp extends Application {
     }
 
     public void shutdownSimulation() {
-        simulation.getStockExchanges().stream()
-                .map(StockExchange::getCompaniesService)
-                .forEach(ExecutorService::shutdownNow);
-        simulation.getEntitiesService().shutdownNow();
+        if (nonNull(simulation)) {
+            simulation.getStockExchanges().stream()
+                    .map(StockExchange::getCompaniesService)
+                    .forEach(ExecutorService::shutdownNow);
+            simulation.getEntitiesService().shutdownNow();
+        }
     }
 
     public Stage getPrimaryStage() {
