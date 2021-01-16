@@ -1,5 +1,6 @@
 package org.example.marketstock.simulation;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.vavr.Tuple3;
 import javafx.collections.ObservableList;
 import org.example.marketstock.models.asset.AbstractAsset;
@@ -32,6 +33,7 @@ import org.example.marketstock.models.asset.Asset;
 import org.example.marketstock.models.asset.Countable;
 import org.example.marketstock.simulation.croupier.Croupier;
 import org.example.marketstock.simulation.croupier.Croupiers;
+import org.example.marketstock.simulation.serialization.SimulationSerializer;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -40,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@JsonSerialize(using = SimulationSerializer.class)
 public class Simulation {
 
     private final Player player;

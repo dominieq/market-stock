@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +29,11 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     private final double openingCapital;
     private volatile int volume;
     private volatile double turnover;
+
+    @JsonIgnore
     private volatile transient boolean active = true;
+
+    @JsonIgnore
     private volatile transient boolean terminated = false;
 
     public Company(final String name,
