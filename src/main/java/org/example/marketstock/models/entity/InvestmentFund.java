@@ -8,12 +8,14 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.vavr.Tuple3;
 import org.example.marketstock.models.asset.Countable;
 import org.example.marketstock.models.briefcase.Briefcase;
 import org.example.marketstock.models.asset.Asset;
+import org.example.marketstock.models.entity.builder.InvestmentFundBuilder;
 import org.example.marketstock.simulation.Simulation;
 
 /**
@@ -21,6 +23,7 @@ import org.example.marketstock.simulation.Simulation;
  * @author Dominik
  * @since 1.0.0
  */
+@JsonDeserialize(builder = InvestmentFundBuilder.class)
 public class InvestmentFund extends AbstractEntity implements Asset, Countable, Serializable, Runnable {
 
     protected final Object NUMBER_OF_ASSET = new Object();

@@ -7,8 +7,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
 import org.example.marketstock.models.company.Company;
+import org.example.marketstock.models.exchange.builder.StockExchangeBuilder;
 import org.example.marketstock.models.index.Index;
 
 import static java.util.Objects.nonNull;
@@ -18,6 +20,7 @@ import static java.util.Objects.nonNull;
  * @author Dominik
  * @since 1.0.0
  */
+@JsonDeserialize(builder = StockExchangeBuilder.class)
 public class StockExchange extends Exchange implements Serializable {
 
     private final List<Index> indices;

@@ -4,14 +4,17 @@ import java.io.Serializable;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.example.marketstock.models.asset.builder.CommodityBuilder;
 
 /**
  *
  * @author Dominik
  * @since 1.0.0
  */
+@JsonDeserialize(builder = CommodityBuilder.class)
 public class Commodity extends AbstractAsset implements Serializable {
     
     private final String unitOfTrading;

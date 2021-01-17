@@ -10,7 +10,9 @@ import java.io.PrintWriter;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
+import org.example.marketstock.simulation.Simulation;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
@@ -51,25 +53,44 @@ public class RootLayoutController {
                     final String serialized = new ObjectMapper().writeValueAsString(marketApp.getSimulation());
                     printWriter.println(serialized);
                 } catch (IOException exception) {
-                    // TODO change for logger
+                    // TODO change for logger after merge
                     exception.printStackTrace();
+                    return false;
                 }
                 return true;
             }
         }
-
         return false;
     }
 
     @FXML
     private void handleLoadFile () {
-        // TODO check whether simulation exist and needs to be stopped
+        if (nonNull(marketApp.getSimulation())) marketApp.shutdownSimulation();
 
         final FileChooser fileChooser = new FileChooser();
         final File file = fileChooser.showOpenDialog(marketApp.getPrimaryStage());
 
         if (nonNull(file)) {
-            // TODO deserialize
+            try {
+                final Simulation simulation = new ObjectMapper().readValue(file, Simulation.class);
+                marketApp.getSimulationBuilder().from(simulation);
+
+                if (isNull(marketApp.getSimulation())) {
+                    marketApp.prepareResources();
+                    marketApp.showSimulationLayout();
+                } else {
+                    final Simulation oldSimulation = marketApp.getSimulation();
+                    marketApp.setSimulation(
+                            marketApp.getSimulationBuilder()
+                                    .withCommodityNames(oldSimulation.getCommodityNames())
+                                    .withCurrencyNames(oldSimulation.getCurrencyNames())
+                                    .withCroupier(oldSimulation.getCroupier())
+                                    .build());
+                }
+            } catch (IOException exception) {
+                // TODO change for logger after merge
+                exception.printStackTrace();
+            }
         }
     }
 

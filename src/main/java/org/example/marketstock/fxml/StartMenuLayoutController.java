@@ -21,6 +21,7 @@ public class StartMenuLayoutController {
     @FXML
     private void handleNewGame () {
         if (marketApp.showCreatePlayerDialog()) {
+            marketApp.prepareNewGame();
             marketApp.showSimulationLayout();
         }
     }
@@ -39,10 +40,6 @@ public class StartMenuLayoutController {
     @FXML
     private void handleGuide () {
         this.marketApp.showGuideLayout();
-    }
-
-    public MarketApp getMarketApp() {
-        return marketApp;
     }
 
     public void setMarketApp(MarketApp marketApp) {

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -11,6 +12,7 @@ import io.vavr.Tuple2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.marketstock.models.asset.Asset;
+import org.example.marketstock.models.briefcase.serialization.BriefcaseDeserializer;
 import org.example.marketstock.models.briefcase.serialization.BriefcaseSerializer;
 
 /**
@@ -19,6 +21,7 @@ import org.example.marketstock.models.briefcase.serialization.BriefcaseSerialize
  * @since 1.0.0
  */
 @JsonSerialize(using = BriefcaseSerializer.class)
+@JsonDeserialize(using = BriefcaseDeserializer.class)
 public class Briefcase implements Serializable {
 
     private static final Logger LOGGER = LogManager.getLogger(Briefcase.class);

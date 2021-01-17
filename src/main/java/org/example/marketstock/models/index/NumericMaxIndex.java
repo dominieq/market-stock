@@ -3,15 +3,18 @@ package org.example.marketstock.models.index;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import org.example.marketstock.models.asset.Asset;
+import org.example.marketstock.models.index.builder.NumericMaxIndexBuilder;
 
 /**
  *
  * @author Dominik Szmyt
  * @since 1.1.0
  */
+@JsonDeserialize(builder = NumericMaxIndexBuilder.class)
 public class NumericMaxIndex extends NumericIndex implements Serializable {
 
     private final IndexType type = IndexType.MAX;

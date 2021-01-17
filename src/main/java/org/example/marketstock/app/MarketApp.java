@@ -25,7 +25,6 @@ import org.example.marketstock.models.exchange.StockExchange;
 import org.example.marketstock.simulation.Simulation;
 import org.example.marketstock.simulation.builder.SimulationBuilder;
 import org.example.marketstock.simulation.croupier.builder.CroupierBuilder;
-import org.example.marketstock.simulation.json.JsonReader;
 import org.example.marketstock.simulation.json.SimpleJsonReader;
 
 import static java.util.Objects.nonNull;
@@ -102,37 +101,6 @@ public class MarketApp extends Application {
 
             rootLayout.setCenter(layout);
 
-            final JsonReader jsonReader = new SimpleJsonReader();
-            simulationBuilder
-                    .withStockExchanges(FXCollections.observableArrayList())
-                    .withCurrencyExchanges(FXCollections.observableArrayList())
-                    .withCommodityExchange(FXCollections.observableArrayList())
-                    .withInvestors(FXCollections.observableArrayList())
-                    .withInvestmentFunds(FXCollections.observableArrayList())
-                    .withCroupier(CroupierBuilder.builder()
-                            .withJsonReader(jsonReader)
-                            .withRandom(new Random())
-                            .build());
-
-            final URL currenciesURL = getClass().getClassLoader().getResource("built-in-names/currencies.json");
-            if (nonNull(currenciesURL)) {
-                simulationBuilder.withCurrencyNames(Arrays.asList(jsonReader.getResource(currenciesURL.getPath())));
-            }
-
-            final URL commodities = getClass().getClassLoader().getResource("built-in-names/commodities.json");
-            if (nonNull(commodities)) {
-                simulationBuilder.withCommodityNames(Arrays.asList(jsonReader.getResource(commodities.getPath())));
-            }
-
-            final URL countriesURL = getClass().getClassLoader().getResource("built-in-names/countries.json");
-            if (nonNull(countriesURL)) {
-                simulationBuilder.withMainCurrency(CurrencyBuilder.builder()
-                        .withName("MarketAppCurrency")
-                        .withRateChanges(new ArrayList<>(Collections.singletonList(0.0)))
-                        .withCountries(Arrays.asList(jsonReader.getResource(countriesURL.getPath())))
-                        .build());
-            }
-
             simulation = simulationBuilder.build();
 
             final SimulationLayoutController controller = loader.getController();
@@ -207,6 +175,46 @@ public class MarketApp extends Application {
         }
     }
 
+    public void prepareNewGame() {
+        simulationBuilder
+                .withStockExchanges(FXCollections.observableArrayList())
+                .withCurrencyExchanges(FXCollections.observableArrayList())
+                .withCommodityExchange(FXCollections.observableArrayList())
+                .withInvestors(FXCollections.observableArrayList())
+                .withInvestmentFunds(FXCollections.observableArrayList());
+
+        final URL countriesURL = getClass().getClassLoader().getResource("built-in-names/countries.json");
+        if (nonNull(countriesURL)) {
+            simulationBuilder.withMainCurrency(CurrencyBuilder.builder()
+                    .withName("MarketAppCurrency")
+                    .withRateChanges(new ArrayList<>(Collections.singletonList(0.0)))
+                    .withCountries(Arrays.asList(new SimpleJsonReader().getResource(countriesURL.getPath())))
+                    .build());
+        }
+
+        prepareResources();
+    }
+
+    public void prepareResources() {
+        simulationBuilder
+                .withCroupier(CroupierBuilder.builder()
+                        .withJsonReader(new SimpleJsonReader())
+                        .withRandom(new Random())
+                        .build());
+
+        final URL currenciesURL = getClass().getClassLoader().getResource("built-in-names/currencies.json");
+        if (nonNull(currenciesURL)) {
+            simulationBuilder
+                    .withCurrencyNames(Arrays.asList(new SimpleJsonReader().getResource(currenciesURL.getPath())));
+        }
+
+        final URL commodities = getClass().getClassLoader().getResource("built-in-names/commodities.json");
+        if (nonNull(commodities)) {
+            simulationBuilder
+                    .withCommodityNames(Arrays.asList(new SimpleJsonReader().getResource(commodities.getPath())));
+        }
+    }
+
     public void shutdownSimulation() {
         if (nonNull(simulation)) {
             simulation.getStockExchanges().stream()
@@ -222,6 +230,10 @@ public class MarketApp extends Application {
 
     public Simulation getSimulation() {
         return simulation;
+    }
+
+    public void setSimulation(final Simulation simulation) {
+        this.simulation = simulation;
     }
 
     public SimulationBuilder getSimulationBuilder() {

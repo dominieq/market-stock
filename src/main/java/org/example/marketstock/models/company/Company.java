@@ -6,17 +6,20 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.marketstock.models.asset.CountableAsset;
+import org.example.marketstock.models.company.builder.CompanyBuilder;
 
 /**
  *
  * @author Dominik
  * @since 1.0.0
  */
+@JsonDeserialize(builder = CompanyBuilder.class)
 public class Company extends CountableAsset implements Serializable, Runnable {
 
     private static final Logger LOGGER = LogManager.getLogger(Company.class);

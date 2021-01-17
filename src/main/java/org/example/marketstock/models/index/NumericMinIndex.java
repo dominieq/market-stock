@@ -1,8 +1,10 @@
 package org.example.marketstock.models.index;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import org.example.marketstock.models.asset.Asset;
+import org.example.marketstock.models.index.builder.NumericMinIndexBuilder;
 
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
  * @author Dominik Szmyt
  * @since 1.1.0
  */
+@JsonDeserialize(builder = NumericMinIndexBuilder.class)
 public class NumericMinIndex extends NumericIndex {
 
     private final IndexType type = IndexType.MIN;
