@@ -48,7 +48,7 @@ public abstract class AbstractAsset implements Asset, Serializable {
      */
     @Override
     public synchronized double updateRate(double rate) {
-        LOGGER.info("{} changes rate from {} to {}", name, currentRate, rate);
+        LOGGER.info("[ASSET]: Rate changes from {} to {} in {}.", currentRate, rate, this);
 
         currentRate = rate;
         rateChanges.add(rate);

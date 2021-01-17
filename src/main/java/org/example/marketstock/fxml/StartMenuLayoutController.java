@@ -41,10 +41,6 @@ public class StartMenuLayoutController {
         this.marketApp.showGuideLayout();
     }
 
-    public MarketApp getMarketApp() {
-        return marketApp;
-    }
-
     public void setMarketApp(MarketApp marketApp) {
         this.marketApp = marketApp;
     }

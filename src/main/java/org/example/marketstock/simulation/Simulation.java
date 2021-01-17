@@ -2,6 +2,8 @@ package org.example.marketstock.simulation;
 
 import io.vavr.Tuple3;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.marketstock.models.asset.AbstractAsset;
 import org.example.marketstock.models.asset.Commodity;
 import org.example.marketstock.models.asset.Currency;
@@ -41,6 +43,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Simulation {
+
+    private static final Logger LOGGER = LogManager.getLogger(Simulation.class);
 
     private final Player player;
     private final ObservableList<StockExchange> stockExchanges;
@@ -90,9 +94,12 @@ public class Simulation {
         if (Double.compare(currentRate, originalRate) != 0) {
             final double originalPrice = number * originalRate;
             finalNumber = (int) Math.floor(originalPrice / currentRate);
+            LOGGER.warn("[PURCHASE][RATE_WARN]: Number has changed from {} to {} when purchasing {} for {}.",
+                    number, finalNumber, asset, entity);
 
             if (finalNumber == 0) return finalNumber;
             else if (finalNumber < 0) {
+                LOGGER.error("[PURCHASE][RATE_ERROR]: Negative number of {}, to purchase by {}.", asset, entity);
                 // FIXME should throw exception because unacceptable
                 return 0;
             }
@@ -102,9 +109,12 @@ public class Simulation {
         // assign new possible number to final number of asset.
         if (asset instanceof Countable && number > ((Countable) asset).getNumberOfAssets()) {
             finalNumber = ((Countable) asset).getNumberOfAssets();
+            LOGGER.warn("[PURCHASE][NUMBER_WARN]: Number has changed from {} to {} when purchasing {} for {}.",
+                    number, finalNumber, asset, entity);
 
             if (finalNumber == 0) return finalNumber;
             else if (finalNumber < 0) {
+                LOGGER.error("[PURCHASE][NUMBER_ERROR]: Negative number of {}, to purchase by {}.", asset, entity);
                 // FIXME should throw exception because unacceptable
                 return 0;
             }
@@ -112,6 +122,7 @@ public class Simulation {
 
         final double price = currentRate * finalNumber;
         entity.addAsset(price, asset, finalNumber);
+        LOGGER.debug("[PURCHASE]: {} bought {} of {} for {}.", entity, finalNumber, asset, price);
 
         final double rate = currentRate + currentRate * 0.05;
         asset.updateRate(rate);
@@ -136,6 +147,7 @@ public class Simulation {
         final double price = currentRate * number;
         final double priceMinusMargin = price - price * asset.getMargin();
         entity.subtractAsset(priceMinusMargin, asset, number);
+        LOGGER.debug("[PURCHASE]: {} sold {} of {} for {}.", entity, asset, number, priceMinusMargin);
 
         final double rate = currentRate  - currentRate * 0.05;
         asset.updateRate(rate);
@@ -174,10 +186,11 @@ public class Simulation {
             possibleNumber = ((Countable) chosenAsset).getNumberOfAssets();
         }
 
-        final int chosenNumber = possibleNumber > 0 ? croupier.getRandom().nextInt(possibleNumber) + 1 : 0;
+        if (possibleNumber == 0) return Optional.empty();
 
-        return chosenNumber > 0 ?
-                Optional.of(new Tuple3<>(chosenAsset, chosenNumber, chosenAsset.getCurrentRate())) : Optional.empty();
+        final int chosenNumber = croupier.getRandom().nextInt(possibleNumber) + 1;
+        LOGGER.debug("[SELECTION]: {} chose {} of {} to buy.", entity, chosenNumber, chosenAsset);
+        return Optional.of(new Tuple3<>(chosenAsset, chosenNumber, chosenAsset.getCurrentRate()));
     }
 
     public synchronized Optional<Tuple3<Asset, Integer, Double>> chooseAssetToSell(final Entity entity) {
@@ -195,6 +208,7 @@ public class Simulation {
                 }).get();
 
         final int chosenNumber = croupier.getRandom().nextInt(entity.getBriefcase().getCount(chosenAsset)) + 1;
+        LOGGER.debug("[SELECTION]: {} chose {} of {} to sell.", entity, chosenNumber, chosenAsset);
         return Optional.of(new Tuple3<>(chosenAsset, chosenNumber, chosenAsset.getCurrentRate()));
     }
 
@@ -245,7 +259,7 @@ public class Simulation {
 
         entitiesService.submit(investor);
         investors.add(investor);
-
+        LOGGER.info("[ADDED]: {}", investor);
         return investor;
     }
 
@@ -290,7 +304,7 @@ public class Simulation {
 
         entitiesService.submit(investmentFund);
         investmentFunds.add(investmentFund);
-
+        LOGGER.info("[ADDED]: {}", investmentFund);
         return investmentFund;
     }
 
@@ -350,6 +364,7 @@ public class Simulation {
                 .withCompanies(new ArrayList<>())
                 .build();
 
+        LOGGER.debug("[CREATED]: {}", stockExchange);
         stockExchanges.add(stockExchange);
         return stockExchange;
     }
@@ -380,6 +395,7 @@ public class Simulation {
                 .withCurrencies(new ArrayList<>())
                 .build();
 
+        LOGGER.debug("[CREATED]: {}", currencyExchange);
         currencyExchanges.add(currencyExchange);
         return currencyExchange;
     }
@@ -409,6 +425,7 @@ public class Simulation {
                 .withCommodities(new ArrayList<>())
                 .build();
 
+        LOGGER.debug("[CREATED]: {}", commodityExchange);
         commodityExchanges.add(commodityExchange);
         return commodityExchange;
     }
@@ -442,6 +459,7 @@ public class Simulation {
                 .withMargin(stockExchange.getMargin())
                 .build();
 
+        LOGGER.debug("[CREATED]: {}", company);
         stockExchange.getCompaniesService().submit(company);
         stockExchange.addCompany(company);
         stockExchange.updateIndices();
@@ -500,6 +518,7 @@ public class Simulation {
                 .withCurrency(commodityExchange.getCurrency())
                 .build();
 
+        LOGGER.debug("[CREATED]: {}", commodity);
         commodityExchange.addResource(commodity);
         return Optional.of(commodity);
     }
@@ -535,6 +554,7 @@ public class Simulation {
                 .withComparisonCurrency(mainCurrency)
                 .build();
 
+        LOGGER.debug("[CREATED]: {}", currency);
         currencyExchange.addCurrency(currency);
         return Optional.of(currency);
     }
@@ -572,6 +592,7 @@ public class Simulation {
                         .withValue(0.0D)
                         .build();
 
+                LOGGER.debug("[CREATED]: {}", index);
                 stockExchange.addIndex(index);
                 return Optional.of(index);
             }
@@ -583,6 +604,7 @@ public class Simulation {
                         .withValue(0.0D)
                         .build();
 
+                LOGGER.debug("[CREATED]: {}", index);
                 stockExchange.addIndex(index);
                 return Optional.of(index);
             }
