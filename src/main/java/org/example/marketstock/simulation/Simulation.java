@@ -61,7 +61,7 @@ public class Simulation {
     private final List<String> commodityNames;
     private final List<String> currencyNames;
     private final Croupier croupier;
-    private Currency mainCurrency;
+    private final Currency mainCurrency;
     private final ExecutorService entitiesService = Executors.newFixedThreadPool(100);
 
     public Simulation(final Player player,
@@ -661,10 +661,6 @@ public class Simulation {
 
     public Currency getMainCurrency() {
         return mainCurrency;
-    }
-
-    public void setMainCurrency(Currency mainCurrency) {
-        this.mainCurrency = mainCurrency;
     }
 
     public ExecutorService getEntitiesService() {
