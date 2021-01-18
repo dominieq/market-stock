@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -215,13 +216,30 @@ public class MarketApp extends Application {
         }
     }
 
-    public void shutdownSimulation() {
+    public void startSimulation() {
         if (nonNull(simulation)) {
-            simulation.getStockExchanges().stream()
-                    .map(StockExchange::getCompaniesService)
-                    .forEach(ExecutorService::shutdownNow);
-            simulation.getEntitiesService().shutdownNow();
+            simulation.getStockExchanges().forEach(stockExchange ->
+                    stockExchange.getCompanies().forEach(company -> stockExchange.getCompaniesService().submit(company)));
+
+            simulation.getInvestors().forEach(investor -> simulation.getEntitiesService().submit(investor));
+            simulation.getInvestmentFunds().forEach(investmentFund -> simulation.getEntitiesService().submit(investmentFund));
         }
+    }
+
+    public ExecutorService shutdownSimulation() {
+        final ExecutorService shutdownService = Executors.newSingleThreadExecutor();
+
+        if (nonNull(simulation)) {
+            shutdownService.submit(() -> {
+                simulation.getStockExchanges().stream()
+                        .map(StockExchange::getCompaniesService)
+                        .forEach(ExecutorService::shutdownNow);
+
+                simulation.getEntitiesService().shutdownNow();
+            });
+        }
+
+        return shutdownService;
     }
 
     public Stage getPrimaryStage() {

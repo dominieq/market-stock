@@ -1,12 +1,21 @@
 package org.example.marketstock.fxml;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import org.example.marketstock.app.MarketApp;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
@@ -37,15 +46,34 @@ public class RootLayoutController {
     private void handleSaveAndCloseFile() {
         final boolean serialized = serializeSimulation();
 
-        if (serialized) {
-            marketApp.shutdownSimulation();
+        if (serialized || isNull(marketApp.getSimulation())) {
+            safeShutdown(marketApp.shutdownSimulation());
             marketApp.getPrimaryStage().close();
-        } // TODO ask user whether he wants to close anyway
+        } else {
+            final Alert warning = new Alert(Alert.AlertType.WARNING);
+            warning.setTitle("Saving problems");
+            warning.setHeaderText("Do you wish to continue?");
+            warning.setContentText("Some problems occurred while saving simulation.\n" +
+                    "Do you wish to close the application anyway?");
+
+            final ButtonType confirmButton = new ButtonType("OK", ButtonBar.ButtonData.YES);
+            final ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            warning.getButtonTypes().setAll(confirmButton, cancelButton);
+
+            final Optional<ButtonType> selection = warning.showAndWait();
+            if (selection.isPresent() && Objects.equals(selection.get(), confirmButton)) {
+                safeShutdown(marketApp.shutdownSimulation());
+                marketApp.getPrimaryStage().close();
+            }
+        }
     }
 
     private boolean serializeSimulation() {
         if (isNull(marketApp.getSimulation())) {
-            // TODO show warning
+            final Alert warning = new Alert(Alert.AlertType.WARNING);
+            warning.setTitle("No simulation");
+            warning.setHeaderText("Cannot save without simulation.");
+            warning.showAndWait();
             return false;
         }
 
@@ -63,7 +91,12 @@ public class RootLayoutController {
                     final String serialized = new ObjectMapper().writeValueAsString(marketApp.getSimulation());
                     printWriter.println(serialized);
                 } catch (IOException exception) {
-                    // TODO show error
+                    final Alert error = new Alert(Alert.AlertType.ERROR);
+                    error.setTitle("Saving error");
+                    error.setHeaderText("Error occurred while saving file: " + file.getName());
+                    error.getDialogPane().setExpandableContent(getExceptionTextArea(exception));
+                    error.showAndWait();
+
                     exception.printStackTrace(); // TODO change for logger after merge
                     return false;
                 }
@@ -76,8 +109,13 @@ public class RootLayoutController {
     @FXML
     private void handleLoadFile () {
         if (nonNull(marketApp.getSimulation())) {
-            // TODO show info that all progress will be lost and if he wants to proceed
-            marketApp.shutdownSimulation(); // TODO do not stop simulation here
+            final Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmation.setTitle("Unsaved progress");
+            confirmation.setHeaderText("You have unsaved progress");
+            confirmation.setTitle("You will lose all your progress. Do you wish to proceed?");
+
+            final Optional<ButtonType> selection = confirmation.showAndWait();
+            if (!(selection.isPresent() &&  Objects.equals(selection.get(), ButtonType.OK))) return;
         }
 
         final FileChooser fileChooser = new FileChooser();
@@ -87,40 +125,72 @@ public class RootLayoutController {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All files", "*.*"), jsonFilter);
         fileChooser.setSelectedExtensionFilter(jsonFilter);
-
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 
         final File file = fileChooser.showOpenDialog(marketApp.getPrimaryStage());
 
         if (nonNull(file)) {
-            // TODO stop simulation as completable future and await termination
             try {
                 final Simulation simulation = new ObjectMapper().readValue(file, Simulation.class);
                 marketApp.getSimulationBuilder().from(simulation);
 
                 if (isNull(marketApp.getSimulation())) {
                     marketApp.prepareResources();
-                    marketApp.showSimulationLayout();
                 } else {
+                    safeShutdown(marketApp.shutdownSimulation());
+
                     final Simulation oldSimulation = marketApp.getSimulation();
-                    marketApp.setSimulation(
-                            marketApp.getSimulationBuilder()
-                                    .withCommodityNames(oldSimulation.getCommodityNames())
-                                    .withCurrencyNames(oldSimulation.getCurrencyNames())
-                                    .withCroupier(oldSimulation.getCroupier())
-                                    .build());
+                    marketApp.getSimulationBuilder()
+                            .withCommodityNames(oldSimulation.getCommodityNames())
+                            .withCurrencyNames(oldSimulation.getCurrencyNames())
+                            .withCroupier(oldSimulation.getCroupier())
+                            .build();
                 }
+
+                marketApp.showSimulationLayout();
+                marketApp.startSimulation();
             } catch (IOException exception) {
+                final Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setTitle("Loading error");
+                error.setHeaderText("Error occurred while loading file: " + file.getName());
+                error.getDialogPane().setExpandableContent(getExceptionTextArea(exception));
+                error.showAndWait();
+
                 exception.printStackTrace(); // TODO change for logger after merge
-                // TODO show error and if simulation existed ask if user wants to start previous again
             }
         }
     }
 
     @FXML
     private void handleClose () {
-        marketApp.shutdownSimulation();
+        safeShutdown(marketApp.shutdownSimulation());
         marketApp.getPrimaryStage().close();
+    }
+
+    private void safeShutdown(final ExecutorService service) {
+        service.shutdown();
+        boolean isTerminated = false;
+
+        try {
+            isTerminated = service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException exception) {
+            exception.printStackTrace(); // TODO change for logger after merge
+        } finally {
+            if (!isTerminated) service.shutdownNow();
+        }
+    }
+
+    private TextArea getExceptionTextArea(final Exception exception) {
+        final StringWriter stringWriter = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
+
+        final TextArea textArea = new TextArea(printWriter.toString());
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        return textArea;
     }
 
     public void setMarketApp(MarketApp marketApp) {
