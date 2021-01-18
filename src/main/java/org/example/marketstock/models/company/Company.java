@@ -69,7 +69,7 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     
     @Override
     public void run () {
-        LOGGER.info("Company {} starts.", this);
+        LOGGER.debug("[THREAD]: Company {} starts.", this);
 
         try {
             while(active) {
@@ -85,11 +85,11 @@ public class Company extends CountableAsset implements Serializable, Runnable {
             }
         } catch (InterruptedException exception) {
             active = false;
-            LOGGER.warn("Company {} stopped with InterruptedException.", this);
+            LOGGER.debug("[THREAD]: Company {} stopped with InterruptedException.", this);
         }
 
         terminated = true;
-        LOGGER.info("Company {} stops.", this);
+        LOGGER.debug("[THREAD]: Company {} stops.", this);
     }
     
     public void terminate () {
@@ -100,7 +100,8 @@ public class Company extends CountableAsset implements Serializable, Runnable {
         final Random random = new Random();
         final int timeout = random.nextInt(15) + 1;
 
-        LOGGER.info("Company {} sleeps for {}.", this, timeout);
+        LOGGER.debug("[THREAD]: Company {} sleeps for {}.", this, timeout);
+
         TimeUnit.SECONDS.sleep(timeout);
     }
 
@@ -112,11 +113,11 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     public synchronized void updateTurnoverAndVolume(double turnover1, int volume1) {
         final double INITIAL_TURNOVER = turnover;
         turnover += turnover1;
-        LOGGER.info("Company {} increased it's turnover from {} to {}", name, INITIAL_TURNOVER, turnover);
+        LOGGER.info("[COMPANY]: Turnover changes from {} to {} in {}.", INITIAL_TURNOVER, turnover, this);
 
         final double INITIAL_VOLUME = volume;
         volume += volume1;
-        LOGGER.info("Company {} decreased it's volume from {} to {}", name, INITIAL_VOLUME, volume);
+        LOGGER.info("[COMPANY]: Volume changes from {} to {} in {}. ", INITIAL_VOLUME, volume, this);
     }
     
     /**
@@ -131,19 +132,19 @@ public class Company extends CountableAsset implements Serializable, Runnable {
         final double INITIAL_REVENUE = revenue;
         if (random.nextInt(2) == 0) {
             revenue -= revenue * PERCENT;
-            LOGGER.info("{}'s revenue was decreased from {} to {}.",name, INITIAL_REVENUE, revenue);
+            LOGGER.info("[COMPANY]: Revenue decreases from {} to {} in {}.", INITIAL_REVENUE, revenue, this);
         } else {
             revenue += revenue * PERCENT;
-            LOGGER.info("{}'s revenue was increased from {} to {}.", name, INITIAL_REVENUE, revenue);
+            LOGGER.info("[COMPANY]: Revenue increases from {} to {} in {}.", INITIAL_REVENUE, revenue, this);
         }
 
         final double INITIAL_PROFIT = profit;
         if (random.nextInt(2) == 0) {
             profit -= profit * PERCENT;
-            LOGGER.info("{}'s profit was decreased from {} to {}.", name, INITIAL_PROFIT, profit);
+            LOGGER.info("[COMPANY]: Profit decreases from {} to {} in {}.", INITIAL_PROFIT, profit, this);
         } else {
             profit += profit * PERCENT;
-            LOGGER.info("{}'s profit was increased from {} to {}.", name, INITIAL_PROFIT, profit);
+            LOGGER.info("[COMPANY]: Profit increases from {} to {} in {}.", INITIAL_PROFIT, profit, this);
         }
     }
     
@@ -155,7 +156,7 @@ public class Company extends CountableAsset implements Serializable, Runnable {
         final int number = rand.nextInt(99_901) + 100;
 
         increaseNumberOfAssets(number);
-        LOGGER.info("{} issued {} new shares.", name, number);
+        LOGGER.info("[COMPANY]: {} new shares issued by {}.", number, this);
     }
 
     @Override

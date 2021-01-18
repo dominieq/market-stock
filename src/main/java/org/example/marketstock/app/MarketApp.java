@@ -46,13 +46,13 @@ public class MarketApp extends Application {
     private BorderPane rootLayout;
 
     public static void main(String[] args) {
-        LOGGER.info("Starting market stock simulator");
+        LOGGER.info("[APP]: Starting market stock simulator.");
         launch(args);
     }
 
     @Override
     public void start (Stage primaryStage) {
-        LOGGER.info("Starting JavaFX application.");
+        LOGGER.debug("[APP]: Starting JavaFX application.");
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Market Stock Simulator");
@@ -231,10 +231,11 @@ public class MarketApp extends Application {
 
         if (nonNull(simulation)) {
             shutdownService.submit(() -> {
+                LOGGER.debug("[APP]: Stopping all companies...");
                 simulation.getStockExchanges().stream()
                         .map(StockExchange::getCompaniesService)
                         .forEach(ExecutorService::shutdownNow);
-
+                LOGGER.debug("[APP]: Stopping investors and investment funds...");
                 simulation.getEntitiesService().shutdownNow();
             });
         }

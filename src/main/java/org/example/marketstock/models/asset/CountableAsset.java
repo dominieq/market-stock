@@ -26,9 +26,7 @@ public abstract class CountableAsset extends AbstractAsset implements Countable 
     public double increaseNumberOfAssets(int addend) {
         synchronized (NUMBER_OF_ASSETS_LOCK) {
             final int sum = numberOfAssets + addend;
-
-            LOGGER.info("{} increases number of assets from {} to {}", name, numberOfAssets, sum);
-
+            LOGGER.info("[COUNTABLE]: Number increases from {} to {} in {}.", numberOfAssets, sum, this);
             numberOfAssets = sum;
             return numberOfAssets;
         }
@@ -38,13 +36,12 @@ public abstract class CountableAsset extends AbstractAsset implements Countable 
     public double decreaseNumberOfAssets(int subtrahend) {
         synchronized (NUMBER_OF_ASSETS_LOCK) {
             if (numberOfAssets - subtrahend < 0) {
-                LOGGER.warn("{} couldn't decrease number of assets by {}.", name, subtrahend);
+                LOGGER.warn("[COUNTABLE]: Aborting decrease in {} because negative difference.", this);
                 return numberOfAssets;
             }
+
             final int difference = numberOfAssets - subtrahend;
-
-            LOGGER.info("{} decreases number of assets from {} to {}", name, numberOfAssets, difference);
-
+            LOGGER.info("[COUNTABLE]: Number decreases from {} to {} in {}.", numberOfAssets, difference, this);
             numberOfAssets = difference;
             return numberOfAssets;
         }

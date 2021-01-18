@@ -42,10 +42,10 @@ public class Briefcase implements Serializable {
             final int sum = initial + number;
 
             map.put(asset, map.get(asset) + number);
-            LOGGER.debug("Number of {} was increased from {} to {}.", asset.getName(), initial, sum);
+            LOGGER.debug("[BRIEFCASE]: Number increases from {} to {} of {}.", initial, sum, asset);
         } else {
             map.put(asset, number);
-            LOGGER.debug("{} was added to briefcase; initial count: {}", asset.getName(), number);
+            LOGGER.debug("[BRIEFCASE]: {} added with initial count {}.", asset, number);
         }
     }
     
@@ -61,14 +61,14 @@ public class Briefcase implements Serializable {
             final int difference = initial - number;
 
             if (difference < 0) {
-                LOGGER.debug("Removing {} of {} would result in negative count of asset.", number, asset.getName());
-                return 0;
+                LOGGER.debug("[BRIEFCASE]: Aborting decrease in {} because negative difference.", asset);
+                return 0; // TODO should return zero because situation is different from not having asset in the first place
             } else if (difference == 0) {
                 map.remove(asset);
-                LOGGER.debug("{} was removed from briefcase; last count: {}", asset.getName(), number);
+                LOGGER.debug("[BRIEFCASE]: {} removed with last count {}.", asset, number);
             } else {
                 map.put(asset, difference);
-                LOGGER.debug("Number of {} was decreased from {} to {}.", asset.getName(), initial, difference);
+                LOGGER.debug("[BRIEFCASE]: Number decreases from {} to {} of {}.", initial, difference, asset);
             }
             return number;
         }

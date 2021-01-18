@@ -5,14 +5,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import io.vavr.Tuple3;
-import javafx.util.Pair;
 import org.example.marketstock.models.asset.Asset;
 import org.example.marketstock.models.briefcase.Briefcase;
 import org.example.marketstock.models.entity.builder.InvestorBuilder;
 import org.example.marketstock.simulation.Simulation;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +49,7 @@ public class Investor extends AbstractInvestor implements Serializable, Runnable
 
     @Override
     public void run () {
-        LOGGER.info( "Investor {} starts.", this);
+        LOGGER.debug( "[THREAD]: Investor {} starts.", this);
 
         try {
             Random rand = new Random();
@@ -83,11 +81,11 @@ public class Investor extends AbstractInvestor implements Serializable, Runnable
             }  
         } catch (InterruptedException exception) {
             active = false;
-            LOGGER.warn("Investor {} stopped with InterruptedException.", this);
+            LOGGER.debug("[THREAD]: Investor {} stopped with InterruptedException.", this);
         }
 
         terminated = true;
-        LOGGER.info("Investor {} stops.", this);
+        LOGGER.debug("[THREAD]: Investor {} stops.", this);
     }
 
     public void terminate () {
@@ -98,7 +96,7 @@ public class Investor extends AbstractInvestor implements Serializable, Runnable
         final Random random = new Random();
         final int timeout = random.nextInt(6) + 10;
 
-        LOGGER.info("Investor sleeps for {} seconds.", timeout);
+        LOGGER.debug("[THREAD]: Investor sleeps for {} seconds.", timeout);
 
         TimeUnit.SECONDS.sleep(timeout);
     }

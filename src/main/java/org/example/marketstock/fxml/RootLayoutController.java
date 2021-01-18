@@ -6,7 +6,11 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
+import javafx.fxml.FXML;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.marketstock.app.MarketApp;
+import org.example.marketstock.simulation.Simulation;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +22,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import javafx.fxml.FXML;
-import org.example.marketstock.simulation.Simulation;
-
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -31,7 +32,7 @@ import static java.util.Objects.nonNull;
  */
 public class RootLayoutController {
 
-    private static final Logger LOGGER = Logger.getLogger(RootLayoutController.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(RootLayoutController.class);
     private MarketApp marketApp;
 
     @FXML
@@ -47,6 +48,7 @@ public class RootLayoutController {
         final boolean serialized = serializeSimulation();
 
         if (serialized || isNull(marketApp.getSimulation())) {
+            LOGGER.info("[APP]: Shutting down simulation...");
             safeShutdown(marketApp.shutdownSimulation());
             marketApp.getPrimaryStage().close();
         } else {
@@ -62,7 +64,9 @@ public class RootLayoutController {
 
             final Optional<ButtonType> selection = warning.showAndWait();
             if (selection.isPresent() && Objects.equals(selection.get(), confirmButton)) {
+                LOGGER.info("[APP]: Shutting down simulation...");
                 safeShutdown(marketApp.shutdownSimulation());
+                LOGGER.debug("[APP]: Shutting down application...");
                 marketApp.getPrimaryStage().close();
             }
         }
@@ -163,7 +167,9 @@ public class RootLayoutController {
 
     @FXML
     private void handleClose () {
+        LOGGER.info("[APP]: Shutting down simulation...");
         safeShutdown(marketApp.shutdownSimulation());
+        LOGGER.debug("[APP]: Shutting down application...");
         marketApp.getPrimaryStage().close();
     }
 
