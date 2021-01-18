@@ -20,7 +20,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -101,7 +100,7 @@ public class RootLayoutController {
                     error.getDialogPane().setExpandableContent(getExceptionTextArea(exception));
                     error.showAndWait();
 
-                    exception.printStackTrace(); // TODO change for logger after merge
+                    LOGGER.error(exception.getMessage(), exception);
                     return false;
                 }
                 return true;
@@ -160,7 +159,7 @@ public class RootLayoutController {
                 error.getDialogPane().setExpandableContent(getExceptionTextArea(exception));
                 error.showAndWait();
 
-                exception.printStackTrace(); // TODO change for logger after merge
+                LOGGER.error(exception.getMessage(), exception);
             }
         }
     }
@@ -180,7 +179,7 @@ public class RootLayoutController {
         try {
             isTerminated = service.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
         } catch (InterruptedException exception) {
-            exception.printStackTrace(); // TODO change for logger after merge
+            LOGGER.warn("[APP]: Shutting down simulation interrupted");
         } finally {
             if (!isTerminated) service.shutdownNow();
         }
