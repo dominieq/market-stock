@@ -21,6 +21,7 @@ public class StartMenuLayoutController {
     @FXML
     private void handleNewGame () {
         if (marketApp.showCreatePlayerDialog()) {
+            marketApp.prepareNewGame();
             marketApp.showSimulationLayout();
         }
     }

@@ -1,5 +1,7 @@
 package org.example.marketstock.simulation;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.vavr.Tuple3;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
@@ -34,6 +36,8 @@ import org.example.marketstock.models.asset.Asset;
 import org.example.marketstock.models.asset.Countable;
 import org.example.marketstock.simulation.croupier.Croupier;
 import org.example.marketstock.simulation.croupier.Croupiers;
+import org.example.marketstock.simulation.serialization.SimulationDeserializer;
+import org.example.marketstock.simulation.serialization.SimulationSerializer;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -42,6 +46,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@JsonSerialize(using = SimulationSerializer.class)
+@JsonDeserialize(using = SimulationDeserializer.class)
 public class Simulation {
 
     private static final Logger LOGGER = LogManager.getLogger(Simulation.class);
@@ -55,7 +61,7 @@ public class Simulation {
     private final List<String> commodityNames;
     private final List<String> currencyNames;
     private final Croupier croupier;
-    private Currency mainCurrency;
+    private final Currency mainCurrency;
     private final ExecutorService entitiesService = Executors.newFixedThreadPool(100);
 
     public Simulation(final Player player,
@@ -655,10 +661,6 @@ public class Simulation {
 
     public Currency getMainCurrency() {
         return mainCurrency;
-    }
-
-    public void setMainCurrency(Currency mainCurrency) {
-        this.mainCurrency = mainCurrency;
     }
 
     public ExecutorService getEntitiesService() {

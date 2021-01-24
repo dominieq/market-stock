@@ -1,5 +1,7 @@
 package org.example.marketstock.models.index;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.marketstock.models.asset.Asset;
 
 import java.util.List;
@@ -9,6 +11,11 @@ import java.util.List;
  * @author Dominik Szmyt
  * @since 1.1.0
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = NumericMaxIndex.class, name = "MAX"),
+        @JsonSubTypes.Type(value = NumericMinIndex.class, name = "MIN")
+})
 public interface Index {
 
     IndexType getType();

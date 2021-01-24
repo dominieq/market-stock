@@ -3,15 +3,17 @@ package org.example.marketstock.models.exchange;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import org.example.marketstock.models.asset.Commodity;
+import org.example.marketstock.models.exchange.builder.CommodityExchangeBuilder;
 
 /**
  *
  * @author Dominik
  * @since 1.0.0
  */
+@JsonDeserialize(builder = CommodityExchangeBuilder.class)
 public class CommodityExchange extends Exchange implements Serializable {
 
     private final List<Commodity> commodities;

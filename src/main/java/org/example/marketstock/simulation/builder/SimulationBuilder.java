@@ -13,6 +13,8 @@ import org.example.marketstock.simulation.croupier.Croupier;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 public final class SimulationBuilder {
 
     private Player player;
@@ -28,6 +30,24 @@ public final class SimulationBuilder {
 
     public static SimulationBuilder builder() {
         return new SimulationBuilder();
+    }
+
+    public SimulationBuilder from (final Simulation simulation) {
+        if (isNull(simulation)) {
+            return this;
+        }
+
+        this.player = simulation.getPlayer();
+        this.stockExchanges = simulation.getStockExchanges();
+        this.currencyExchanges = simulation.getCurrencyExchanges();
+        this.commodityExchanges = simulation.getCommodityExchanges();
+        this.investors = simulation.getInvestors();
+        this.investmentFunds = simulation.getInvestmentFunds();
+        this.commodityNames = simulation.getCommodityNames();
+        this.currencyExchanges = simulation.getCurrencyExchanges();
+        this.croupier = simulation.getCroupier();
+        this.mainCurrency = simulation.getMainCurrency();
+        return this;
     }
 
     public SimulationBuilder withPlayer(final Player player) {

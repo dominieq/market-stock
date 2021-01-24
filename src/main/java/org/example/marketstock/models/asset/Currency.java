@@ -3,14 +3,17 @@ package org.example.marketstock.models.asset;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.example.marketstock.models.asset.builder.CurrencyBuilder;
 
 /**
  *
  * @author Dominik Szmyt
  * @since 1.0.0
  */
+@JsonDeserialize(builder = CurrencyBuilder.class)
 public class Currency extends AbstractAsset implements Serializable {
     
     private final Currency comparisonCurrency;
