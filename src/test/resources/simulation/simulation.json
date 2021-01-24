@@ -1,0 +1,106 @@
+{
+  "player": {
+    "budget": 80.0,
+    "briefcase": [
+      {
+        "asset": {
+          "type": "company",
+          "name": "Stratton Oakmont",
+          "currentRate": 4.41,
+          "minRate": 4.0,
+          "maxRate": 4.41,
+          "margin": 0.12,
+          "rateChanges": [4.0, 4.2, 4.41],
+          "numberOfAssets": 90,
+          "dateOfFirstValuation": "1989-01-01",
+          "openingQuotation": 4.0,
+          "profit": 100000.0,
+          "revenue": 100000.0,
+          "equityCapital": 1000.0,
+          "openingCapital": 1000.0,
+          "volume": 10,
+          "turnover": 41.0
+        },
+        "numberOfAsset": 5
+      }
+    ],
+    "firstName": "Jordan",
+    "lastName": "Belfort"
+  },
+  "mainCurrency": {
+    "type": "currency",
+    "name": "USD",
+    "currentRate": 0.0,
+    "minRate": 0.0,
+    "maxRate": 0.0,
+    "margin": 0.0,
+    "rateChanges": [0.0],
+    "comparisonCurrency": null,
+    "countries": ["USA"]
+  },
+  "stockExchanges": [
+    {
+      "name": "New York Stock Exchange",
+      "country": "USA",
+      "city": "New York",
+      "address": "11 Wall Street",
+      "currency": "USD",
+      "margin": 0.12,
+      "indices": [],
+      "companies": [
+        {
+          "type": "company",
+          "name": "Stratton Oakmont",
+          "currentRate": 4.41,
+          "minRate": 4.0,
+          "maxRate": 4.41,
+          "margin": 0.12,
+          "rateChanges": [4.0, 4.2, 4.41],
+          "numberOfAssets": 90,
+          "dateOfFirstValuation": "1989-01-01",
+          "openingQuotation": 4.0,
+          "profit": 100000.0,
+          "revenue": 100000.0,
+          "equityCapital": 1000.0,
+          "openingCapital": 1000.0,
+          "volume": 10,
+          "turnover": 41.0
+        }
+      ]
+    }
+  ],
+  "commodityExchanges": [],
+  "currencyExchanges": [],
+  "investors": [
+    {
+      "budget": 79.0,
+      "briefcase": [
+        {
+          "asset": {
+            "type": "company",
+            "name": "Stratton Oakmont",
+            "currentRate": 4.41,
+            "minRate": 4.0,
+            "maxRate": 4.41,
+            "margin": 0.12,
+            "rateChanges": [4.0, 4.2, 4.41],
+            "numberOfAssets": 90,
+            "dateOfFirstValuation": "1989-01-01",
+            "openingQuotation": 4.0,
+            "profit": 100000.0,
+            "revenue": 100000.0,
+            "equityCapital": 1000.0,
+            "openingCapital": 1000.0,
+            "volume": 10,
+            "turnover": 41.0
+          },
+          "numberOfAsset": 5
+        }
+      ],
+      "firstName": "Scrooge",
+      "lastName": "McQuack",
+      "pesel": "1234567890"
+    }
+  ],
+  "investmentFunds": []
+}
