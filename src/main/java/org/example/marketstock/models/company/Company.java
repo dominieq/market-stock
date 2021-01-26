@@ -15,8 +15,10 @@ import org.example.marketstock.models.asset.CountableAsset;
 import org.example.marketstock.models.company.builder.CompanyBuilder;
 
 /**
+ * Represents a real life company that issues shares and is listed in one of available stock exchanges.
+ * Apart from that, it randomly updates it's profit and revenue and issues new shares.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonDeserialize(builder = CompanyBuilder.class)
@@ -91,7 +93,10 @@ public class Company extends CountableAsset implements Serializable, Runnable {
         terminated = true;
         LOGGER.debug("[THREAD]: Company {} stops.", this);
     }
-    
+
+    /**
+     * Terminates a company's thread by ending it's while loop.
+     */
     public void terminate () {
         this.active = false;
     }
@@ -106,9 +111,11 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     }
 
     /**
-     * Company updates rate of their shares and increases turnover and volume.
-     * @param turnover1 A double variable which is going to be added to turnover.
-     * @param volume1 An integer variable which is going to be added to volume.
+     * Changes turnover and volume by provided value.
+     * Usually called after the successful purchase of company's shares.
+     *
+     * @param turnover1 - A value which is going to be added to turnover.
+     * @param volume1 - A value which is going to be added to volume.
      */
     public synchronized void updateTurnoverAndVolume(double turnover1, int volume1) {
         final double INITIAL_TURNOVER = turnover;
@@ -121,7 +128,7 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     }
     
     /**
-     * Company increases or diminishes revenue and profit.
+     * Randomly changes revenue and profit by arbitrary values. Called by a company itself.
      */
     public void updateRevenueAndProfit() {
         final Random random = new Random();
@@ -149,7 +156,7 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     }
     
     /**
-     * Company issues a random number of shares.
+     * Increases the number of available shares by random number.
      */
     public void issueAssets() {
         final Random rand = new Random();

@@ -9,8 +9,9 @@ import org.example.marketstock.models.asset.Commodity;
 import org.example.marketstock.models.exchange.builder.CommodityExchangeBuilder;
 
 /**
+ * Represents a real life commodity exchange where investors can buy and sell commodities listed there.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonDeserialize(builder = CommodityExchangeBuilder.class)

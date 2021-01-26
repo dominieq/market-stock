@@ -9,8 +9,9 @@ import org.example.marketstock.models.asset.Currency;
 import org.example.marketstock.models.exchange.builder.CurrencyExchangeBuilder;
 
 /**
+ * Represents a real life currency exchange where investors can buy and sell currencies listed there.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonDeserialize(builder = CurrencyExchangeBuilder.class)

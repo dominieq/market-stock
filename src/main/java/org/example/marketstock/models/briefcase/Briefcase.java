@@ -16,8 +16,10 @@ import org.example.marketstock.models.briefcase.serialization.BriefcaseDeseriali
 import org.example.marketstock.models.briefcase.serialization.BriefcaseSerializer;
 
 /**
+ * Represents an inventory of an {@link org.example.marketstock.models.entity.Entity} that can buy and sell assets.
+ * After successful purchase an asset is stored in the briefcase until it is sold.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonSerialize(using = BriefcaseSerializer.class)
@@ -32,9 +34,9 @@ public class Briefcase implements Serializable {
     }
     
     /**
-     * Increases number of a given {@link Asset} or adds it to {@link Briefcase}.
+     * Increases the number of a given {@link Asset} or adds it to the {@link Briefcase}.
      * @param asset - {@link Asset} from {@link Briefcase} or a new {@link Asset}.
-     * @param number - Count of asset.
+     * @param number - The number of an asset.
      */
     public void addOrIncrease(final Asset asset, final Integer number) {
         if (contains(asset)) {
@@ -50,10 +52,10 @@ public class Briefcase implements Serializable {
     }
     
     /**
-     * Reduces number of a given {@link Asset} or removes it when it's count equals 0.
+     * Reduces the number of a given {@link Asset} or removes it when it's count equals 0.
      * @param asset - {@link Asset} that should be in Briefcase.
-     * @param number - Count of asset.
-     * @return Number of successfully removed assets
+     * @param number - The number of an asset.
+     * @return The number of successfully removed assets.
      */
     public int decreaseOrRemove(final Asset asset, final Integer number) {
         if (contains(asset)) {
@@ -75,35 +77,73 @@ public class Briefcase implements Serializable {
         return 0;
     }
 
+    /**
+     * Checks whether an asset is stored in the briefcase.
+     * @param asset - An asset that may be stored in the briefcase.
+     * @return <tt>true</tt> when an asset is stored in the briefcase, otherwise <tt>false</tt>.
+     */
     public boolean contains(final Asset asset) {
         return map.containsKey(asset);
     }
 
+    /**
+     * Checks whether a specific number of an asset is stored in the briefcase.
+     * @param asset - An asset that may be stored in the briefcase.
+     * @param numberOfAsset - The number of an asset.
+     * @return <tt>true</tt> when a specific number of an asset is stored in the briefcase, otherwise <tt>false</tt>.
+     */
     public boolean contains(final Asset asset, final int numberOfAsset) {
         return contains(asset) && map.get(asset) == numberOfAsset;
     }
 
+    /**
+     * Returns the stream of asset-integer tuples.
+     * @return The stream of asset-integer tuples.
+     * @see Tuple2
+     */
     public Stream<Tuple2<Asset, Integer>> stream() {
         return map.entrySet().stream()
                 .map(entry -> new Tuple2<>(entry.getKey(), entry.getValue()));
     }
 
+    /**
+     * Returns the list of assets stored in the briefcase.
+     * @return The list of assets stored in the briefcase.
+     */
     public List<Asset> getAssets() {
         return new ArrayList<>(map.keySet());
     }
 
+    /**
+     * Returns the list of numbers of each asset stored in the briefcase.
+     * @return The list of numbers of each asset stored in the briefcase.
+     */
     public List<Integer> getNumbers() {
         return new ArrayList<>(map.values());
     }
 
+    /**
+     * Returns the number of an asset. If the asset isn't stored in the briefcase, returns 0.
+     * @param asset - An asset that may be stored in the briefcase.
+     * @return The number of a specified asset or 0 if it isn't stored in the briefcase.
+     */
     public int getCount(final Asset asset) {
         return map.getOrDefault(asset, 0);
     }
 
+    /**
+     * Checks whether the briefcase is empty.
+     * @return <tt>true</tt> if the briefcase is empty, otherwise <tt>false</tt>.
+     */
     public boolean isEmpty() {
         return map.isEmpty();
     }
 
+    /**
+     * Removes an asset from briefcase even if it's number is greater than 0.
+     * @param asset - An asset that is to be removed from the briefcase.
+     * @return The number of an asset or null if it wasn't stored in the briefcase.
+     */
     public Integer removeEntirely(final Asset asset) {
         return map.remove(asset);
     }

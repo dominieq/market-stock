@@ -6,8 +6,9 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
+ * Represents a real life exchange where investors can buy or sell assets listed there.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 public abstract class Exchange implements Serializable {
