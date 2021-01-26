@@ -10,9 +10,12 @@ import org.example.marketstock.models.asset.Asset;
 import org.example.marketstock.models.index.builder.NumericMaxIndexBuilder;
 
 /**
+ * Represents a set of {@link Asset}s
+ * that are listed in a certain {@link org.example.marketstock.models.exchange.Exchange}.
+ * This implementation gathers assets that have the highest current rate.
  *
+ * @since 1.0.0
  * @author Dominik Szmyt
- * @since 1.1.0
  */
 @JsonDeserialize(builder = NumericMaxIndexBuilder.class)
 public class NumericMaxIndex extends NumericIndex implements Serializable {
@@ -27,6 +30,13 @@ public class NumericMaxIndex extends NumericIndex implements Serializable {
         super(name1, size1, content1, value1);
     }
 
+    /**
+     * This implementation when used in sorted method should arrange provided content in descending order.
+     *
+     * @param asset1 - First asset to compare.
+     * @param asset2 - Second asset to compare.
+     * @return int - 0 when assets are equal; -1 when first asset has higher current rate than second; 1 otherwise.
+     */
     @Override
     protected int compare(Asset asset1, Asset asset2) {
         if (asset1.getCurrentRate() == asset2.getCurrentRate()) {

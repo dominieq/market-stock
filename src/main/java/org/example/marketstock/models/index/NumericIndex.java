@@ -11,9 +11,11 @@ import java.util.stream.Collectors;
 import static java.util.Objects.nonNull;
 
 /**
+ * Represents a set of {@link Asset}s that are listed in a certain {@link org.example.marketstock.models.exchange.Exchange}.
+ * Any numeric characteristic describing the {@link Asset} can become a main criterion when assigning an asset to this index.
  *
+ * @since 1.0.0
  * @author Dominik Szmyt
- * @since 1.1.0
  */
 public abstract class NumericIndex implements Index {
 
@@ -37,6 +39,11 @@ public abstract class NumericIndex implements Index {
         updateIndex(content1);
     }
 
+    /**
+     * Updates content by sorting provided list using {@link #compare(Asset, Asset)}} method
+     * and then limits the size of a result list to the size of a specific index.
+     * @param content1 - The list of assets that may replace the old content.
+     */
     @Override
     public void updateIndex(List<Asset> content1) {
         content = new ArrayList<>();
@@ -52,6 +59,10 @@ public abstract class NumericIndex implements Index {
         calculateValue();
     }
 
+    /**
+     * Calculates the value of an index which is the sum of current rates
+     * of each asset that belongs to the index.
+     */
     protected void calculateValue() {
         value = 0D;
 
@@ -64,5 +75,12 @@ public abstract class NumericIndex implements Index {
         }
     }
 
+    /**
+     * Each {@link NumericIndex} extension should provide a method that compares two assets.
+     * The method should return 0 when assets are equal and -1 or 1 when they aren't.
+     * @param asset1 - First asset to compare.
+     * @param asset2 - Second asset to compare.
+     * @return int - 0 when assets are equal; -1 or 1 depending on the intended order.
+     */
     abstract protected int compare(Asset asset1, Asset asset2);
 }
