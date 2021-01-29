@@ -6,6 +6,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * Controls the {@code CreatePlayerDialogLayout} and consequently
+ * the process of creating a player by a user.
+ *
+ * @author Dominik Szmyt
+ * @since 1.0.0
+ */
 public class CreatePlayerDialogController {
 
     private String firstName;
@@ -14,6 +21,9 @@ public class CreatePlayerDialogController {
     private Stage dialogStage;
     private boolean confirmClicked;
 
+    /**
+     * Create a {@code Controller} with default values.
+     */
     public CreatePlayerDialogController() {
         this.firstName = "";
         this.lastName = "";
@@ -38,6 +48,10 @@ public class CreatePlayerDialogController {
         });
     }
 
+    /**
+     * Callback fired when a user wishes to cancel their choices.
+     * If there are any unsaved changes, warns user that they will lose their progress and requires confirmation.
+     */
     @FXML
     private void handleCancel() {
         String firstName = this.firstNameTextField.getText();
@@ -63,6 +77,12 @@ public class CreatePlayerDialogController {
         }
     }
 
+    /**
+     * Callback fired when a user wishes to accept their choices.
+     * If there are any empty fields or some values are invalid,
+     * displays a warning and requires from a user to change missing or incorrect fields.
+     * Otherwise, accepts the user's selection and creates a new player.
+     */
     @FXML
     private void handleConfirm() {
         String alertContent = "";
@@ -104,16 +124,8 @@ public class CreatePlayerDialogController {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public double getBudget() {
@@ -124,19 +136,11 @@ public class CreatePlayerDialogController {
         this.budget = budget;
     }
 
-    public Stage getDialogStage() {
-        return dialogStage;
-    }
-
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
 
     public boolean isConfirmClicked() {
         return confirmClicked;
-    }
-
-    public void setConfirmClicked(boolean confirmClicked) {
-        this.confirmClicked = confirmClicked;
     }
 }

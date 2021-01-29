@@ -1,88 +1,74 @@
 package org.example.marketstock.models.exchange;
 
-import org.example.marketstock.exceptions.AddingObjectException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.List;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.common.base.MoreObjects;
 import org.example.marketstock.models.asset.Currency;
+import org.example.marketstock.models.exchange.builder.CurrencyExchangeBuilder;
 
 /**
+ * Represents a real life currency exchange where investors can buy and sell currencies listed there.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
+@JsonDeserialize(builder = CurrencyExchangeBuilder.class)
 public class CurrencyExchange extends Exchange implements Serializable {
 
-    private ArrayList<Currency> currencies;
-    private final ArrayList<String> allCurrencies;
+    private final List<Currency> currencies;
 
-    @Deprecated
-    public CurrencyExchange() {
-        this.currencies = new ArrayList<>();
-        this.allCurrencies = new ArrayList<>();
-    }
-
-    public CurrencyExchange(String country, String city, String address, String currency, double margin,
-                            ArrayList<Currency> currencies, ArrayList<String> allCurrencies) {
-        super(country, city, address, currency, margin);
-
-        String name = "Currency exchange in " + city;
-
-        this.setName(name);
-        this.currencies = currencies;
-        this.allCurrencies = allCurrencies;
-
-        LOGGER.info("Currency exchange with name: {} and currencies created.", name);
-    }
-
-    @Deprecated
-    public void initialize() {
-        this.drawValues();
-        this.setName("Currency exchange in " + this.getCity());
-        this.initializeAllCurrencies();
-    }
-    
     /**
-     * @return Resource in a text form.
-     * @throws AddingObjectException when there are no currencies to choose from.
+     * Create an {@code CurrencyExchange} with all necessary fields.
+     * @param name The name of an {@code CurrencyExchange}.
+     * @param country The country in which an {@code CurrencyExchange} is located.
+     * @param city The city in which an {@code CurrencyExchange} is located.
+     * @param address The address of an {@code CurrencyExchange} location
+     * @param currency The currency used in transactions on an {@code CurrencyExchange}.
+     * @param margin The margin of an {@code CurrencyExchange}.
+     * @param currencies A list of currencies listed by an {@code CurrencyExchange}.
      */
-    @Deprecated
-    public String drawCurrency() throws AddingObjectException {
-        if(this.allCurrencies.isEmpty()) {
-            throw new AddingObjectException("There are no resources to choose from.");
-        } else {
-            Random rand = new Random();
-            int index = rand.nextInt(allCurrencies.size());
+    public CurrencyExchange(final String name,
+                            final String country,
+                            final String city,
+                            final String address,
+                            final String currency,
+                            final double margin,
+                            final List<Currency> currencies) {
 
-            String currencyRaw = allCurrencies.get(index);
-            this.allCurrencies.remove(currencyRaw);
-            return currencyRaw;
-        }
-    }
+        super(name, country, city, address, currency, margin);
 
-    @Deprecated
-    private void initializeAllCurrencies() {
-        String [] array = new String[] {"Grosz Krakowski","Grosz Praski",
-            "Marka","Liwr","Funt Szterling","Floren","Gulden","Talar","Frank",
-            "Korona Novigradzkie","Oren","Rupia","Jen","Szekel","Dukat"};
-
-        allCurrencies.addAll(Arrays.asList(array));
-    }
-
-    public ArrayList<Currency> getCurrencies() {
-        return this.currencies;
-    }
-
-    public ObservableList<Currency> getCurrenciesObservableArrayList() {
-        return FXCollections.observableArrayList(this.currencies);
-    }
-
-    public void setCurrencies(ArrayList<Currency> currencies) {
         this.currencies = currencies;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", name)
+                .add("country", country)
+                .add("city", city)
+                .add("address", address)
+                .add("currency", currency)
+                .add("margin", margin)
+                .add("currencies", currencies)
+                .toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CurrencyExchange)) return false;
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    public List<Currency> getCurrencies() {
+        return this.currencies;
     }
 
     public void addCurrency(Currency currency) {
@@ -91,17 +77,5 @@ public class CurrencyExchange extends Exchange implements Serializable {
 
     public void removeCurrency(Currency currency) {
         currencies.remove(currency);
-    }
-
-    public ArrayList<String> getAllCurrencies() {
-        return allCurrencies;
-    }
-
-    public void addCurrencyRaw(String currencyRaw) {
-        this.allCurrencies.add(currencyRaw);
-    }
-
-    public void removeCurrencyRaw(String currencyRaw) {
-        this.allCurrencies.remove(currencyRaw);
     }
 }

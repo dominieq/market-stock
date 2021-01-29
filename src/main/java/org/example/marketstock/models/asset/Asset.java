@@ -1,157 +1,68 @@
 package org.example.marketstock.models.asset;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.marketstock.models.company.Company;
+import org.example.marketstock.models.entity.InvestmentFund;
+
+import java.util.List;
 
 /**
+ * Represents the concept of a real life asset. An {@code Asset} can be bought and sold by investors.
+ * It's rate should change with every performed transaction.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
-public abstract class Asset implements Serializable {
-    
-    protected static Logger LOGGER = LogManager.getLogger(Asset.class);
-    private String name;
-    private volatile double currentRate;
-    private volatile double minRate;
-    private volatile double maxRate;
-    private volatile double exchangeMargin;
-    private ArrayList<Double> rateChangeArrayList;
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Commodity.class, name = "commodity"),
+        @JsonSubTypes.Type(value = Company.class, name = "company"),
+        @JsonSubTypes.Type(value = Currency.class, name = "currency"),
+        @JsonSubTypes.Type(value = InvestmentFund.class, name = "investmentFund")
+})
+public interface Asset {
 
-    @Override
-    public String toString() {
-        return this.name + " with current rate " + this.currentRate;
-    }
-
-    @Deprecated
-    public Asset() {
-        this.name = "name";
-        this.currentRate = 0.0;
-        this.maxRate = 0.0;
-        this.minRate = 0.0;
-        this.exchangeMargin = 0.0;
-        this.rateChangeArrayList = new ArrayList<>();
-
-        LOGGER.warn("Asset used a deprecated constructor.");
-    }
-    
     /**
-     * Updates rate changes for asset chart.
-     * @param rate new rate value based on number of people buying
+     * Each {@code Asset} implementation should have a name.
+     * @return The name of an {@code Asset}.
      */
-    public synchronized void updateRate(Double rate) {
-        LOGGER.info("{} changes old rate {} to new rate {}", new Object[]{this.name, this.currentRate, rate});
+    String getName();
 
-        if (this.getRateChangeArrayList().size() >= 10) {
-            this.getRateChangeArrayList().remove(0);
-        }
-
-        this.rateChangeArrayList.add(rate);
-        this.currentRate = rate;
-
-        this.maxRate = this.findMaxRate();
-        this.minRate = this.findMinRate();
-    }
-    
     /**
-     * Finds maximum in rateObservableArray
-     * @return max - maximum found in rateObservableArray
+     * Each {@code Asset} implementation should have a current rate.
+     * @return The current rate of an {@code Asset}.
      */
-    protected Double findMaxRate() {
-        Double maxRate = Double.MIN_VALUE;
+    double getCurrentRate();
 
-        for (Double rate : this.rateChangeArrayList) {
-            if (rate > maxRate) {
-                maxRate = rate;
-            }
-        }
-
-        return maxRate;
-    }
-    
     /**
-     * Finds minimum in rateObservableArray.
-     * @return min - minimum found in rateObservableArray
+     * Each {@code Asset} implementation should store a minimum rate.
+     * @return The minimum rate of an {@code Asset}.
      */
-    protected Double findMinRate() {
-        Double minRate = Double.MAX_VALUE;
+    double getMinRate();
 
-        for (Double rate : this.rateChangeArrayList) {
-            if (rate < minRate) {
-                minRate = rate;
-            }
-        }
+    /**
+     * Each {@code Asset} implementation should store a maximum rate.
+     * @return The maximum rate of an {@code Asset}.
+     */
+    double getMaxRate();
 
-        return minRate;
-    }
+    /**
+     * Each {@code Asset} should store a list of it's rate changes.
+     * @return The list of rate changes of an {@code Asset}.
+     */
+    List<Double> getRateChanges();
 
-    public String getName() {
-        return this.name;
-    }
+    /**
+     * Each {@code Asset} should store a margin of an exchange that is listing it.
+     * @return The margin of an exchange that is listing it.
+     */
+    double getMargin();
 
-    public StringProperty getNameProperty() {
-        return new SimpleStringProperty(name);
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getCurrentRate() {
-        return this.currentRate;
-    }
-
-    public void setCurrentRate(double currentRate) {
-        this.currentRate = currentRate;
-    }
-
-    public double getMinRate() {
-        return this.minRate;
-    }
-
-    public void setMinRate(double minRate) {
-        this.minRate = minRate;
-    }
-
-    public double getMaxRate() {
-        return this.maxRate;
-    }
-
-    public void setMaxRate(double maxRate) {
-        this.maxRate = maxRate;
-    }
-
-    public double getExchangeMargin() {
-        return exchangeMargin;
-    }
-
-    public void setExchangeMargin(double exchangeMargin) {
-        this.exchangeMargin = exchangeMargin;
-    }
-
-    public ArrayList<Double> getRateChangeArrayList() {
-        return this.rateChangeArrayList;
-    }
-
-    public ObservableList<Double> getRateChangeObservableArrayList() {
-        return FXCollections.observableArrayList(this.rateChangeArrayList);
-    }
-
-    public void setRateChangeArrayList(ArrayList<Double> rateChangeArrayList) {
-        this.rateChangeArrayList = rateChangeArrayList;
-    }
-
-    public void addRate(double rate) {
-        this.rateChangeArrayList.add(rate);
-    }
-
-    public void deleteRate(double rate) {
-        this.rateChangeArrayList.remove(rate);
-    }
+    /**
+     * Each {@code Asset} implementation should provide a method to update it's rate.
+     * @param rate A new rate that is to replace the current rate.
+     * @return A new value of current rate.
+     */
+    double updateRate(double rate);
 }

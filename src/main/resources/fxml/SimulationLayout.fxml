@@ -2039,35 +2039,14 @@
                             <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
                             <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
                             <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
-                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
-                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
-                            <RowConstraints vgrow="SOMETIMES" maxHeight="48.0" />
                         </rowConstraints>
                         <GridPane.margin>
                             <Insets bottom="16.0" left="16.0" right="16.0" />
                         </GridPane.margin>
                         <Label
-                            text="First name of CEO"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="0"
-                        >
-                            <GridPane.margin>
-                                <Insets topRightBottomLeft="8.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label
-                            text="Last name of CEO"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="1"
-                        >
-                            <GridPane.margin>
-                                <Insets topRightBottomLeft="8.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label
                             text="Name of investment fund"
                             GridPane.columnIndex="0"
-                            GridPane.rowIndex="2"
+                            GridPane.rowIndex="0"
                         >
                             <GridPane.margin>
                                 <Insets topRightBottomLeft="8.0" />
@@ -2076,7 +2055,7 @@
                         <Label
                             text="Budget"
                             GridPane.columnIndex="0"
-                            GridPane.rowIndex="3"
+                            GridPane.rowIndex="1"
                         >
                             <GridPane.margin>
                                 <Insets topRightBottomLeft="8.0" />
@@ -2085,7 +2064,7 @@
                         <Label
                             text="Number of investment units"
                             GridPane.columnIndex="0"
-                            GridPane.rowIndex="4"
+                            GridPane.rowIndex="2"
                         >
                             <GridPane.margin>
                                 <Insets topRightBottomLeft="8.0" />
@@ -2094,7 +2073,7 @@
                         <Label
                             text="Current rate"
                             GridPane.columnIndex="0"
-                            GridPane.rowIndex="5"
+                            GridPane.rowIndex="3"
                         >
                             <GridPane.margin>
                                 <Insets topRightBottomLeft="8.0" />
@@ -2103,7 +2082,7 @@
                         <Label
                             text="Maximum rate"
                             GridPane.columnIndex="0"
-                            GridPane.rowIndex="6"
+                            GridPane.rowIndex="4"
                         >
                             <GridPane.margin>
                                 <Insets topRightBottomLeft="8.0" />
@@ -2112,36 +2091,7 @@
                         <Label
                             text="Minimum rate"
                             GridPane.columnIndex="0"
-                            GridPane.rowIndex="7"
-                        >
-                            <GridPane.margin>
-                                <Insets topRightBottomLeft="8.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label
-                            text="Name of an investment unit"
-                            GridPane.columnIndex="0"
-                            GridPane.rowIndex="8"
-                        >
-                            <GridPane.margin>
-                                <Insets topRightBottomLeft="8.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label
-                            fx:id="investmentFundFirstNameLabel"
-                            text="Label"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="0"
-                        >
-                            <GridPane.margin>
-                                <Insets topRightBottomLeft="8.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label
-                            fx:id="investmentFundLastNameLabel"
-                            text="Label"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="1"
+                            GridPane.rowIndex="5"
                         >
                             <GridPane.margin>
                                 <Insets topRightBottomLeft="8.0" />
@@ -2152,7 +2102,7 @@
                             text="Label"
                             wrapText="true"
                             GridPane.columnIndex="1"
-                            GridPane.rowIndex="2"
+                            GridPane.rowIndex="0"
                         >
                             <GridPane.margin>
                                 <Insets topRightBottomLeft="8.0" />
@@ -2162,7 +2112,7 @@
                             fx:id="investmentFundBudgetLabel"
                             text="Label"
                             GridPane.columnIndex="1"
-                            GridPane.rowIndex="3"
+                            GridPane.rowIndex="1"
                         >
                             <GridPane.margin>
                                 <Insets topRightBottomLeft="8.0" />
@@ -2172,6 +2122,26 @@
                             fx:id="investmentUnitNumberLabel"
                             text="Label"
                             GridPane.columnIndex="1"
+                            GridPane.rowIndex="2"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentFundCurrentRateLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
+                            GridPane.rowIndex="3"
+                        >
+                            <GridPane.margin>
+                                <Insets topRightBottomLeft="8.0" />
+                            </GridPane.margin>
+                        </Label>
+                        <Label
+                            fx:id="investmentFundMaxRateLabel"
+                            text="Label"
+                            GridPane.columnIndex="1"
                             GridPane.rowIndex="4"
                         >
                             <GridPane.margin>
@@ -2179,41 +2149,10 @@
                             </GridPane.margin>
                         </Label>
                         <Label
-                            fx:id="investmentUnitCurrentRateLabel"
+                            fx:id="investmentFundMinRateLabel"
                             text="Label"
                             GridPane.columnIndex="1"
                             GridPane.rowIndex="5"
-                        >
-                            <GridPane.margin>
-                                <Insets topRightBottomLeft="8.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label
-                            fx:id="investmentUnitMaxRateLabel"
-                            text="Label"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="6"
-                        >
-                            <GridPane.margin>
-                                <Insets topRightBottomLeft="8.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label
-                            fx:id="investmentUnitMinRateLabel"
-                            text="Label"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="7"
-                        >
-                            <GridPane.margin>
-                                <Insets topRightBottomLeft="8.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label
-                            fx:id="investmentUnitNameLabel"
-                            text="Label"
-                            wrapText="true"
-                            GridPane.columnIndex="1"
-                            GridPane.rowIndex="8"
                         >
                             <GridPane.margin>
                                 <Insets topRightBottomLeft="8.0" />
