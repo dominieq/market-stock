@@ -37,8 +37,10 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
+ * Controls the {@code SimulationLayout} and consequently
+ * allows a user to participate in the {@link Simulation}.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 public class SimulationLayoutController {
@@ -262,6 +264,9 @@ public class SimulationLayoutController {
         this.simulation = simulation;
     }
 
+    /**
+     * Populates main tables with lists from {@link Simulation}.
+     */
     public void setSimulationItems() {
         if (isNull(simulation)) {
             return;
@@ -275,6 +280,9 @@ public class SimulationLayoutController {
         showPlayerDetails(simulation.getPlayer());
     }
 
+    /**
+     * Used when a user wanted to remove, buy or sell an asset or entity without selecting it first.
+     */
     public void showActionWithoutSelection() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
 
@@ -284,6 +292,9 @@ public class SimulationLayoutController {
         alert.showAndWait();
     }
 
+    /**
+     * Used when there are no more random assets for a selected exchange.
+     */
     public void showAddingObjectWarning () {
         Alert alert = new Alert(Alert.AlertType.WARNING);
 
@@ -293,6 +304,9 @@ public class SimulationLayoutController {
         alert.showAndWait();
     }
 
+    /**
+     * Used when a {@link Countable} object doesn't have enough assets.
+     */
     public void showNotEnoughSharesWarning() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
 
@@ -302,6 +316,9 @@ public class SimulationLayoutController {
         alert.showAndWait();
     }
 
+    /**
+     * Used when a user wanted to sell a number of assets they don't possess.
+     */
     public void showSellingTooMuch () {
         Alert alert = new Alert(Alert.AlertType.WARNING);
 
@@ -311,6 +328,9 @@ public class SimulationLayoutController {
         alert.showAndWait();
     }
 
+    /**
+     * Used when a user wanted to add an asset without selecting an exchange first.
+     */
     public void showAddingWithoutMarkingWarning () {
         Alert alert = new Alert(Alert.AlertType.WARNING);
 
@@ -616,9 +636,9 @@ public class SimulationLayoutController {
     //########################################################//
 
     /**
-     * Displays player's inventory (briefcase content).
-     * @param asset Asset from player's briefcase.
-     * @param player Player from simulation.
+     * Displays an asset from player's {@code Briefcase}.
+     * @param asset An {@code Asset} from player's {@code Briefcase}.
+     * @param player The {@code Player} from {@link Simulation}.
      */
     public void showBriefcaseDetails(final Asset asset, final Player player) {
         if(nonNull(asset) && nonNull(player)){
@@ -642,8 +662,8 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Displays player's characteristics.
-     * @param player Player from simulation.
+     * Shows player's characteristics.
+     * @param player The {@code Player} from {@link Simulation}.
      */
     public void showPlayerDetails(final Player player) {
         if (nonNull(player)) {
@@ -677,7 +697,8 @@ public class SimulationLayoutController {
     }
     
     /**
-     * Allows player to buy a number of asset from their belongings.
+     * Callback fired when a user wishes to buy a selected number of an {@link Asset} from their {@code Briefcase}.
+     * After the transaction is completed the {@link TextField} is cleared.
      */
     @FXML
     private void handleBuyAsset() {
@@ -696,7 +717,8 @@ public class SimulationLayoutController {
     }
     
     /**
-     * Allows player to sell a number of asset from their briefcase.
+     * Callback fired when a user wishes to sell a selected number of an {@link Asset} from their {@code Briefcase}.
+     * After the transaction is completed the {@link TextField} is cleared.
      */
     @FXML
     private void handleSellAsset() {
@@ -714,6 +736,10 @@ public class SimulationLayoutController {
         }
     }
 
+    /**
+     * Displays an instance of an {@link Asset} depending on its implementation.
+     * @param asset An asset that is to be displayed in a GUI.
+     */
     private void showUnknownAsset(final Asset asset) {
         if (asset instanceof Company) {
             if (Objects.equals(asset, companyTableView.getSelectionModel().getSelectedItem())) {
@@ -741,8 +767,8 @@ public class SimulationLayoutController {
     //########################################################//
 
     /**
-     * Shows characteristics of a selected stock exchange.
-     * @param stockExchange Stock exchange from simulation.
+     * Shows characteristics of a selected {@link StockExchange}.
+     * @param stockExchange A {@code StockExchange} from {@link Simulation}.
      */
     public void showStockExchange(final StockExchange stockExchange) {
         if(nonNull(stockExchange)) {
@@ -769,7 +795,7 @@ public class SimulationLayoutController {
     }
     
     /**
-     * Add a new stock exchange to simulation.
+     * Callback fired when a user wishes to add a new {@link StockExchange} to {@link Simulation}.
      */
     @FXML
     private void handleAddStockExchange() {
@@ -780,7 +806,7 @@ public class SimulationLayoutController {
     }
     
     /**
-     * Removes a selected stock exchange from simulation.
+     * Callback fired when a user wishes to remove a selected {@link StockExchange} from {@link Simulation}.
      */
     @FXML
     private void handleRemoveStockExchange() {
@@ -797,8 +823,8 @@ public class SimulationLayoutController {
     }
     
     /**
-     * Shows characteristics of a selected company.
-     * @param company Company that belonged to certain stock exchange.
+     * Shows characteristics of a selected {@link Company}.
+     * @param company A {@code Company} that belongs to a selected {@link StockExchange}.
      */
     public void showCompany(final Company company) {
         if(nonNull(company)) {
@@ -833,7 +859,7 @@ public class SimulationLayoutController {
     }
     
     /**
-     * Add new company to a selected stock exchange and to the list of all companies.
+     * Callback fired when a user wishes to add a new {@link Company} to a selected {@link StockExchange}.
      */
     @FXML
     private void handleAddCompany() {
@@ -855,7 +881,7 @@ public class SimulationLayoutController {
     }
        
     /**
-     *  Removes a selected company from a selected stock exchange and the list of all companies.
+     *  Callback fired when a user wishes to remove a selected {@link Company} from a selected {@link StockExchange}.
      */
     @FXML
     private void handleRemoveCompany() {
@@ -876,8 +902,8 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Allows a player to buy a number of shares from a selected company. Number is taken from a TextField.
-     * After transaction is completed the TextField is cleared.
+     * Callback fired when a user wishes to buy a selected number of a selected {@link Company}.
+     * After the transaction is completed the {@link TextField} is cleared.
      */
     @FXML
     private synchronized void handleBuyShares() {
@@ -898,8 +924,8 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Displays a selected Index characteristics.
-     * @param index Index that belonged to certain stock exchange.
+     * Shows characteristics of a selected {@link Index}.
+     * @param index An {@code Index} that belongs to a selected {@link StockExchange}.
      */
     public void showIndex(final Index index) {
         if(nonNull(index)) {
@@ -916,7 +942,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Adds new Index to a selected stock exchange and the list of all indices.
+     * Callback fired when a user wishes to add a new {@link Index} to a selected {@link StockExchange}.
      */
     @FXML
     private void handleAddIndex() {
@@ -941,7 +967,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Removes a selected Index from a selected stock exchange and the list of all indices.
+     * Callback fired when a user wishes to remove a selected {@link Index} from a selected {@link StockExchange}.
      */
     @FXML
     private void handleRemoveIndex() {
@@ -967,8 +993,8 @@ public class SimulationLayoutController {
     //########################################################//
 
     /**
-     * Displays a selected currency exchange characteristics.
-     * @param currencyExchange CurrencyExchange from simulation.
+     * Shows characteristics of a selected {@link CurrencyExchange}.
+     * @param currencyExchange {@code CurrencyExchange} from {@link Simulation}.
      */
     public void showCurrencyExchange(final CurrencyExchange currencyExchange) {
         if (nonNull(currencyExchange)) {
@@ -993,7 +1019,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Add a new currency exchange to simulation.
+     * Callback fired when a user wishes to add a new {@link CurrencyExchange} to {@link Simulation}.
      */
     @FXML
     private void handleAddCurrencyExchange() {
@@ -1004,7 +1030,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Removes a selected currency exchange from simulation.
+     * Callback fired when a user wishes to remove a selected {@link CurrencyExchange} from {@link Simulation}.
      */
     @FXML
     private void handleRemoveCurrencyExchange() {
@@ -1021,8 +1047,8 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Displays a selected currency characteristics.
-     * @param currency Currency from a selected currency exchange.
+     * Shows characteristics of a selected {@link Currency}.
+     * @param currency {@code Currency} from a selected {@link CurrencyExchange}.
      */
     public void showCurrency(final Currency currency) {
         if (nonNull(currency)) {
@@ -1045,7 +1071,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Add new currency to a selected currency exchange and the list a all currencies.
+     * Callback fired when a user wishes to add a new {@link Currency} to a selected {@link CurrencyExchange}.
      */
     @FXML
     private void handleAddCurrency() {
@@ -1072,7 +1098,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Removes a selected currency from a selected currency exchange and the list of all currencies.
+     * Callback fired when a user wishes to remove a selected {@link Currency} from a selected {@link CurrencyExchange}.
      */
     @FXML
     private void handleRemoveCurrency() {
@@ -1092,7 +1118,8 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Allows player to buy a selected number of currency.
+     * Callback fired when a user wishes to buy a selected number of a selected {@link Currency}.
+     * After the transaction is completed the {@link TextField} is cleared.
      */
     @FXML
     private void handleBuyCurrency() {
@@ -1118,8 +1145,8 @@ public class SimulationLayoutController {
     //########################################################//
 
     /**
-     * Displays a selected commodity exchange characteristics.
-     * @param commodityExchange CommodityExchange from simulation.
+     * Shows characteristics of a selected {@link CommodityExchange}.
+     * @param commodityExchange {@code CommodityExchange} from {@link Simulation}.
      */
     public void showCommodityExchange(final CommodityExchange commodityExchange) {
         if(nonNull(commodityExchange)) {
@@ -1144,7 +1171,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Adds a new commodity exchange to simulation.
+     * Callback fired when a user wishes to add a new {@link CommodityExchange} to {@link Simulation}.
      */
     @FXML
     private void handleAddCommodityExchange() {
@@ -1155,7 +1182,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Removes a selected commodity exchange from simulation.
+     * Callback fired when a user wishes to remove a selected {@link CommodityExchange} from {@link Simulation}.
      */
     @FXML
     private void handleRemoveCommodityExchange() {
@@ -1172,8 +1199,8 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Displays a selected commodity characteristics.
-     * @param commodity Commodity from a selected commodity exchange.
+     * Shows characteristics of a selected {@link Commodity}.
+     * @param commodity {@code Commodity} from a selected {@link CommodityExchange}.
      */
     public void showCommodity(Commodity commodity) {
         if(nonNull(commodity)) {
@@ -1194,7 +1221,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Adds new commodity to a selected commodity exchange and to the list of all commodities.
+     * Callback fired when a user wishes to add a new {@link Commodity} to a selected {@link CommodityExchange}.
      */
     @FXML
     private void handleAddCommodity() {
@@ -1221,7 +1248,7 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Removes a selected commodity from a selected commodity exchange and from the list of all commodities.
+     * Callback fired when a user wishes to remove a selected {@link Commodity} from a selected {@link CommodityExchange}.
      */
     @FXML
     private void handleRemoveCommodity() {
@@ -1241,7 +1268,8 @@ public class SimulationLayoutController {
     }
 
     /**
-     * Allows player to buy a selected number of commodity.
+     * Callback fired when a user wishes to buy a selected number of a selected {@link Commodity}.
+     * After the transaction is completed the {@link TextField} is cleared.
      */
     @FXML
     private void handleBuyCommodity() {
@@ -1267,7 +1295,7 @@ public class SimulationLayoutController {
     //########################################################//
 
     /**
-     * Removes a selected investor from simulation
+     * Callback fired when a user wishes to remove a selected {@link Investor} from {@link Simulation}.
      */
     @FXML
     private void handleRemoveInvestor() {
@@ -1284,8 +1312,8 @@ public class SimulationLayoutController {
     }
     
     /**
-     * Displays a selected investor characteristics.
-     * @param investor Investor from a simulation.
+     * Shows characteristics a selected {@link Investor}.
+     * @param investor {@code Investor} from a {@link Simulation}.
      */
     private void showInvestor(final Investor investor) {
         if(nonNull(investor)) {
@@ -1310,7 +1338,7 @@ public class SimulationLayoutController {
     } 
     
     /**
-     * Removes a selected investment fund from simulation.
+     * Callback fired when a user wishes to remove a selected {@link InvestmentFund} from {@link Simulation}.
      */
     @FXML
     private void handleRemoveInvestmentFund() {
@@ -1327,8 +1355,8 @@ public class SimulationLayoutController {
     } 
     
     /**
-     * Shows a selected investment fund characteristics.
-     * @param investmentFund InvestmentFund from a simulation
+     * Shows characteristics of a selected {@link InvestmentFund}.
+     * @param investmentFund {@code InvestmentFund} from a {@link Simulation}.
      */
     private void showInvestmentFund(final InvestmentFund investmentFund) {
         if(nonNull(investmentFund)) {
@@ -1349,7 +1377,8 @@ public class SimulationLayoutController {
     }
     
     /**
-     * Allows player to buy a number of investment units from a investment fund.
+     * Callback fired when a user wishes to buy a selected number of a selected {@link InvestmentFund}.
+     * After the transaction is completed the {@link TextField} is cleared.
      */
     @FXML
     private void handleBuyInvestmentUnits() {
@@ -1368,6 +1397,10 @@ public class SimulationLayoutController {
         }
     }
 
+    /**
+     * Shows a {@link LineChart} that displays rate changes of a selected {@link Asset} from the player's briefcase.
+     * Graph can display up to 2 assets at once.
+     */
     private void showAssetLineChart() {
         try {
            assetLineChart.getData().clear();
