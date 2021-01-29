@@ -10,10 +10,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * Implements {@link JsonReader} to retrieve arrays from the local resources folder.
+ *
+ * @since 1.0.0
+ * @author Dominik Szmyt
+ */
 public final class SimpleJsonReader implements JsonReader {
 
     private static final Logger LOGGER = LogManager.getLogger(SimpleJsonReader.class);
 
+    /**
+     * Reads a file from the local resources folder and returns it's content as a string array.
+     * @param location Preferably an URL to a specified resource.
+     * @return A string array from a file located in the local resources folder.
+     */
     @Override
     public String[] getResource(String location) {
         final JSONParser parser = new JSONParser();

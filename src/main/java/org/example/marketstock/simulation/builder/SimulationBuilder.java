@@ -15,6 +15,13 @@ import java.util.List;
 
 import static java.util.Objects.isNull;
 
+/**
+ * A builder for the {@link Simulation} class.
+ *
+ * @author Dominik Szmyt
+ * @see Simulation
+ * @since 1.0.0
+ */
 public final class SimulationBuilder {
 
     private Player player;

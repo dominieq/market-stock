@@ -10,6 +10,13 @@ import org.example.marketstock.models.entity.Player;
 
 import java.io.IOException;
 
+/**
+ * A custom deserializer for the {@link Player} class.
+ *
+ * @author Dominik Szmyt
+ * @see Player
+ * @since 1.0.0
+ */
 public class PlayerDeserializer extends StdDeserializer<Player> {
 
     public PlayerDeserializer() {

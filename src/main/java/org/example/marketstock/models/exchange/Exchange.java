@@ -6,8 +6,9 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /**
+ * Represents a real life exchange where investors can buy or sell assets listed there.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 public abstract class Exchange implements Serializable {
@@ -19,6 +20,15 @@ public abstract class Exchange implements Serializable {
     protected final String currency;
     protected final double margin;
 
+    /**
+     * Create an {@code Exchange} with all necessary fields.
+     * @param name The name of an {@code Exchange}.
+     * @param country The country in which an {@code Exchange} is located.
+     * @param city The city in which an {@code Exchange} is located.
+     * @param address The address of an {@code Exchange} location
+     * @param currency The currency used in transactions on an {@code Exchange}.
+     * @param margin The margin of an {@code Exchange}.
+     */
     public Exchange(final String name,
                     final String country,
                     final String city,

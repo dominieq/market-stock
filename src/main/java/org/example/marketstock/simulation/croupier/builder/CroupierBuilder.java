@@ -7,6 +7,13 @@ import java.util.Random;
 
 import static java.util.Objects.isNull;
 
+/**
+ * A builder for the {@link Croupier} class.
+ *
+ * @author Dominik Szmyt
+ * @see Croupier
+ * @since 1.0.0
+ */
 public final class CroupierBuilder {
 
     private JsonReader jsonReader;

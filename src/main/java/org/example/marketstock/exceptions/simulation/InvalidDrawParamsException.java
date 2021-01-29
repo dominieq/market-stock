@@ -5,10 +5,23 @@ import com.google.common.base.Objects;
 
 import java.util.Arrays;
 
+/**
+ * Should be thrown when invalid parameters were provided
+ * to methods from {@link org.example.marketstock.simulation.croupier.Croupiers}.
+ * Invalid parameters are concatenated to the message.
+ *
+ * @author Dominik Szmyt
+ * @since 1.0.0
+ */
 public class InvalidDrawParamsException extends RuntimeException {
 
     private final Object[] params;
 
+    /**
+     * Create an {@code InvalidDrawParamsException} with invalid params included.
+     * @param message The detail message.
+     * @param params A list of params that were invalid.
+     */
     public InvalidDrawParamsException(final String message,
                                       final Object[] params) {
 

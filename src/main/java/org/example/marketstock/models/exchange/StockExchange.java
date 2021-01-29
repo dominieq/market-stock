@@ -16,8 +16,11 @@ import org.example.marketstock.models.index.Index;
 import static java.util.Objects.nonNull;
 
 /**
+ * Represents a real life stock exchange where investors can buy and sell shares
+ * that belong to companies listed there.
+ * Stock exchange offers the possibility to measure it's companies in stock indices.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonDeserialize(builder = StockExchangeBuilder.class)
@@ -29,6 +32,17 @@ public class StockExchange extends Exchange implements Serializable {
     @JsonIgnore
     private final transient ExecutorService companiesService = Executors.newFixedThreadPool(100);
 
+    /**
+     * Create an {@code StockExchange} with all necessary fields.
+     * @param name The name of an {@code StockExchange}.
+     * @param country The country in which an {@code StockExchange} is located.
+     * @param city The city in which an {@code StockExchange} is located.
+     * @param address The address of an {@code StockExchange} location
+     * @param currency The currency used in transactions on an {@code StockExchange}.
+     * @param margin The margin of an {@code StockExchange}.
+     * @param indices A list of indices created by an {@code StockExchange}.
+     * @param companies A list of companies listed by an {@code StockExchange}.
+     */
     public StockExchange(final String name,
                          final String country,
                          final String city,
@@ -44,6 +58,10 @@ public class StockExchange extends Exchange implements Serializable {
         this.companies = companies;
     }
 
+    /**
+     * Updates available indices with current company list from a stock exchange.
+     * Usually called after a new company was added to a stock exchange.
+     */
     public void updateIndices() {
         if (nonNull(indices) && !indices.isEmpty()) {
             indices.forEach(index -> index.updateIndex(new ArrayList<>(companies)));

@@ -31,6 +31,8 @@ import org.example.marketstock.simulation.json.SimpleJsonReader;
 import static java.util.Objects.nonNull;
 
 /**
+ * Main class of the project. Starts the application.
+ * Is responsible for creating both the {@link Player} and {@link Simulation}.
  *
  * @author Dominik Szmyt
  * @since 1.0.0
@@ -50,6 +52,11 @@ public class MarketApp extends Application {
         launch(args);
     }
 
+    /**
+     * Starts the application using provided stage.
+     * Uses {@link #initRootLayout()} and {@link #showStartMenuLayout()} methods to display starting layout.
+     * @param primaryStage The primary stage for this application.
+     */
     @Override
     public void start (Stage primaryStage) {
         LOGGER.debug("[APP]: Starting JavaFX application.");
@@ -61,6 +68,9 @@ public class MarketApp extends Application {
         showStartMenuLayout();
     }
 
+    /**
+     * Initializes {@link RootLayoutController} and displays a {@code RootLayout}.
+     */
     private void initRootLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -79,6 +89,9 @@ public class MarketApp extends Application {
         }
     }
 
+    /**
+     * Initializes {@link StartMenuLayoutController} and displays a {@code StartMenuLayout}.
+     */
     private void showStartMenuLayout() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -94,6 +107,10 @@ public class MarketApp extends Application {
         }
     }
 
+    /**
+     * Builds the {@link Simulation} from a builder and initializes {@link SimulationLayoutController}.
+     * In the end displays a {@code SimulationLayout}.
+     */
     public void showSimulationLayout() {
         try {
             final FXMLLoader loader = new FXMLLoader();
@@ -112,6 +129,9 @@ public class MarketApp extends Application {
         }
     }
 
+    /**
+     * Initializes the {@link GuideLayoutController} and displays a {@code GuideLayoutController}.
+     */
     public void showGuideLayout() {
         try {
             FXMLLoader loader = new FXMLLoader ();
@@ -132,6 +152,11 @@ public class MarketApp extends Application {
         }
     }
 
+    /**
+     * Initializes the {@link CreatePlayerDialogController} and displays a {@code CreatePlayerDialog}.
+     * After a user selected their values, creates the {@link Player} and returns {@code true}.
+     * @return {@code true} if the {@link Player} was built successfully, otherwise returns {@code false}.
+     */
     public boolean showCreatePlayerDialog() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -176,6 +201,11 @@ public class MarketApp extends Application {
         }
     }
 
+    /**
+     * Prepares the {@link SimulationBuilder} for a new game.
+     * Adds empty collections and creates the main currency
+     * that will be used as a reference for all {@code Currencies}.
+     */
     public void prepareNewGame() {
         simulationBuilder
                 .withStockExchanges(FXCollections.observableArrayList())
@@ -196,6 +226,10 @@ public class MarketApp extends Application {
         prepareResources();
     }
 
+    /**
+     * Prepares the {@link SimulationBuilder} to include necessary resources for creating new assets and entities.
+     * This step includes loading data from default files.
+     */
     public void prepareResources() {
         simulationBuilder
                 .withCroupier(CroupierBuilder.builder()
@@ -216,6 +250,10 @@ public class MarketApp extends Application {
         }
     }
 
+    /**
+     * If a {@link Simulation} exists starts all necessary threads
+     * which includes: companies, investors and investment funds.
+     */
     public void startSimulation() {
         if (nonNull(simulation)) {
             simulation.getStockExchanges().forEach(stockExchange ->
@@ -226,6 +264,10 @@ public class MarketApp extends Application {
         }
     }
 
+    /**
+     * If a {@link Simulation} exists tries to kill all running threads in a separate thread.
+     * @return An {@code ExecutorService} with a single thread responsible for killing threads from the {@link Simulation}.
+     */
     public ExecutorService shutdownSimulation() {
         final ExecutorService shutdownService = Executors.newSingleThreadExecutor();
 

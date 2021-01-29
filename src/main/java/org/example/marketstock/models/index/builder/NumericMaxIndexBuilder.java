@@ -5,6 +5,13 @@ import org.example.marketstock.models.asset.Asset;
 
 import java.util.List;
 
+/**
+ * A builder for the {@link NumericMaxIndex} class.
+ *
+ * @author Dominik Szmyt
+ * @see NumericMaxIndex
+ * @since 1.0.0
+ */
 public final class NumericMaxIndexBuilder {
 
     private String name;

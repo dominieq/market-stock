@@ -10,8 +10,9 @@ import com.google.common.base.Objects;
 import org.example.marketstock.models.asset.builder.CommodityBuilder;
 
 /**
+ * Represents a real life commodity that can be bought and sold by investors.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonDeserialize(builder = CommodityBuilder.class)
@@ -20,6 +21,17 @@ public class Commodity extends AbstractAsset implements Serializable {
     private final String unitOfTrading;
     private final String currency;
 
+    /**
+     * Create a {@code Commodity} with all necessary fields.
+     * @param name The name of a {@code Commodity}.
+     * @param currentRate The current rate of a {@code Commodity}.
+     * @param minRate The minimum rate of a {@code Commodity}.
+     * @param maxRate The maximum rate of a {@code Commodity}.
+     * @param margin The margin of an {@code Exchange} that lists the {@code Commodity}.
+     * @param rateChanges The list of rate changes of a {@code Commodity}.
+     * @param unitOfTrading The unit of trading of a {@code Commodity}.
+     * @param currency The currency in which a {@code Commodity} can be bought.
+     */
     public Commodity(final String name,
                      final double currentRate,
                      final double minRate,

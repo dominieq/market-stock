@@ -9,6 +9,7 @@ import com.google.common.base.Objects;
 import org.example.marketstock.models.asset.builder.CurrencyBuilder;
 
 /**
+ * Represents a real life currency that can be bought and sold by investors.
  *
  * @author Dominik Szmyt
  * @since 1.0.0
@@ -19,6 +20,17 @@ public class Currency extends AbstractAsset implements Serializable {
     private final Currency comparisonCurrency;
     private final List<String> countries;
 
+    /**
+     * Create a {@code Currency} with all necessary fields.
+     * @param name The name of a {@code Currency}.
+     * @param currentRate The current rate of a {@code Currency}.
+     * @param minRate The minimum rate of a {@code Currency}.
+     * @param maxRate The maximum rate of a {@code Currency}.
+     * @param exchangeMargin The margin of an {@code Exchange} that lists the {@code Currency}.
+     * @param rateChangeArrayList The list of rate changes of an {@code Currency}.
+     * @param comparisonCurrency A currency in comparison to which a current rate is calculated.
+     * @param countries The list of countries in which the {@code Currency} can be used.
+     */
     public Currency(final String name,
                     final double currentRate,
                     final double minRate,

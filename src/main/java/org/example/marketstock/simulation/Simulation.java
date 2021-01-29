@@ -46,6 +46,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Represents a simplified world where entities can buy and sell assets.
+ * Takes care of adding or removing new objects safely.
+ * On top of that, provides methods for entities to choose assets and perform transactions.
+ *
+ * @since 1.0.0
+ * @author Domink Szmyt
+ */
 @JsonSerialize(using = SimulationSerializer.class)
 @JsonDeserialize(using = SimulationDeserializer.class)
 public class Simulation {
@@ -87,6 +95,25 @@ public class Simulation {
         this.mainCurrency = mainCurrency;
     }
 
+    /**
+     * Performs a purchase operation. The purchase operation consists of several steps:
+     * <ol>
+     *     <li>Evaluating the final number of a selected asset.</li>
+     *     <li>Calculating price - result is used to change entity's budget and company's turnover.</li>
+     *     <li>Changing the rate of a selected asset.</li>
+     *     <li>Decreasing the number of a selected asset if necessary.</li>
+     *     <li>Updating company's turnover and volume using calculated price and final number.</li>
+     *     <li>Updating indices if necessary.</li>
+     * </ol>
+     * Since there is a chance that the rate or count of a selected asset may change between choosing and buying it,
+     * method changes the final number of asset if necessary.
+     *
+     * @param asset An asset to buy.
+     * @param number The number of a selected asset.
+     * @param originalRate The original rate of a selected asset.
+     * @param entity An entity that wants to buy selected asset.
+     * @return The number of successfully purchased asset.
+     */
     public synchronized int buySelectedResource(final Asset asset,
                                                  final int number,
                                                  final double originalRate,
@@ -145,6 +172,21 @@ public class Simulation {
         return finalNumber;
     }
 
+    /**
+     * Performs a sell operation. The sell operation consists of several steps:
+     * <ol>
+     *     <li>Calculating price - result is used to change company's turnover.</li>
+     *     <li>Calculating price minus asset's margin - result is used to increase entity's budget.</li>
+     *     <li>Changing the rate of a selected asset.</li>
+     *     <li>Increasing the number of a selected asset if necessary.</li>
+     *     <li>Updating company's turnover and volume using calculated price and initial number.</li>
+     *     <li>Updating indices if necessary.</li>
+     * </ol>
+     *
+     * @param asset An asset to sell.
+     * @param number The number of a selected asset
+     * @param entity An entity that wants to sell the selected asset.
+     */
     public synchronized void sellSelectedResource(final Asset asset,
                                                   final int number,
                                                   final Entity entity) {
@@ -168,6 +210,19 @@ public class Simulation {
         }
     }
 
+    /**
+     * Performs a purchase selection operation. The operation consists of several steps:
+     * <ol>
+     *     <li>Removing the entity from the list of available assets.</li>
+     *     <li>Selecting an asset with the lowest current rate at that moment.</li>
+     *     <li>Calculating the number of a selected asset while taking into account entity's budget and available stock.</li>
+     * </ol>
+     * Since there is a chance that an entity may be an asset as well,
+     * method removes entity from available assets just in case.
+     *
+     * @param entity An entity that wants to choose asset.
+     * @return A tuple where the first value is the selected asset; second - the selected number; third - original rate.
+     */
     public synchronized Optional<Tuple3<Asset, Integer, Double>> chooseAssetToBuy(final Entity entity) {
         final List<Asset> assets = getAvailableAssets();
 
@@ -199,6 +254,16 @@ public class Simulation {
         return Optional.of(new Tuple3<>(chosenAsset, chosenNumber, chosenAsset.getCurrentRate()));
     }
 
+    /**
+     * Performs a sell selection operation. The operation consists of several steps:
+     * <ol>
+     *     <li>Selecting an asset with the highest current rate at that moment.</li>
+     *     <li>Calculating the number of a selected asset while taking into account available stock.</li>
+     * </ol>
+     *
+     * @param entity An entity that wants to choose asset to sell.
+     * @return A tuple where the first value is the selected asset; second - the number of asset; third - original rate.
+     */
     public synchronized Optional<Tuple3<Asset, Integer, Double>> chooseAssetToSell(final Entity entity) {
         final List<Asset> assets = entity.getBriefcase().getAssets();
 
@@ -218,6 +283,10 @@ public class Simulation {
         return Optional.of(new Tuple3<>(chosenAsset, chosenNumber, chosenAsset.getCurrentRate()));
     }
 
+    /**
+     * Adds a random investor and investment fund when number of available assets is divisible by 5.
+     * Method is used in {@link org.example.marketstock.fxml.SimulationLayoutController} after the user adds a random asset.
+     */
     public synchronized void issueEntities() {
         if (getAvailableAssets().size() % 5 == 0) {
             addInvestor();
@@ -225,6 +294,10 @@ public class Simulation {
         }
     }
 
+    /**
+     * Creates the list of available assets from exchanges as well as investment funds.
+     * @return A list of available assets.
+     */
     public List<Asset> getAvailableAssets() {
         final List<Asset> availableAssets = new ArrayList<>();
 
@@ -251,6 +324,10 @@ public class Simulation {
         return availableAssets;
     }
 
+    /**
+     * Creates a new {@link Investor} with random values generated by {@link Croupier} and starts new thread.
+     * @return A new investor with random values.
+     */
     public Investor addInvestor() {
         final Investor investor = InvestorBuilder.builder()
                 .withFirstName(croupier.drawFirstName())
@@ -269,6 +346,10 @@ public class Simulation {
         return investor;
     }
 
+    /**
+     * Gracefully stops investor's thread, then removes them from the {@link Simulation}.
+     * @param investor An investor that will be removed from the {@link Simulation}.
+     */
     public synchronized void removeInvestor(final Investor investor) {
         if (!investor.isActive()) {
             return;
@@ -290,6 +371,10 @@ public class Simulation {
         });
     }
 
+    /**
+     * Creates new {@link InvestmentFund} with random value generated by {@link Croupier} and starts new thread.
+     * @return A new investment fund with random values.
+     */
     public InvestmentFund addInvestmentFund() {
         final double currentRate = croupier.drawCurrentRate();
 
@@ -314,6 +399,11 @@ public class Simulation {
         return investmentFund;
     }
 
+    /**
+     * Gracefully stops investment fund's thread, then removes it from the {@link Simulation}
+     * and briefcases that belong to each entity in the {@link Simulation}.
+     * @param investmentFund An investment fund that will be removed from the {@link Simulation}.
+     */
     public void removeInvestmentFund(final InvestmentFund investmentFund) {
         if (!investmentFund.isActive()) {
             return;
@@ -338,6 +428,10 @@ public class Simulation {
         });
     }
 
+    /**
+     * Removes the selected asset from briefcases that belong to each entity in the {@link Simulation}.
+     * @param asset An asset that will be removed from all briefcases.
+     */
     public void removeAssetFromBriefcase(final Asset asset) {
         synchronized (this) {
             investors.stream()
@@ -353,8 +447,8 @@ public class Simulation {
     }
 
     /**
-     * Creates new Stock Exchange with random values generated by Croupier.
-     * @return StockExchange with random values.
+     * Creates new {@link StockExchange} with random values generated by {@link Croupier}.
+     * @return A new stock exchange with random values.
      */
     public StockExchange addStockExchange() {
         final String city = croupier.drawCity();
@@ -375,6 +469,12 @@ public class Simulation {
         return stockExchange;
     }
 
+    /**
+     * Shuts down every company's thread and removes all companies from briefcases
+     * that belong to each entity in the {@link Simulation}.
+     * Then, removes selected stock exchange from the {@link Simulation}.
+     * @param stockExchange A stock exchange that will be removed from the {@link Simulation}.
+     */
     public void removeStockExchange(final StockExchange stockExchange) {
         stockExchange.getCompaniesService().shutdownNow();
         stockExchanges.remove(stockExchange);
@@ -385,8 +485,8 @@ public class Simulation {
     }
 
     /**
-     * Creates new Currency Exchange with random values generated by Exchange Croupier.
-     * @return CurrencyExchange with random values.
+     * Creates a new {@link CurrencyExchange} with random values generated by {@link Croupier}.
+     * @return A new currency exchange with random values.
      */
     public CurrencyExchange addCurrencyExchange() {
         final String city = croupier.drawCity();
@@ -406,6 +506,11 @@ public class Simulation {
         return currencyExchange;
     }
 
+    /**
+     * Removes the selected currency exchange from the {@link Simulation}.
+     * Then, removes every currency from briefcases that belong to each entity in the {@link Simulation}.
+     * @param currencyExchange A currency exchange that will be removed from the {@link Simulation}.
+     */
     public void removeCurrencyExchange(final CurrencyExchange currencyExchange) {
         currencyExchanges.remove(currencyExchange);
 
@@ -415,8 +520,8 @@ public class Simulation {
     }
 
     /**
-     * Creates new CommodityExchange with random values generated by Exchange Croupier.
-     * @return CommodityExchange with random values.
+     * Creates a new {@link CommodityExchange} with random values generated by {@link Croupier}.
+     * @return A new commodity exchange with random values.
      */
     public CommodityExchange addCommodityExchange() {
         final String city = croupier.drawCity();
@@ -436,6 +541,11 @@ public class Simulation {
         return commodityExchange;
     }
 
+    /**
+     * Removes the selected commodity exchange from the {@link Simulation}.
+     * Then, removes every commodity from briefcases that belong to each entity in the {@link Simulation}.
+     * @param commodityExchange A commodity exchange that will be removed from the {@link Simulation}.
+     */
     public void removeCommodityExchange(final CommodityExchange commodityExchange) {
         commodityExchanges.remove(commodityExchange);
 
@@ -444,6 +554,12 @@ public class Simulation {
         }
     }
 
+    /**
+     * Creates a new {@link Company} with random values generated by {@link Croupier}.
+     * The company is then added to the selected {@link StockExchange} and a new thread is started.
+     * @param stockExchange - A selected stock exchange that will own the company.
+     * @return A new company with random values.
+     */
     public Company addCompany(final StockExchange stockExchange) {
         double openingRate = croupier.drawOpeningRate();
 
@@ -472,6 +588,12 @@ public class Simulation {
         return company;
     }
 
+    /**
+     * Gracefully stops company's thread, then removes it from the selected {@link StockExchange}
+     * and briefcases that belong to each entity in the {@link Simulation}.
+     * @param company A company that will be removed from the selected stock exchange.
+     * @param stockExchange A stock exchange that will have one of it's companies removed.
+     */
     public void removeCompany(final Company company, final StockExchange stockExchange) {
         if (!company.isActive()) {
             return;
@@ -498,6 +620,13 @@ public class Simulation {
         });
     }
 
+    /**
+     * Creates a new {@link Commodity} with random values generated by {@link Croupier}.
+     * There is a chance that there won't be any available commodities for a selected commodity exchange.
+     * In such case, an empty {@link Optional} is returned.
+     * @param commodityExchange A commodity exchange that will own the commodity.
+     * @return If there are no available names for commodity exchange, optional is empty.
+     */
     public Optional<Commodity> addCommodity(final CommodityExchange commodityExchange) {
         List<String> names = commodityExchange.getCommodities().stream()
                 .map(commodity -> commodity.getName() + ";" + commodity.getUnitOfTrading())
@@ -529,11 +658,24 @@ public class Simulation {
         return Optional.of(commodity);
     }
 
+    /**
+     * Removes a commodity from the selected {@link CommodityExchange}
+     * and briefcases that belong to each entity in the {@link Simulation}.
+     * @param commodity A commodity that will be removed from the selected commodity exchange.
+     * @param commodityExchange A commodity exchange that will have one of it's commodities removed.
+     */
     public synchronized void removeCommodity(final Commodity commodity, final CommodityExchange commodityExchange) {
         removeAssetFromBriefcase(commodity);
         commodityExchange.removeResource(commodity);
     }
 
+    /**
+     * Creates a new {@link Currency} with random values generated by {@link Croupier}.
+     * There is a chance that there won't be any available currencies for a selected currency exchange.
+     * In such case, an empty {@link Optional} is returned.
+     * @param currencyExchange A currency exchange that will own the currency.
+     * @return If there are no available names for currency exchange, optional is empty.
+     */
     public Optional<Currency> addCurrency(final CurrencyExchange currencyExchange) {
         List<String> names = currencyExchange.getCurrencies().stream()
                 .map(AbstractAsset::getName)
@@ -565,11 +707,24 @@ public class Simulation {
         return Optional.of(currency);
     }
 
+    /**
+     * Removes a currency from the selected {@link CurrencyExchange}
+     * and briefcases that belong to each entity in the {@link Simulation}.
+     * @param currency A currency that will be removed from the selected currency exchange.
+     * @param currencyExchange A currency exchange that will have one of it's currencies removed.
+     */
     public synchronized void removeCurrency(final Currency currency, final CurrencyExchange currencyExchange) {
         removeAssetFromBriefcase(currency);
         currencyExchange.removeCurrency(currency);
     }
 
+    /**
+     * Creates a new {@link Index} with random values generated by {@link Croupier}.
+     * There is a chance that there won't be any available indices for the selected stock exchange.
+     * In such case, an empty {@link Optional} is returned.
+     * @param stockExchange A stock exchange that will own the index.
+     * @return If there are no available indices for stock exchange, optional is empty.
+     */
     public Optional<Index> addIndex(final StockExchange stockExchange) {
         final List<String> indices = stockExchange.getIndices().stream()
                 .map(Index::getType)
@@ -619,6 +774,11 @@ public class Simulation {
         }
     }
 
+    /**
+     * Removes an index from the selected {@link StockExchange}.
+     * @param index An index that will be removed from the selected stock exchange.
+     * @param stockExchange A stock exchange that will have one of it's indices removed.
+     */
     public void removeIndex(final Index index, final StockExchange stockExchange) {
         stockExchange.removeIndex(index);
     }

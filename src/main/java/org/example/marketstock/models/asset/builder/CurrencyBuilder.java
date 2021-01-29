@@ -4,6 +4,13 @@ import org.example.marketstock.models.asset.Currency;
 
 import java.util.List;
 
+/**
+ * A builder for the {@code Currency} class.
+ *
+ * @author Dominik Szmyt
+ * @see Currency
+ * @since 1.0.0
+ */
 public final class CurrencyBuilder {
 
     private String name;

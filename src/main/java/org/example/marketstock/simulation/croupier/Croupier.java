@@ -9,6 +9,12 @@ import java.util.Random;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Provides methods that generate random values that are then used to create entities and assets.
+ *
+ * @since 1.0.0
+ * @author Dominik Szmyt
+ */
 public class Croupier {
 
     private static final String COMPANIES_LOCATION = "built-in-names/companies.json";
@@ -23,6 +29,11 @@ public class Croupier {
     private final JsonReader jsonReader;
     private final Random random;
 
+    /**
+     * Create a {@code Croupier} with all necessary fields.
+     * @param jsonReader A {@code JsonReader} for reading resources.
+     * @param random A {@code Random} for drawing random values.
+     */
     public Croupier(final JsonReader jsonReader,
                     final Random random) {
 

@@ -4,6 +4,13 @@ import org.example.marketstock.models.asset.Commodity;
 
 import java.util.List;
 
+/**
+ * A builder fot the {@code Commodity} builder.
+ *
+ * @author Dominik Szmyt
+ * @see Commodity
+ * @since 1.0.0
+ */
 public final class CommodityBuilder {
 
     private String name;

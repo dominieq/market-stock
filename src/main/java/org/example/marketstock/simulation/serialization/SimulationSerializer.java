@@ -12,6 +12,13 @@ import org.example.marketstock.simulation.Simulation;
 
 import java.io.IOException;
 
+/**
+ * A custom serializer for the {@link Simulation} class.
+ *
+ * @author Dominik Szmyt
+ * @see Simulation
+ * @since 1.0.0
+ */
 public class SimulationSerializer extends StdSerializer<Simulation> {
 
     public SimulationSerializer() {

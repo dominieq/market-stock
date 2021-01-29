@@ -15,8 +15,10 @@ import org.example.marketstock.models.asset.CountableAsset;
 import org.example.marketstock.models.company.builder.CompanyBuilder;
 
 /**
+ * Represents a real life company that issues shares and is listed in one of available stock exchanges.
+ * Apart from that, it randomly updates it's profit and revenue and issues new shares.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonDeserialize(builder = CompanyBuilder.class)
@@ -39,6 +41,24 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     @JsonIgnore
     private volatile transient boolean terminated = false;
 
+    /**
+     * Create a {@code Company} with all necessary fields.
+     * @param name The name of a {@code Company}.
+     * @param currentRate The current rate of a {@code Company}.
+     * @param minRate The minimum rate of a {@code Company}.
+     * @param maxRate The maximum rate of a {@code Company}.
+     * @param rateChanges The list of rate changes of a {@code Company}.
+     * @param margin The margin of an {@code Exchange} that lists a {@code Company}.
+     * @param numberOfAssets The number of shares issued by a {@code Company}.
+     * @param dateOfFirstValuation The date of first valuation of a {@code Company}.
+     * @param openingQuotation The opening quotation of a {@code Company}.
+     * @param profit The profit of a {@code Company}.
+     * @param revenue The revenue of a {@code Company}.
+     * @param equityCapital The equity capital of a {@code Company}.
+     * @param openingCapital The opening capital of a {@code Company}.
+     * @param volume The volume of a {@code Company}.
+     * @param turnover The turnover of a {@code Company}.
+     */
     public Company(final String name,
                    final double currentRate,
                    final double minRate,
@@ -91,11 +111,18 @@ public class Company extends CountableAsset implements Serializable, Runnable {
         terminated = true;
         LOGGER.debug("[THREAD]: Company {} stops.", this);
     }
-    
+
+    /**
+     * Terminates a company's thread by ending it's while loop.
+     */
     public void terminate () {
         this.active = false;
     }
 
+    /**
+     * Sleeps for random amount of time between 1 and 15 seconds.
+     * @throws InterruptedException If any thread interrupted the current thread while the current thread was sleeping.
+     */
     private void sleep() throws InterruptedException {
         final Random random = new Random();
         final int timeout = random.nextInt(15) + 1;
@@ -106,9 +133,11 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     }
 
     /**
-     * Company updates rate of their shares and increases turnover and volume.
-     * @param turnover1 A double variable which is going to be added to turnover.
-     * @param volume1 An integer variable which is going to be added to volume.
+     * Changes turnover and volume by provided value.
+     * Usually called after the successful purchase of company's shares.
+     *
+     * @param turnover1 A value which is going to be added to turnover.
+     * @param volume1 A value which is going to be added to volume.
      */
     public synchronized void updateTurnoverAndVolume(double turnover1, int volume1) {
         final double INITIAL_TURNOVER = turnover;
@@ -121,7 +150,7 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     }
     
     /**
-     * Company increases or diminishes revenue and profit.
+     * Randomly changes revenue and profit by arbitrary values. Called by a company itself.
      */
     public void updateRevenueAndProfit() {
         final Random random = new Random();
@@ -149,7 +178,7 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     }
     
     /**
-     * Company issues a random number of shares.
+     * Increases the number of available shares by random number.
      */
     public void issueAssets() {
         final Random rand = new Random();

@@ -9,6 +9,13 @@ import org.example.marketstock.models.briefcase.Briefcase;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * A custom serializer for the {@link Briefcase} class.
+ *
+ * @author Dominik Szmyt
+ * @see Briefcase
+ * @since 1.0.0
+ */
 public class BriefcaseSerializer extends StdSerializer<Briefcase> {
 
     public BriefcaseSerializer() {

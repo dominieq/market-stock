@@ -6,6 +6,13 @@ import org.example.marketstock.simulation.Simulation;
 
 import static java.util.Objects.isNull;
 
+/**
+ * A builder for the {@code Investor} class.
+ *
+ * @author Dominik Szmyt
+ * @see Investor
+ * @since 1.0.0
+ */
 public final class InvestorBuilder {
 
     private String firstName;

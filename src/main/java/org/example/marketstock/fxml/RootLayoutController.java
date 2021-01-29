@@ -25,8 +25,9 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 /**
+ * Controls the {@code RootLayout} and consequently the {@code MenuBar}.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 public class RootLayoutController {
@@ -37,11 +38,22 @@ public class RootLayoutController {
     @FXML
     private void initialize () {}
 
+    /**
+     * Callback fired when a user wishes to save the running {@link Simulation} to a file.
+     * @see #serializeSimulation()
+     */
     @FXML
     private void handleSaveFile () {
         serializeSimulation();
     }
 
+    /**
+     * Callback fired when a user wishes to save the running {@link Simulation} before exiting.
+     * If the serialization was successful, closes the application.
+     * If some errors occurred during the serialization process, displays a warning
+     * and requires a confirmation in order to proceed with closing the application.
+     * @see #serializeSimulation()
+     */
     @FXML
     private void handleSaveAndCloseFile() {
         final boolean serialized = serializeSimulation();
@@ -71,6 +83,13 @@ public class RootLayoutController {
         }
     }
 
+    /**
+     * At first, if there is no running {@link Simulation}, warns a user and returns {@code false}.
+     * Displays a {@link FileChooser} and after a user selected their file,
+     * tries to serialize the existing {@code Simulation}.
+     * If the process succeeds returns {@code true}, otherwise returns {@code false}.
+     * @return {@code true} if a {@link Simulation} was successfully serialized, otherwise returns {@code false}.
+     */
     private boolean serializeSimulation() {
         if (isNull(marketApp.getSimulation())) {
             final Alert warning = new Alert(Alert.AlertType.WARNING);
@@ -109,6 +128,13 @@ public class RootLayoutController {
         }
     }
 
+    /**
+     * Callback fired when a user wants to load a {@link Simulation} from a file.
+     * If a simulation is still running, warns a user that they are going to lose their progress and
+     * requires a confirmation to proceed. Displays a {@link FileChooser} and after a user selected their file,
+     * tries to parse it as a new {@code Simulation}. If another simulation is still running, tries to stop it.
+     * If there wasn't any simulation, creates a new one immediately. Displays an error if something went wrong.
+     */
     @FXML
     private void handleLoadFile () {
         if (nonNull(marketApp.getSimulation())) {
@@ -164,6 +190,10 @@ public class RootLayoutController {
         }
     }
 
+    /**
+     * Callback fired when a user wishes to close the application.
+     * Tries to gracefully stop a {@link Simulation} and if succeeds, closes the application.
+     */
     @FXML
     private void handleClose () {
         LOGGER.info("[APP]: Shutting down simulation...");
@@ -172,6 +202,12 @@ public class RootLayoutController {
         marketApp.getPrimaryStage().close();
     }
 
+    /**
+     * Tries to shutdown an {@link ExecutorService} and awaits its termination.
+     * If the process didn't succeed, tries to kill remaining processes.
+     *
+     * @param service An {@code ExecutorService} that is to be shutdown safely.
+     */
     private void safeShutdown(final ExecutorService service) {
         service.shutdown();
         boolean isTerminated = false;
@@ -185,6 +221,11 @@ public class RootLayoutController {
         }
     }
 
+    /**
+     * Transforms the provided {@link Exception} into a {@link TextArea} that can be displayed in warning.
+     * @param exception An {@code Exception} that is to be displayed in a warning.
+     * @return An {@link Exception} inside a {@code TextArea}.
+     */
     private TextArea getExceptionTextArea(final Exception exception) {
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);

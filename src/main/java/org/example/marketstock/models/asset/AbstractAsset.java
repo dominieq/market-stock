@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * A simple implementation of {@link Asset}.
  *
  * @author Dominik
  * @since 1.0.0
@@ -25,6 +26,15 @@ public abstract class AbstractAsset implements Asset, Serializable {
     protected final double margin;
     protected final List<Double> rateChanges;
 
+    /**
+     * Create an {@code AbstractAsset} with all necessary fields.
+     * @param name1 The name of an {@code AbstractAsset}.
+     * @param currentRate1 The current rate of an {@code AbstractAsset}.
+     * @param minRate1 The minimum rate of an {@code AbstractAsset}.
+     * @param maxRate1 The maximum rate of an {@code AbstractAsset}.
+     * @param margin1 The margin of an {@code Exchange} that lists the {@code AbstractAsset}.
+     * @param rateChanges1 The list of rate changes of an {@code AbstractAsset}.
+     */
     public AbstractAsset(final String name1,
                          final double currentRate1,
                          final double minRate1,
@@ -41,10 +51,13 @@ public abstract class AbstractAsset implements Asset, Serializable {
     }
     
     /**
-     * Updates current rate and adds new rate to rate changes.
-     * Calculates min and max rate.
-     * @param rate - New rate calculated after an investor bought this asset.
-     * @return Updated current rate.
+     * At first, replaces old value with the new one and adds the new rate to rate changes.
+     * In the end, calculates min and max rate.
+     * <br>
+     * <b>NOTE:</b> this implementation keeps track of only 10 rate changes.
+     *
+     * @param rate A new rate that is to replace the current rate.
+     * @return A new value of current rate.
      */
     @Override
     public synchronized double updateRate(double rate) {

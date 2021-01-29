@@ -9,8 +9,9 @@ import org.example.marketstock.models.asset.Commodity;
 import org.example.marketstock.models.exchange.builder.CommodityExchangeBuilder;
 
 /**
+ * Represents a real life commodity exchange where investors can buy and sell commodities listed there.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonDeserialize(builder = CommodityExchangeBuilder.class)
@@ -18,6 +19,16 @@ public class CommodityExchange extends Exchange implements Serializable {
 
     private final List<Commodity> commodities;
 
+    /**
+     * Create an {@code CommodityExchange} with all necessary fields.
+     * @param name The name of an {@code CommodityExchange}.
+     * @param country The country in which an {@code CommodityExchange} is located.
+     * @param city The city in which an {@code CommodityExchange} is located.
+     * @param address The address of an {@code CommodityExchange} location
+     * @param currency The currency used in transactions on an {@code CommodityExchange}.
+     * @param margin The margin of an {@code CommodityExchange}.
+     * @param commodities A list of commodities listed by an {@code CommodityExchange}.
+     */
     public CommodityExchange(final String name,
                              final String country,
                              final String city,

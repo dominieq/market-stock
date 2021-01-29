@@ -7,6 +7,13 @@ import java.util.List;
 
 import static java.util.Objects.isNull;
 
+/**
+ * A builder for the {@link CurrencyExchange} class.
+ *
+ * @author Dominik Szmyt
+ * @see CurrencyExchange
+ * @since 1.0.0
+ */
 public final class CurrencyExchangeBuilder {
 
     private String name;
