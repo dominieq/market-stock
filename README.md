@@ -1,30 +1,28 @@
 # Market Stock Simulator
-Open source JavaFX application that simulates market stock in very simplified way.
+Open source JavaFX application that simulates market stock in a very simplified way.
 I created it during my IT studies before I learnt how to efficiently use git and GitHub. 
 
 I'm uploading it now to show possible recruiters my accomplishments.
 
-### Getting started
-##### Prerequisites:
-A functional computer with Java 8 installed on it. 
-[Guide on how to install Java.](https://www.java.com/en/download/help/download_options.xml)
+## Quick start
+**NOTE: You need to have Java (version 1.8) installed and available from command line!**
 
-##### Downloading JAR file:
-[Download latest release.](https://github.com/dominieq/market-stock/releases/tag/v1.0.0-rc.1) 
-Open command line in JAR file location and execute `java -jar [name-of-latest-release]-fat.jar`. 
-Market Stock Simulator is going to start.
+Go to [releases](https://github.com/dominieq/market-stock/releases) 
+and choose your version of Market Stock Simulator.
+Once you've downloaded the application, run it by using the following command:
+````
+java -jar marketstock-{latest_version}-fat.jar
+````
 
-##### Building project on your own:
-**Warning!** You should have git and maven installed on your computer:
+## Build application from scratch
+**NOTE: You need to have Maven (version at least 3.3.1) installed and available from command line!**
 
-- [Install Git](https://git-scm.com/downloads),
-- [Download Maven](https://maven.apache.org/download.cgi) then [install Maven](https://maven.apache.org/install.html).
+To build application on your own, first download or copy
+the source code and then go to the project folder and execute:
+````
+mvn clean package
+````
 
-Open command line in Your desired location and then execute commands below: 
-```bash
-git clone https://github.com/dominieq/market-stock
-cd market-stock
-mvn clean install
-java -jar target/[name-of-latest-release]-fat.jar
-```
-Market Stock Simulator is going to start.
+## License
+This project is licensed under the Apache License, Version 2.0 -
+see the [LICENSE](https://github.com/dominieq/market-stock/blob/master/LICENSE) file for details.
