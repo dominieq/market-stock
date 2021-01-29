@@ -120,12 +120,12 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     }
 
     /**
-     * Sleeps for random amount of time between 1 and 15 seconds.
+     * Sleeps for random amount of time between 10 and 15 seconds.
      * @throws InterruptedException If any thread interrupted the current thread while the current thread was sleeping.
      */
     private void sleep() throws InterruptedException {
         final Random random = new Random();
-        final int timeout = random.nextInt(15) + 1;
+        final int timeout = random.nextInt(6) + 10;
 
         LOGGER.debug("[THREAD]: Company {} sleeps for {}.", this, timeout);
 

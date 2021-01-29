@@ -64,7 +64,7 @@ public class SimulationTest {
                 .withCommodityNames(commodities)
                 .withCurrencyNames(currencies)
                 .withCroupier(CroupierBuilder.builder()
-                        .withJsonReader(new SimpleJsonReader())
+                        .withResourcesReader(new SimpleJsonReader())
                         .withRandom(new Random())
                         .build())
                 .withMainCurrency(CurrencyBuilder.builder()

@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * Implements {@link JsonReader} to retrieve arrays from the local resources folder.
+ * Implements {@link ResourcesReader} to retrieve arrays from the local resources folder.
  *
  * @since 1.0.0
  * @author Dominik Szmyt
  */
-public final class SimpleJsonReader implements JsonReader {
+public final class SimpleJsonReader implements ResourcesReader {
 
     private static final Logger LOGGER = LogManager.getLogger(SimpleJsonReader.class);
 

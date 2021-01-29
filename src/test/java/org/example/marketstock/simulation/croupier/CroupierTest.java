@@ -1,6 +1,6 @@
 package org.example.marketstock.simulation.croupier;
 
-import org.example.marketstock.simulation.json.JsonReader;
+import org.example.marketstock.simulation.json.ResourcesReader;
 import org.example.marketstock.simulation.json.SimpleJsonReader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class CroupierTest {
 
-    private static JsonReader jsonReader;
+    private static ResourcesReader jsonReader;
     private static Random random;
     private Croupier subject;
 

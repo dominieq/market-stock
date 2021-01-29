@@ -5,8 +5,6 @@ import org.example.marketstock.models.exchange.CommodityExchange;
 
 import java.util.List;
 
-import static java.util.Objects.isNull;
-
 /**
  * A builder for the {@link CommodityExchange} class.
  *
@@ -28,21 +26,6 @@ public final class CommodityExchangeBuilder {
 
     public static CommodityExchangeBuilder builder() {
         return new CommodityExchangeBuilder();
-    }
-
-    public CommodityExchangeBuilder from(CommodityExchange commodityExchange) {
-        if (isNull(commodityExchange)) {
-            return this;
-        }
-
-        this.commodities = commodityExchange.getCommodities();
-        this.name = commodityExchange.getName();
-        this.country = commodityExchange.getCountry();
-        this.city = commodityExchange.getCity();
-        this.address = commodityExchange.getAddress();
-        this.currency = commodityExchange.getCurrency();
-        this.margin = commodityExchange.getMargin();
-        return this;
     }
 
     public CommodityExchangeBuilder withCommodities(final List<Commodity> commodities) {

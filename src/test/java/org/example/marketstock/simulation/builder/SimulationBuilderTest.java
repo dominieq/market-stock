@@ -63,7 +63,7 @@ public class SimulationBuilderTest {
         final List<String> commodityNames = FXCollections.observableArrayList();
 
         final Croupier croupier = CroupierBuilder.builder()
-                .withJsonReader(new SimpleJsonReader())
+                .withResourcesReader(new SimpleJsonReader())
                 .withRandom(new Random(0))
                 .build();
         final Currency mainCurrency = CurrencyBuilder.builder()

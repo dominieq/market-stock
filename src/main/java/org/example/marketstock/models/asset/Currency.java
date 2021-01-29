@@ -26,8 +26,8 @@ public class Currency extends AbstractAsset implements Serializable {
      * @param currentRate The current rate of a {@code Currency}.
      * @param minRate The minimum rate of a {@code Currency}.
      * @param maxRate The maximum rate of a {@code Currency}.
-     * @param exchangeMargin The margin of an {@code Exchange} that lists the {@code Currency}.
-     * @param rateChangeArrayList The list of rate changes of an {@code Currency}.
+     * @param margin The margin of an {@code Exchange} that lists the {@code Currency}.
+     * @param rateChanges The list of rate changes of an {@code Currency}.
      * @param comparisonCurrency A currency in comparison to which a current rate is calculated.
      * @param countries The list of countries in which the {@code Currency} can be used.
      */
@@ -35,12 +35,12 @@ public class Currency extends AbstractAsset implements Serializable {
                     final double currentRate,
                     final double minRate,
                     final double maxRate,
-                    final double exchangeMargin,
-                    final List<Double> rateChangeArrayList,
+                    final double margin,
+                    final List<Double> rateChanges,
                     final Currency comparisonCurrency,
                     final List<String> countries) {
 
-        super(name, currentRate, minRate, maxRate, exchangeMargin, rateChangeArrayList);
+        super(name, currentRate, minRate, maxRate, margin, rateChanges);
 
         this.comparisonCurrency = comparisonCurrency;
         this.countries = countries;

@@ -1,7 +1,7 @@
 package org.example.marketstock.simulation.croupier.builder;
 
 import org.example.marketstock.simulation.croupier.Croupier;
-import org.example.marketstock.simulation.json.JsonReader;
+import org.example.marketstock.simulation.json.ResourcesReader;
 
 import java.util.Random;
 
@@ -16,7 +16,7 @@ import static java.util.Objects.isNull;
  */
 public final class CroupierBuilder {
 
-    private JsonReader jsonReader;
+    private ResourcesReader resourcesReader;
     private Random random;
 
     private CroupierBuilder() { }
@@ -30,13 +30,13 @@ public final class CroupierBuilder {
             return this;
         }
 
-        this.jsonReader = croupier.getJsonReader();
+        this.resourcesReader = croupier.getResourcesReader();
         this.random = croupier.getRandom();
         return this;
     }
 
-    public CroupierBuilder withJsonReader(final JsonReader jsonReader) {
-        this.jsonReader = jsonReader;
+    public CroupierBuilder withResourcesReader(final ResourcesReader resourcesReader) {
+        this.resourcesReader = resourcesReader;
         return this;
     }
 
@@ -46,6 +46,6 @@ public final class CroupierBuilder {
     }
 
     public Croupier build() {
-        return new Croupier(jsonReader, random);
+        return new Croupier(resourcesReader, random);
     }
 }

@@ -92,18 +92,18 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
 
             while (active) {
                 sleep();
-                if(!active) break;
+                if (!active) break;
 
                 final int coinFlip = rand.nextInt(2);
 
-                if(coinFlip == 0 || briefcase.isEmpty()) {
+                if (coinFlip == 0 || briefcase.isEmpty()) {
                     final Optional<Tuple3<Asset, Integer, Double>> selection = simulation.chooseAssetToBuy(this);
 
                     if (selection.isPresent()) {
                         final Tuple3<Asset, Integer, Double> tuple = selection.get();
                         simulation.buySelectedResource(tuple._1, tuple._2,  tuple._3, this);
                     }
-                } else if (!briefcase.isEmpty()) {
+                } else {
                     final Optional<Tuple3<Asset, Integer, Double>> selection = simulation.chooseAssetToSell(this);
 
                     if (selection.isPresent()) {

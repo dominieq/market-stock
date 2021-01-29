@@ -124,16 +124,8 @@ public class CreatePlayerDialogController {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public double getBudget() {
@@ -144,19 +136,11 @@ public class CreatePlayerDialogController {
         this.budget = budget;
     }
 
-    public Stage getDialogStage() {
-        return dialogStage;
-    }
-
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
 
     public boolean isConfirmClicked() {
         return confirmClicked;
-    }
-
-    public void setConfirmClicked(boolean confirmClicked) {
-        this.confirmClicked = confirmClicked;
     }
 }

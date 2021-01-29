@@ -5,8 +5,6 @@ import org.example.marketstock.models.exchange.CurrencyExchange;
 
 import java.util.List;
 
-import static java.util.Objects.isNull;
-
 /**
  * A builder for the {@link CurrencyExchange} class.
  *
@@ -28,21 +26,6 @@ public final class CurrencyExchangeBuilder {
 
     public static CurrencyExchangeBuilder builder() {
         return new CurrencyExchangeBuilder();
-    }
-
-    public CurrencyExchangeBuilder from(final CurrencyExchange currencyExchange) {
-        if (isNull(currencyExchange)) {
-            return this;
-        }
-
-        this.name = currencyExchange.getName();
-        this.country = currencyExchange.getCountry();
-        this.city = currencyExchange.getCity();
-        this.address = currencyExchange.getAddress();
-        this.currency = currencyExchange.getCurrency();
-        this.margin = currencyExchange.getMargin();
-        this.currencies = currencyExchange.getCurrencies();
-        return this;
     }
 
     public CurrencyExchangeBuilder withName(final String name) {

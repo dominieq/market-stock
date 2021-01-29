@@ -6,7 +6,7 @@ package org.example.marketstock.simulation.json;
  * @since 1.0.0
  * @author Domink Szmyt
  */
-public interface JsonReader {
+public interface ResourcesReader {
 
     /**
      * An implementation can either search for the destination in local resources or make an API call.

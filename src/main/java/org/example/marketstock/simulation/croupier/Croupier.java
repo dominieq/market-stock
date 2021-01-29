@@ -1,7 +1,7 @@
 package org.example.marketstock.simulation.croupier;
 
 import com.google.common.base.MoreObjects;
-import org.example.marketstock.simulation.json.JsonReader;
+import org.example.marketstock.simulation.json.ResourcesReader;
 
 import java.net.URL;
 import java.util.Calendar;
@@ -26,44 +26,44 @@ public class Croupier {
     private static final String LAST_NAMES_LOCATION = "built-in-names/last-names.json";
     private static final String FUND_NAMES_LOCATION = "built-in-names/fund-names.json";
 
-    private final JsonReader jsonReader;
+    private final ResourcesReader resourcesReader;
     private final Random random;
 
     /**
      * Create a {@code Croupier} with all necessary fields.
-     * @param jsonReader A {@code JsonReader} for reading resources.
+     * @param resourcesReader A {@code ResourcesReader} for reading resources.
      * @param random A {@code Random} for drawing random values.
      */
-    public Croupier(final JsonReader jsonReader,
+    public Croupier(final ResourcesReader resourcesReader,
                     final Random random) {
 
-        this.jsonReader = jsonReader;
+        this.resourcesReader = resourcesReader;
         this.random = random;
     }
 
     public String drawCompanyName() {
         final String path = getPath(COMPANIES_LOCATION);
-        return Croupiers.drawString(random, jsonReader.getResource(path));
+        return Croupiers.drawString(random, resourcesReader.getResource(path));
     }
 
     public String drawCountry() {
         final String path = getPath(COUNTRIES_LOCATION);
-        return Croupiers.drawString(random, jsonReader.getResource(path));
+        return Croupiers.drawString(random, resourcesReader.getResource(path));
     }
 
     public String drawCity() {
         final String path = getPath(CITIES_LOCATION);
-        return Croupiers.drawString(random, jsonReader.getResource(path));
+        return Croupiers.drawString(random, resourcesReader.getResource(path));
     }
 
     public String drawAddress() {
         final String path = getPath(ADDRESSES_LOCATION);
-        return Croupiers.drawString(random, jsonReader.getResource(path));
+        return Croupiers.drawString(random, resourcesReader.getResource(path));
     }
 
     public String drawCurrency() {
         final String path = getPath(CURRENCIES_LOCATION);
-        return Croupiers.drawString(random, jsonReader.getResource(path));
+        return Croupiers.drawString(random, resourcesReader.getResource(path));
     }
 
     public double drawMargin() {
@@ -107,22 +107,22 @@ public class Croupier {
 
     public String[] drawCountries() {
         final String path = getPath(COUNTRIES_LOCATION);
-        return Croupiers.drawSubset(random, jsonReader.getResource(path));
+        return Croupiers.drawSubset(random, resourcesReader.getResource(path));
     }
 
     public String drawFirstName() {
         final String path = getPath(FIRST_NAMES_LOCATION);
-        return Croupiers.drawString(random, jsonReader.getResource(path));
+        return Croupiers.drawString(random, resourcesReader.getResource(path));
     }
 
     public String drawLastName() {
         final String path = getPath(LAST_NAMES_LOCATION);
-        return Croupiers.drawString(random, jsonReader.getResource(path));
+        return Croupiers.drawString(random, resourcesReader.getResource(path));
     }
 
     public String drawInvestmentFundName() {
         final String path = getPath(FUND_NAMES_LOCATION);
-        return Croupiers.drawString(random, jsonReader.getResource(path));
+        return Croupiers.drawString(random, resourcesReader.getResource(path));
     }
 
     public double drawBudget() {
@@ -149,7 +149,7 @@ public class Croupier {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-                .add("jsonReader", jsonReader)
+                .add("resourcesReader", resourcesReader)
                 .add("random", random)
                 .toString();
     }
@@ -158,7 +158,7 @@ public class Croupier {
         return random;
     }
 
-    public JsonReader getJsonReader() {
-        return jsonReader;
+    public ResourcesReader getResourcesReader() {
+        return resourcesReader;
     }
 }

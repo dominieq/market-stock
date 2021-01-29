@@ -69,7 +69,9 @@ public class Investor extends AbstractInvestor implements Serializable, Runnable
                 sleep();
                 if (!active) break;
 
-                if (rand.nextInt(2) == 0) {
+                final int coinFlip = rand.nextInt(2);
+
+                if (coinFlip == 0 || briefcase.isEmpty()) {
                     final Optional<Tuple3<Asset, Integer, Double>> selection = simulation.chooseAssetToBuy(this);
 
                     if (selection.isPresent()) {

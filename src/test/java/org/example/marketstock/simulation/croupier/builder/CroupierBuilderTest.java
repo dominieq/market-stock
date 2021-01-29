@@ -1,7 +1,7 @@
 package org.example.marketstock.simulation.croupier.builder;
 
 import org.example.marketstock.simulation.croupier.Croupier;
-import org.example.marketstock.simulation.json.JsonReader;
+import org.example.marketstock.simulation.json.ResourcesReader;
 import org.example.marketstock.simulation.json.SimpleJsonReader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CroupierBuilderTest {
 
     private static Random testRandom;
-    private static JsonReader testJsonReader;
+    private static ResourcesReader testJsonReader;
     private CroupierBuilder subject;
 
     @BeforeAll
@@ -34,13 +34,13 @@ public class CroupierBuilderTest {
         // when
         final Croupier actual = subject
                 .withRandom(testRandom)
-                .withJsonReader(testJsonReader)
+                .withResourcesReader(testJsonReader)
                 .build();
 
         // then
         assertThat(actual)
                 .hasFieldOrPropertyWithValue("random", testRandom)
-                .hasFieldOrPropertyWithValue("jsonReader", testJsonReader);
+                .hasFieldOrPropertyWithValue("resourcesReader", testJsonReader);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class CroupierBuilderTest {
         // given
         final Croupier initial = subject
                 .withRandom(testRandom)
-                .withJsonReader(testJsonReader)
+                .withResourcesReader(testJsonReader)
                 .build();
 
         // when
@@ -60,7 +60,7 @@ public class CroupierBuilderTest {
         // then
         assertThat(actual)
                 .hasFieldOrPropertyWithValue("random", testRandom)
-                .hasFieldOrPropertyWithValue("jsonReader", testJsonReader);
+                .hasFieldOrPropertyWithValue("resourcesReader", testJsonReader);
     }
 
     @Test
@@ -69,22 +69,22 @@ public class CroupierBuilderTest {
         // given
         final Croupier initial = subject
                 .withRandom(testRandom)
-                .withJsonReader(testJsonReader)
+                .withResourcesReader(testJsonReader)
                 .build();
 
         final Random random = new Random(1);
-        final JsonReader jsonReader = new SimpleJsonReader();
+        final ResourcesReader jsonReader = new SimpleJsonReader();
 
         // when
         final Croupier actual = subject
                 .from(initial)
                 .withRandom(random)
-                .withJsonReader(jsonReader)
+                .withResourcesReader(jsonReader)
                 .build();
 
         // then
         assertThat(actual)
                 .hasFieldOrPropertyWithValue("random", random)
-                .hasFieldOrPropertyWithValue("jsonReader", jsonReader);
+                .hasFieldOrPropertyWithValue("resourcesReader", jsonReader);
     }
 }

@@ -233,7 +233,7 @@ public class MarketApp extends Application {
     public void prepareResources() {
         simulationBuilder
                 .withCroupier(CroupierBuilder.builder()
-                        .withJsonReader(new SimpleJsonReader())
+                        .withResourcesReader(new SimpleJsonReader())
                         .withRandom(new Random())
                         .build());
 
