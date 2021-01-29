@@ -19,7 +19,7 @@ import java.util.List;
 @JsonDeserialize(builder = NumericMinIndexBuilder.class)
 public class NumericMinIndex extends NumericIndex {
 
-    private final IndexType type = IndexType.MIN;
+    private final IndexType type = IndexType.NUMERIC_MIN;
 
     /**
      * Create a {@code NumericMinIndex} with all necessary fields.

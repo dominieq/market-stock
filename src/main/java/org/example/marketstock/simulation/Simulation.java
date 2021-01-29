@@ -745,7 +745,7 @@ public class Simulation {
         final IndexType type = IndexType.valueOf(typeValue);
 
         switch (type) {
-            case MAX: {
+            case NUMERIC_MAX: {
                 final NumericMaxIndex index = NumericMaxIndexBuilder.builder()
                         .withName("Top 5 companies")
                         .withSize(5)
@@ -757,7 +757,7 @@ public class Simulation {
                 stockExchange.addIndex(index);
                 return Optional.of(index);
             }
-            case MIN: {
+            case NUMERIC_MIN: {
                 final NumericMinIndex index = NumericMinIndexBuilder.builder()
                         .withName("Last 5 companies")
                         .withSize(5)

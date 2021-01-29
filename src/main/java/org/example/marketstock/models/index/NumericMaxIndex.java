@@ -20,7 +20,7 @@ import org.example.marketstock.models.index.builder.NumericMaxIndexBuilder;
 @JsonDeserialize(builder = NumericMaxIndexBuilder.class)
 public class NumericMaxIndex extends NumericIndex implements Serializable {
 
-    private final IndexType type = IndexType.MAX;
+    private final IndexType type = IndexType.NUMERIC_MAX;
 
     /**
      * Create a {@code NumericMaxIndex} with all necessary fields.

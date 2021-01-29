@@ -15,8 +15,8 @@ import java.util.List;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = NumericMaxIndex.class, name = "MAX"),
-        @JsonSubTypes.Type(value = NumericMinIndex.class, name = "MIN")
+        @JsonSubTypes.Type(value = NumericMaxIndex.class, name = "NUMERIC_MAX"),
+        @JsonSubTypes.Type(value = NumericMinIndex.class, name = "NUMERIC_MIN")
 })
 public interface Index {
 

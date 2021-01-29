@@ -8,8 +8,8 @@ package org.example.marketstock.models.index;
  */
 public enum IndexType {
 
-    MAX("MAX"),
-    MIN("MIN");
+    NUMERIC_MAX("NUMERIC_MAX"),
+    NUMERIC_MIN("NUMERIC_MIN");
 
     private final String value;
 
