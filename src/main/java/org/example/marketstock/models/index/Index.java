@@ -21,42 +21,42 @@ import java.util.List;
 public interface Index {
 
     /**
-     * Each index implementation should have a unique type.
-     * @return IndexType - The type of an index
+     * Each {@code Index} implementation should have a unique type.
+     * @return The type of an index
      */
     IndexType getType();
 
     /**
-     * Each index implementation should have a name that isn't required to be unique.
-     * @return String - The name of an index.
+     * Each {@code Index} implementation should have a name that isn't required to be unique.
+     * @return The name of an index.
      */
     String getName();
 
     /**
-     * Each index implementation should have a size which is the maximum size of it's content.
-     * @return long - The size of an index.
+     * Each {@code Index} implementation should have a size which is the maximum size of it's content.
+     * @return The size of an index.
      */
     long getSize();
 
     /**
-     * Each index implementation should have a content which is a list of assets.
+     * Each {@code Index} implementation should have a content which is a list of assets.
      * The list should have a size equal to the size of an index.
      * Each index should create content according to it's intended use.
-     * @return List - The content of an index.
+     * @return The content of an index.
      */
     List<Asset> getContent();
 
     /**
-     * Each index implementation should have a value
+     * Each {@code Index} implementation should have a value
      * which is the sum of current rates of each asset that belongs to an index.
-     * @return double - The value of an index.
+     * @return The value of an index.
      */
     double getValue();
 
     /**
-     * Each index implementation should provide a method that will update it's content.
+     * Each {@code Index} implementation should provide a method that will update it's content.
      * Method should take raw list of assets and modify it's content according to it's intended use and size.
-     * @param content - The list of assets that may replace the old content.
+     * @param content The list of assets that may replace the old content.
      */
     void updateIndex(List<Asset> content);
 }

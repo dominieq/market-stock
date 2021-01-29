@@ -26,6 +26,13 @@ public abstract class NumericIndex implements Index {
     protected List<Asset> content;
     protected double value;
 
+    /**
+     * Create a {@code NumericIndex} with all necessary fields.
+     * @param name1 The name of a {@code NumericIndex}
+     * @param size1 The size of a {@code NumericIndex}
+     * @param content1 The content of a {@code NumericIndex}
+     * @param value1 The value of a {@code NumericIndex}
+     */
     protected NumericIndex(final String name1,
                            final long size1,
                            final List<Asset> content1,
@@ -42,7 +49,7 @@ public abstract class NumericIndex implements Index {
     /**
      * Updates content by sorting provided list using {@link #compare(Asset, Asset)}} method
      * and then limits the size of a result list to the size of a specific index.
-     * @param content1 - The list of assets that may replace the old content.
+     * @param content1 The list of assets that may replace the old content.
      */
     @Override
     public void updateIndex(List<Asset> content1) {
@@ -78,9 +85,9 @@ public abstract class NumericIndex implements Index {
     /**
      * Each {@link NumericIndex} extension should provide a method that compares two assets.
      * The method should return 0 when assets are equal and -1 or 1 when they aren't.
-     * @param asset1 - First asset to compare.
-     * @param asset2 - Second asset to compare.
-     * @return int - 0 when assets are equal; -1 or 1 depending on the intended order.
+     * @param asset1 First asset to compare.
+     * @param asset2 Second asset to compare.
+     * @return 0 when assets are equal; -1 or 1 depending on the intended order.
      */
     abstract protected int compare(Asset asset1, Asset asset2);
 }

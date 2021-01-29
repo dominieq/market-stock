@@ -10,8 +10,8 @@ public interface JsonReader {
 
     /**
      * An implementation can either search for the destination in local resources or make an API call.
-     * @param location - Preferably an URL to a specified resource.
-     * @return String[] - An array of string values.
+     * @param location Preferably an URL to a specified resource.
+     * @return An array of string values.
      */
     String[] getResource(String location);
 }

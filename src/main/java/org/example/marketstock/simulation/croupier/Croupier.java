@@ -29,6 +29,11 @@ public class Croupier {
     private final JsonReader jsonReader;
     private final Random random;
 
+    /**
+     * Create a {@code Croupier} with all necessary fields.
+     * @param jsonReader A {@code JsonReader} for reading resources.
+     * @param random A {@code Random} for drawing random values.
+     */
     public Croupier(final JsonReader jsonReader,
                     final Random random) {
 

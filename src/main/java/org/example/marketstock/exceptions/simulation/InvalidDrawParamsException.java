@@ -17,6 +17,11 @@ public class InvalidDrawParamsException extends RuntimeException {
 
     private final Object[] params;
 
+    /**
+     * Create an {@code InvalidDrawParamsException} with invalid params included.
+     * @param message The detail message.
+     * @param params A list of params that were invalid.
+     */
     public InvalidDrawParamsException(final String message,
                                       final Object[] params) {
 

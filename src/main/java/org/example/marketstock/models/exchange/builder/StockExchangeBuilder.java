@@ -6,6 +6,13 @@ import org.example.marketstock.models.index.Index;
 
 import java.util.List;
 
+/**
+ * A builder for the {@link StockExchange} class.
+ *
+ * @author Dominik Szmyt
+ * @see StockExchange
+ * @since 1.0.0
+ */
 public final class StockExchangeBuilder {
 
     private List<Index> indices;

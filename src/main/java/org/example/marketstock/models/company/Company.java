@@ -41,6 +41,24 @@ public class Company extends CountableAsset implements Serializable, Runnable {
     @JsonIgnore
     private volatile transient boolean terminated = false;
 
+    /**
+     * Create a {@code Company} with all necessary fields.
+     * @param name The name of a {@code Company}.
+     * @param currentRate The current rate of a {@code Company}.
+     * @param minRate The minimum rate of a {@code Company}.
+     * @param maxRate The maximum rate of a {@code Company}.
+     * @param rateChanges The list of rate changes of a {@code Company}.
+     * @param margin The margin of an {@code Exchange} that lists a {@code Company}.
+     * @param numberOfAssets The number of shares issued by a {@code Company}.
+     * @param dateOfFirstValuation The date of first valuation of a {@code Company}.
+     * @param openingQuotation The opening quotation of a {@code Company}.
+     * @param profit The profit of a {@code Company}.
+     * @param revenue The revenue of a {@code Company}.
+     * @param equityCapital The equity capital of a {@code Company}.
+     * @param openingCapital The opening capital of a {@code Company}.
+     * @param volume The volume of a {@code Company}.
+     * @param turnover The turnover of a {@code Company}.
+     */
     public Company(final String name,
                    final double currentRate,
                    final double minRate,
@@ -101,6 +119,10 @@ public class Company extends CountableAsset implements Serializable, Runnable {
         this.active = false;
     }
 
+    /**
+     * Sleeps for random amount of time between 1 and 15 seconds.
+     * @throws InterruptedException If any thread interrupted the current thread while the current thread was sleeping.
+     */
     private void sleep() throws InterruptedException {
         final Random random = new Random();
         final int timeout = random.nextInt(15) + 1;
@@ -114,8 +136,8 @@ public class Company extends CountableAsset implements Serializable, Runnable {
      * Changes turnover and volume by provided value.
      * Usually called after the successful purchase of company's shares.
      *
-     * @param turnover1 - A value which is going to be added to turnover.
-     * @param volume1 - A value which is going to be added to volume.
+     * @param turnover1 A value which is going to be added to turnover.
+     * @param volume1 A value which is going to be added to volume.
      */
     public synchronized void updateTurnoverAndVolume(double turnover1, int volume1) {
         final double INITIAL_TURNOVER = turnover;

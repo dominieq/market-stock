@@ -22,8 +22,8 @@ public final class SimpleJsonReader implements JsonReader {
 
     /**
      * Reads a file from the local resources folder and returns it's content as a string array.
-     * @param location - Preferably an URL to a specified resource.
-     * @return String[] - A string array from a file located in the local resources folder.
+     * @param location Preferably an URL to a specified resource.
+     * @return A string array from a file located in the local resources folder.
      */
     @Override
     public String[] getResource(String location) {

@@ -19,6 +19,16 @@ public class CurrencyExchange extends Exchange implements Serializable {
 
     private final List<Currency> currencies;
 
+    /**
+     * Create an {@code CurrencyExchange} with all necessary fields.
+     * @param name The name of an {@code CurrencyExchange}.
+     * @param country The country in which an {@code CurrencyExchange} is located.
+     * @param city The city in which an {@code CurrencyExchange} is located.
+     * @param address The address of an {@code CurrencyExchange} location
+     * @param currency The currency used in transactions on an {@code CurrencyExchange}.
+     * @param margin The margin of an {@code CurrencyExchange}.
+     * @param currencies A list of currencies listed by an {@code CurrencyExchange}.
+     */
     public CurrencyExchange(final String name,
                             final String country,
                             final String city,

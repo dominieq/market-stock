@@ -32,6 +32,17 @@ public class StockExchange extends Exchange implements Serializable {
     @JsonIgnore
     private final transient ExecutorService companiesService = Executors.newFixedThreadPool(100);
 
+    /**
+     * Create an {@code StockExchange} with all necessary fields.
+     * @param name The name of an {@code StockExchange}.
+     * @param country The country in which an {@code StockExchange} is located.
+     * @param city The city in which an {@code StockExchange} is located.
+     * @param address The address of an {@code StockExchange} location
+     * @param currency The currency used in transactions on an {@code StockExchange}.
+     * @param margin The margin of an {@code StockExchange}.
+     * @param indices A list of indices created by an {@code StockExchange}.
+     * @param companies A list of companies listed by an {@code StockExchange}.
+     */
     public StockExchange(final String name,
                          final String country,
                          final String city,

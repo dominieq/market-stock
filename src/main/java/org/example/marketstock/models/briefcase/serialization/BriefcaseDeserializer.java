@@ -13,6 +13,13 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * A custom deserializer for the {@link Briefcase} class.
+ *
+ * @author Dominik Szmyt
+ * @see Briefcase
+ * @since 1.0.0
+ */
 public class BriefcaseDeserializer extends StdDeserializer<Briefcase> {
 
     public BriefcaseDeserializer() {

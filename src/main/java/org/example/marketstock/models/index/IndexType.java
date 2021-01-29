@@ -13,6 +13,10 @@ public enum IndexType {
 
     private final String value;
 
+    /**
+     * Create an {@code IndexType} from a value.
+     * @param value The value of an index type.
+     */
     IndexType(String value) {
         this.value = value;
     }

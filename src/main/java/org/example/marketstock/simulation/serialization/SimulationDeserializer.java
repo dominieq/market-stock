@@ -21,6 +21,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A custom deserializer for the {@link Simulation} class.
+ *
+ * @author Dominik Szmyt
+ * @see Simulation
+ * @since 1.0.0
+ */
 public class SimulationDeserializer extends StdDeserializer<Simulation> {
 
     public SimulationDeserializer() {

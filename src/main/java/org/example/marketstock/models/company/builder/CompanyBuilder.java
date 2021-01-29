@@ -4,6 +4,13 @@ import org.example.marketstock.models.company.Company;
 
 import java.util.List;
 
+/**
+ * A builder for the {@link Company} class.
+ *
+ * @author Dominik Szmyt
+ * @see Company
+ * @since 1.0.0
+ */
 public final class CompanyBuilder {
 
     private String name;

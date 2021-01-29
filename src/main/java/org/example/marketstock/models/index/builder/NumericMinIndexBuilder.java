@@ -5,6 +5,13 @@ import org.example.marketstock.models.asset.Asset;
 
 import java.util.List;
 
+/**
+ * A builder for a {@link NumericMinIndex} class.
+ *
+ * @author Dominik Szmyt
+ * @see NumericMinIndex
+ * @since 1.0.0
+ */
 public final class NumericMinIndexBuilder {
 
     private String name;

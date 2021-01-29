@@ -23,10 +23,10 @@ public final class Croupiers {
     /**
      * Draws a new date with the year part between the selected boundaries using custom {@link Random} object.
      *
-     * @param random - A custom {@link Random} object.
-     * @param minYear - The lower boundary of the year part in generated {@link LocalDate}.
-     * @param maxYear - The upper boundary of the year part in generated {@link LocalDate}.
-     * @return String - A new date with the year part between the selected boundaries.
+     * @param random A custom {@link Random} object.
+     * @param minYear The lower boundary of the year part in generated {@link LocalDate}.
+     * @param maxYear The upper boundary of the year part in generated {@link LocalDate}.
+     * @return A new date with the year part between the selected boundaries.
      */
     public static String drawDateWithBoundaries(Random random, int minYear, int maxYear) {
         if (isNull(random)) {
@@ -49,9 +49,9 @@ public final class Croupiers {
      * Draws a new date with the year part between the selected boundaries
      * using default {@link Random} object with seed that equals 0.
      *
-     * @param minYear - The lower boundary of the year part in generated {@link LocalDate}.
-     * @param maxYear - The upper boundary of the year part in generated {@link LocalDate}.
-     * @return String - A new date with the year part between the selected boundaries.
+     * @param minYear The lower boundary of the year part in generated {@link LocalDate}.
+     * @param maxYear The upper boundary of the year part in generated {@link LocalDate}.
+     * @return A new date with the year part between the selected boundaries.
      */
     public static String drawDateWithBoundaries(int minYear, int maxYear) {
         return drawDateWithBoundaries(random, minYear, maxYear);
@@ -60,10 +60,10 @@ public final class Croupiers {
     /**
      * Draws a new double value between the selected boundaries using custom {@link Random} object.
      *
-     * @param random - A custom {@link Random} object.
-     * @param lowerBoundary - The lower boundary of a new double value.
-     * @param upperBoundary - The upper boundary of a new double value.
-     * @return double - A new double value between the selected boundaries.
+     * @param random A custom {@link Random} object.
+     * @param lowerBoundary The lower boundary of a new double value.
+     * @param upperBoundary The upper boundary of a new double value.
+     * @return A new double value between the selected boundaries.
      */
     public static double drawDoubleWithBoundaries(Random random, double lowerBoundary, double upperBoundary) {
         if (isNull(random)) {
@@ -82,9 +82,9 @@ public final class Croupiers {
      * Draws a new double value between the selected boundaries
      * using default {@link Random} object with seed that equals 0.
      *
-     * @param lowerBoundary - The lower boundary of a new double value.
-     * @param upperBoundary - The upper boundary of a new double value.
-     * @return double - A new double value between the selected boundaries.
+     * @param lowerBoundary The lower boundary of a new double value.
+     * @param upperBoundary The upper boundary of a new double value.
+     * @return A new double value between the selected boundaries.
      */
     public static double drawDoubleWithBoundaries(double lowerBoundary, double upperBoundary) {
         return drawDoubleWithBoundaries(random, lowerBoundary, upperBoundary);
@@ -93,9 +93,9 @@ public final class Croupiers {
     /**
      * Draws a string value from the provided string array using custom {@link Random} object.
      *
-     * @param random - A custom {@link Random} object.
-     * @param strings - The array of string values.
-     * @return String - A random string value selected from the provided string array.
+     * @param random A custom {@link Random} object.
+     * @param strings The array of string values.
+     * @return A random string value selected from the provided string array.
      */
     public static String drawString(Random random, String [] strings) {
         if (isNull(random)) {
@@ -113,8 +113,8 @@ public final class Croupiers {
      * Draws a string value from the provided string array
      * using custom {@link Random} object with seed that equals 0.
      *
-     * @param strings - The array of string values.
-     * @return String - A random string value selected from the provided string array.
+     * @param strings The array of string values.
+     * @return A random string value selected from the provided string array.
      */
     public static String drawString(String[] strings) {
         return drawString(random, strings);
@@ -124,10 +124,10 @@ public final class Croupiers {
      * Draws a subset from the provided string array using custom {@link Random} object.
      * The subset's size is equal to the provided limit value.
      *
-     * @param random - A custom {@link Random} object.
-     * @param limit - The size of a subset.
-     * @param strings - The array of string values.
-     * @return String[] - The random subset of the provided string array.
+     * @param random A custom {@link Random} object.
+     * @param limit The size of a subset.
+     * @param strings The array of string values.
+     * @return A random subset of the provided string array.
      */
     public static String[] drawSubset(Random random, int limit, String[] strings) {
         if (isNull(random)) {
@@ -154,9 +154,9 @@ public final class Croupiers {
      * Draws a subset from the provided string array using custom {@link Random} object.
      * The subset's size is a random value not greater then the array of strings.
      *
-     * @param random - A custom {@link Random} object.
-     * @param strings - The array of string values.
-     * @return String[] - The random subset of the string array.
+     * @param random A custom {@link Random} object.
+     * @param strings The array of string values.
+     * @return A random subset of the string array.
      */
     public static String[] drawSubset(Random random, String[] strings) {
         return drawSubset(random, 1 + random.nextInt(strings.length), strings);
@@ -167,8 +167,8 @@ public final class Croupiers {
      * using default {@link Random} object with seed that equals 0.
      * The subset's size is a random value not greater then the size of provided array.
      *
-     * @param strings - The array of string values.
-     * @return String[] - The random subset of the string array.
+     * @param strings The array of string values.
+     * @return A random subset of the string array.
      */
     public static String[] drawSubset(String[] strings) {
         return drawSubset(random, strings);

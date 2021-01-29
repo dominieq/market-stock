@@ -22,6 +22,13 @@ public class NumericMaxIndex extends NumericIndex implements Serializable {
 
     private final IndexType type = IndexType.MAX;
 
+    /**
+     * Create a {@code NumericMaxIndex} with all necessary fields.
+     * @param name1 The name of a {@code NumericMaxIndex}
+     * @param size1 The size of a {@code NumericMaxIndex}
+     * @param content1 The content of a {@code NumericMaxIndex}
+     * @param value1 The value of a {@code NumericMaxIndex}
+     */
     public NumericMaxIndex(final String name1,
                            final long size1,
                            final List<Asset> content1,
@@ -33,9 +40,9 @@ public class NumericMaxIndex extends NumericIndex implements Serializable {
     /**
      * This implementation when used in sorted method should arrange provided content in descending order.
      *
-     * @param asset1 - First asset to compare.
-     * @param asset2 - Second asset to compare.
-     * @return int - 0 when assets are equal; -1 when first asset has higher current rate than second; 1 otherwise.
+     * @param asset1 First asset to compare.
+     * @param asset2 Second asset to compare.
+     * @return 0 when assets are equal; -1 when first asset has higher current rate than second; 1 otherwise.
      */
     @Override
     protected int compare(Asset asset1, Asset asset2) {

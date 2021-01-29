@@ -29,14 +29,18 @@ public class Briefcase implements Serializable {
     private static final Logger LOGGER = LogManager.getLogger(Briefcase.class);
     private final Map<Asset, Integer> map;
 
+    /**
+     * Create a {@code Briefcase} with all necessary fields.
+     * @param map A map that will store the number of a specific asset.
+     */
     public Briefcase(final Map<Asset, Integer> map) {
         this.map = map;
     }
     
     /**
      * Increases the number of a given {@link Asset} or adds it to the {@link Briefcase}.
-     * @param asset - {@link Asset} from {@link Briefcase} or a new {@link Asset}.
-     * @param number - The number of an asset.
+     * @param asset {@link Asset} from {@link Briefcase} or a new {@link Asset}.
+     * @param number The number of an asset.
      */
     public void addOrIncrease(final Asset asset, final Integer number) {
         if (contains(asset)) {
@@ -53,8 +57,8 @@ public class Briefcase implements Serializable {
     
     /**
      * Reduces the number of a given {@link Asset} or removes it when it's count equals 0.
-     * @param asset - {@link Asset} that should be in Briefcase.
-     * @param number - The number of an asset.
+     * @param asset {@link Asset} that should be in Briefcase.
+     * @param number The number of an asset.
      * @return The number of successfully removed assets.
      */
     public int decreaseOrRemove(final Asset asset, final Integer number) {
@@ -79,8 +83,8 @@ public class Briefcase implements Serializable {
 
     /**
      * Checks whether an asset is stored in the briefcase.
-     * @param asset - An asset that may be stored in the briefcase.
-     * @return <tt>true</tt> when an asset is stored in the briefcase, otherwise <tt>false</tt>.
+     * @param asset An asset that may be stored in the briefcase.
+     * @return {@code true} when an asset is stored in the briefcase, otherwise returns {@code false}.
      */
     public boolean contains(final Asset asset) {
         return map.containsKey(asset);
@@ -88,9 +92,9 @@ public class Briefcase implements Serializable {
 
     /**
      * Checks whether a specific number of an asset is stored in the briefcase.
-     * @param asset - An asset that may be stored in the briefcase.
-     * @param numberOfAsset - The number of an asset.
-     * @return <tt>true</tt> when a specific number of an asset is stored in the briefcase, otherwise <tt>false</tt>.
+     * @param asset An asset that may be stored in the briefcase.
+     * @param numberOfAsset The number of an asset.
+     * @return {@code true} when a specific number of an asset is stored in the briefcase, otherwise {@code false}.
      */
     public boolean contains(final Asset asset, final int numberOfAsset) {
         return contains(asset) && map.get(asset) == numberOfAsset;
@@ -124,7 +128,7 @@ public class Briefcase implements Serializable {
 
     /**
      * Returns the number of an asset. If the asset isn't stored in the briefcase, returns 0.
-     * @param asset - An asset that may be stored in the briefcase.
+     * @param asset An asset that may be stored in the briefcase.
      * @return The number of a specified asset or 0 if it isn't stored in the briefcase.
      */
     public int getCount(final Asset asset) {
@@ -133,7 +137,7 @@ public class Briefcase implements Serializable {
 
     /**
      * Checks whether the briefcase is empty.
-     * @return <tt>true</tt> if the briefcase is empty, otherwise <tt>false</tt>.
+     * @return {@code true} if the briefcase is empty, otherwise {@code false}.
      */
     public boolean isEmpty() {
         return map.isEmpty();
@@ -141,7 +145,7 @@ public class Briefcase implements Serializable {
 
     /**
      * Removes an asset from briefcase even if it's number is greater than 0.
-     * @param asset - An asset that is to be removed from the briefcase.
+     * @param asset An asset that is to be removed from the briefcase.
      * @return The number of an asset or null if it wasn't stored in the briefcase.
      */
     public Integer removeEntirely(final Asset asset) {
