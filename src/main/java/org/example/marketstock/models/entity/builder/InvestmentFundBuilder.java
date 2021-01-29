@@ -6,6 +6,13 @@ import org.example.marketstock.simulation.Simulation;
 
 import java.util.List;
 
+/**
+ * A builder for the {@code InvestmentFund} class.
+ *
+ * @author Dominik Szmyt
+ * @see InvestmentFund
+ * @since 1.0.0
+ */
 public final class InvestmentFundBuilder {
 
     private String name;

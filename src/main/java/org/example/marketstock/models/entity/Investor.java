@@ -16,8 +16,10 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * A simple implementation of an {@code AbstractInvestor}.
+ * An investor randomly increases their budget which simulates external earnings.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonDeserialize(builder = InvestorBuilder.class)
@@ -34,6 +36,15 @@ public class Investor extends AbstractInvestor implements Serializable, Runnable
     @JsonIgnore
     private volatile transient boolean terminated = false;
 
+    /**
+     * Create an {@code Investor} with all necessary fields.
+     * @param firstName The first name of an {@code Investor}.
+     * @param lastName The last name of an {@code Investor}.
+     * @param budget The budget of an {@code Investor}.
+     * @param briefcase A briefcase that belongs to an {@code Investor}.
+     * @param PESEL The PESEL of an {@code Investor}.
+     * @param simulation An instance of an {@code Simulation} that allows an {@code Investor} to perform transactions.
+     */
     public Investor(final String firstName,
                     final String lastName,
                     final double budget,
@@ -88,10 +99,17 @@ public class Investor extends AbstractInvestor implements Serializable, Runnable
         LOGGER.debug("[THREAD]: Investor {} stops.", this);
     }
 
+    /**
+     * Terminates an investor's thread by ending it's {@code while} loop.
+     */
     public void terminate () {
         active = false;
     }
 
+    /**
+     * Sleeps for a random amount of time between 10 and 15 seconds.
+     * @throws InterruptedException If any thread interrupted the current thread while the current thread was sleeping.
+     */
     private void sleep() throws InterruptedException {
         final Random random = new Random();
         final int timeout = random.nextInt(6) + 10;

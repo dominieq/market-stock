@@ -19,8 +19,10 @@ import org.example.marketstock.models.entity.builder.InvestmentFundBuilder;
 import org.example.marketstock.simulation.Simulation;
 
 /**
+ * Represents a real life investment fund which buys and sells assets, apart from issuing it's own investment units.
+ * An investment fund randomly increases it's budget what simulates external earnings.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 @JsonDeserialize(builder = InvestmentFundBuilder.class)
@@ -45,6 +47,19 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
     @JsonIgnore
     private volatile transient boolean terminated = false;
 
+    /**
+     * Create an {@code InvestmentFund} with all necessary fields.
+     * @param name The name of an {@code InvestmentFund}
+     * @param currentRate The current rate of an {@code InvestmentFund}.
+     * @param minRate The minimum rate of an {@code InvestmentFund}.
+     * @param maxRate The maximum rate of an {@code InvestmentFund}.
+     * @param rateChanges The list of rate changes of {@code InvestmentFund}.
+     * @param margin The margin of an {@code InvestmentFund}.
+     * @param numberOfAssets The number of assets issued by an {@code InvestmentFund}.
+     * @param budget The budget of an {@code InvestmentFund}.
+     * @param briefcase A briefcase that belongs to an {@code InvestmentFund}.
+     * @param simulation An instance of a {@code Simulation} that allows an {@code InvestmentFund} to perform transactions.
+     */
     public InvestmentFund(final String name,
                           final double currentRate,
                           final double minRate,
@@ -112,10 +127,17 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
         LOGGER.debug("[THREAD]: Investment fund {} stops", this);
     }
 
+    /**
+     * Terminates an investment fund's thread by ending it's {@code while} loop.
+     */
     public void terminate () {
         active = false;
     }
 
+    /**
+     * Sleeps for a random amount of time between 10 and 15 seconds.
+     * @throws InterruptedException If any thread interrupted the current thread while the current thread was sleeping.
+     */
     private void sleep() throws InterruptedException {
         final Random random = new Random();
         final int timeout = random.nextInt(6) + 10;
@@ -126,8 +148,7 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
     }
     
     /**
-     * Investment fund draws a number of new investment units
-     * and adds it to the current number of investment units.
+     * Increases the number of available investment units by random number.
      */
     protected void issueAssets() {
         final Random rand = new Random();
@@ -137,6 +158,15 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
         LOGGER.info("[INVESTMENT_FUND]: {} new investment units issued by {}.", number, this);
     }
 
+    /**
+     * At first, replaces old value with the new one and adds the new rate to rate changes.
+     * In the end, calculates min and max rate.
+     * <br>
+     * <b>NOTE:</b> this implementation keeps track of only 10 rate changes.
+     *
+     * @param rate A new rate that is to replace the current rate.
+     * @return A new value of current rate.
+     */
     @Override
     public double updateRate(double rate) {
         LOGGER.info("[ASSET]: Rate changes from {} to {} in {}.", currentRate, rate, this);
@@ -154,6 +184,11 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
         return currentRate;
     }
 
+    /**
+     * Increases number of assets by a given value.
+     * @param addend A value that is to be added to the number of assets.
+     * @return The number of assets after addition.
+     */
     @Override
     public double increaseNumberOfAssets(int addend) {
         synchronized (NUMBER_OF_ASSET) {
@@ -164,6 +199,11 @@ public class InvestmentFund extends AbstractEntity implements Asset, Countable, 
         }
     }
 
+    /**
+     * Decreases number of assets by a given value if the value isn't greater than the original number.
+     * @param subtrahend A value that is to be subtracted from the number of assets.
+     * @return The number of assets after possible subtraction.
+     */
     @Override
     public double decreaseNumberOfAssets(int subtrahend) {
         synchronized (NUMBER_OF_ASSET) {
