@@ -1,192 +1,62 @@
 package org.example.marketstock.models.index;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.example.marketstock.models.asset.Asset;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.example.marketstock.models.company.Company;
+import java.util.List;
 
 /**
+ * Represents a named set of {@link Asset}s
+ * that are listed in a certain {@link org.example.marketstock.models.exchange.Exchange}.
  *
- * @author Dominik Szmyt
  * @since 1.0.0
+ * @author Dominik Szmyt
  */
-public class Index implements Serializable {
-    
-    private static final Logger LOGGER = LogManager.getLogger(Index.class);
-    private String name;
-    private int maxSize;
-    private String accessCondition;
-    private ArrayList<Company> companies;
-    private double value;
-
-    @Override
-    public String toString() {
-        return this.name;
-    }
-
-    @Deprecated
-    public Index(String names) {
-        String [] parts = names.split(";");
-
-        this.name = parts[0];
-        this.maxSize = Integer.parseInt(parts[1]);
-        this.accessCondition = parts[2];
-        this.companies = new ArrayList<>();
-        this.value = 0.0;
-
-        LOGGER.warn("Index used a deprecated constructor.");
-    }
-
-    public Index(String name, int maxSize, String accessCondition) {
-        this.name = name;
-        this.maxSize = maxSize;
-        this.accessCondition = accessCondition;
-        this.companies = new ArrayList<>();
-        this.value = 0.0;
-
-        LOGGER.info("{} was created.", this.toString());
-    }
-
-    public Index(String name, int maxSize, String accessCondition, ArrayList<Company> companies) {
-        this.name = name;
-        this.maxSize = maxSize;
-        this.accessCondition = accessCondition;
-
-        this.updateCompanies(companies);
-
-        LOGGER.info("{} was created with companies:\t{}.", new Object[]{this.toString(), this.companies});
-    }
-
-    public Index(String name, int maxSize, String accessCondition, ArrayList<Company> companies, double value) {
-        this.name = name;
-        this.maxSize = maxSize;
-        this.accessCondition = accessCondition;
-        this.companies = companies;
-        this.value = value;
-
-        LOGGER.info("{} was created with value {} and companies:\t{}.",
-                new Object[]{this.toString(), this.value, this.companies});
-    }
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = NumericMaxIndex.class, name = "NUMERIC_MAX"),
+        @JsonSubTypes.Type(value = NumericMinIndex.class, name = "NUMERIC_MIN")
+})
+public interface Index {
 
     /**
-     * Index updates a list of it's companies based on it's max size and access condition.
-     * @param companies ArrayList of Companies from stock exchange that owns this index.
+     * Each {@code Index} implementation should have a unique type.
+     * @return The type of an index
      */
-    public void updateCompanies(ArrayList<Company> companies) {
-        this.companies = new ArrayList<>();
-
-        if (!companies.isEmpty()) {
-            if(this.accessCondition.equals("max")) {
-                double max = Double.MIN_VALUE;
-                Company maxCompany = companies.get(0);
-
-                for (int i = 0; i < this.maxSize; i++) {
-                    for (Company company : companies) {
-                        if(company.getCurrentRate() > max && !this.companies.contains(company)) {
-                            max = company.getCurrentRate();
-                            maxCompany = company;
-                        }
-                    }
-
-                    if (maxCompany != null) {
-                        this.companies.add(maxCompany);
-                    }
-
-                    max = Double.MIN_VALUE;
-                    maxCompany = null;
-                }
-            } else if (this.accessCondition.equals("min")) {
-                double min = Double.MAX_VALUE;
-                Company minCompany = companies.get(0);
-
-                for (int i = 0; i < this.maxSize; i++) {
-                    for (Company company : companies) {
-                        if(company.getCurrentRate() < min && !this.companies.contains(company)) {
-                            min = company.getCurrentRate();
-                            minCompany = company;
-                        }
-                    }
-
-                    if (minCompany != null) {
-                        this.companies.add(minCompany);
-                    }
-
-                    min = Double.MAX_VALUE;
-                    minCompany = null;
-                }
-            }
-            LOGGER.info("New companies in {}:\t{}.", new Object[]{this.toString(), this.companies.toArray()});
-
-            this.updateValue();
-        }
-    }
+    IndexType getType();
 
     /**
-     * Index updates it's value that is based on companies from this index.
+     * Each {@code Index} implementation should have a name that isn't required to be unique.
+     * @return The name of an index.
      */
-    public void updateValue() {
-        this.value = 0.0;
+    String getName();
 
-        if (this.companies != null && !this.companies.isEmpty()) {
-            for (Company company : this.companies) {
-                this.value += company.getCurrentRate();
-            }
-        }
+    /**
+     * Each {@code Index} implementation should have a size which is the maximum size of it's content.
+     * @return The size of an index.
+     */
+    long getSize();
 
-        LOGGER.info("{} updated value to {}.", new Object[]{this.toString(), this.value});
-    }
+    /**
+     * Each {@code Index} implementation should have a content which is a list of assets.
+     * The list should have a size equal to the size of an index.
+     * Each index should create content according to it's intended use.
+     * @return The content of an index.
+     */
+    List<Asset> getContent();
 
-    public String getName() {
-        return this.name;
-    }
+    /**
+     * Each {@code Index} implementation should have a value
+     * which is the sum of current rates of each asset that belongs to an index.
+     * @return The value of an index.
+     */
+    double getValue();
 
-    public StringProperty getNameProperty() {
-        return new SimpleStringProperty(name);
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getMaxSize() {
-        return maxSize;
-    }
-
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
-    }
-
-    public String getAccessCondition() {
-        return accessCondition;
-    }
-
-    public void setAccessCondition(String accessCondition) {
-        this.accessCondition = accessCondition;
-    }
-
-    public Double getValue() {
-        return this.value;
-    }
-
-    public void setValue(Double x) {
-        this.value = x;
-    }
-
-    public ArrayList<Company> getCompanies() {
-        return this.companies;
-    }
-
-    public ObservableList<Company> getCompanyObservableArrayList() {
-        return FXCollections.observableArrayList(this.companies);
-    }
-
-    public void setCompanies(ArrayList<Company> companies) {
-        this.companies = companies;
-    }
+    /**
+     * Each {@code Index} implementation should provide a method that will update it's content.
+     * Method should take raw list of assets and modify it's content according to it's intended use and size.
+     * @param content The list of assets that may replace the old content.
+     */
+    void updateIndex(List<Asset> content);
 }

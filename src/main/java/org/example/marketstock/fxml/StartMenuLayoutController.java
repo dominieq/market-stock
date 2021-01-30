@@ -1,11 +1,12 @@
 package org.example.marketstock.fxml;
 
-import org.example.marketstock.app.MarketApp;
 import javafx.fxml.FXML;
+import org.example.marketstock.app.MarketApp;
 
 /**
+ * Controls the {@code StartMenuLayout}.
  *
- * @author Dominik
+ * @author Dominik Szmyt
  * @since 1.0.0
  */
 public class StartMenuLayoutController {
@@ -16,16 +17,20 @@ public class StartMenuLayoutController {
     private void initialize() {}
 
     /**
-     * Starts simulation with default settings.
+     * Callback fired when a user wishes to play new game.
+     * Stars simulation with default settings.
      */
     @FXML
     private void handleNewGame () {
-        this.marketApp.getPlayer().createPlayer("Dominik", "Szmyt", 10000.0);
-        this.marketApp.showSimulationLayout();
+        if (marketApp.showCreatePlayerDialog()) {
+            marketApp.prepareNewGame();
+            marketApp.showSimulationLayout();
+        }
     }
 
     /**
-     * Closes application.
+     * Callback fired when a user wishes to close the application.
+     * Closes the application.
      */
     @FXML
     private void handleExit () {
@@ -33,15 +38,12 @@ public class StartMenuLayoutController {
     }
 
     /**
-     * Displays short manual in a new window.
+     * Callback fired when a user wishes to read a guide.
+     * Displays a short manual in a new dialog.
      */
     @FXML
     private void handleGuide () {
         this.marketApp.showGuideLayout();
-    }
-
-    public MarketApp getMarketApp() {
-        return marketApp;
     }
 
     public void setMarketApp(MarketApp marketApp) {
